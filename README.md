@@ -1,5 +1,21 @@
 # Instruksi Penggunaan & Development
 
+#
+
+# Sebelum menjalankan project, salin file `.env.example` menjadi `.env` lalu sesuaikan value sesuai environment Anda.
+
+#
+
+# Contoh:
+
+# ```bash
+
+# cp .env.example .env
+
+# # Edit .env sesuai konfigurasi database dan kebutuhan lain
+
+# ```
+
 ## Menjalankan Project
 
 1. Install dependencies:
@@ -125,10 +141,19 @@ npm run db:reset
 
 ## Environment
 
-- Koneksi database menggunakan PostgreSQL, atur di file `.env`:
+- Koneksi database menggunakan PostgreSQL, atur di file `.env` dengan variabel berikut:
+
   ```env
-  DATABASE_URL="postgresql://user:password@localhost:5432/nama_db"
+  POSTGRES_USER=postgres
+  POSTGRES_PASSWORD=postgres
+  POSTGRES_DB=rental_mobil
+  POSTGRES_HOST=localhost
+  POSTGRES_PORT=5432
+
+  # Prisma connection string untuk Postgres
+  DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
   ```
+
 - Pastikan `provider` di `prisma/schema.prisma` sudah menggunakan `postgresql`.
 
 ## Dokumentasi Lain
