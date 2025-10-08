@@ -14,6 +14,10 @@
 
 ## Proses Development
 
+### Catatan UI
+
+- Dalam pengembangan tampilan, utamakan desain untuk mobile terlebih dahulu (mobile first), kemudian lanjutkan ke tampilan tablet dan desktop.
+
 Jika ingin menambahkan fitur UI baru, buat branch dari `development`:
 
 ```bash
