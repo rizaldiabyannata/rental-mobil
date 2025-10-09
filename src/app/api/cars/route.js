@@ -2,33 +2,54 @@ import { NextResponse } from "next/server";
 import { withAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
+// Mapping layer between legacy API field names and Prisma schema fields
+// Schema fields: startingPrice, available, features (String[]), specifications (Json?)
+function carToApi(car) {
+  if (!car) return car;
+  return {
+    id: car.id,
+    name: car.name,
+    description: car.description,
+    startingPrice: car.startingPrice,
+    capacity: car.capacity,
+    transmission: car.transmission,
+    fuelType: car.fuelType,
+    available: car.available,
+    features: car.features,
+    specifications: car.specifications,
+    createdAt: car.createdAt,
+    updatedAt: car.updatedAt,
+  };
+}
+
+function buildCarWhereFilters({ search, available }) {
+  const where = {};
+  if (available !== undefined && available !== null) {
+    where.available = available === "true";
+  }
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { description: { contains: search, mode: "insensitive" } },
+      { transmission: { contains: search, mode: "insensitive" } },
+      { fuelType: { contains: search, mode: "insensitive" } },
+    ];
+  }
+  return where;
+}
+
 // GET - List semua cars dengan pagination dan filter
 async function getCars(request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = parseInt(searchParams.get("limit")) || 10;
-    const isAvailable = searchParams.get("isAvailable");
+    const isAvailable = searchParams.get("available");
     const search = searchParams.get("search") || "";
 
     const skip = (page - 1) * limit;
 
-    let where = {};
-
-    // Filter berdasarkan ketersediaan
-    if (isAvailable !== null && isAvailable !== undefined) {
-      where.isAvailable = isAvailable === "true";
-    }
-
-    // Filter berdasarkan pencarian
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { brand: { contains: search, mode: "insensitive" } },
-        { model: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-      ];
-    }
+    const where = buildCarWhereFilters({ search, available: isAvailable });
 
     const [cars, total] = await Promise.all([
       prisma.car.findMany({
@@ -42,7 +63,7 @@ async function getCars(request) {
 
     return NextResponse.json({
       success: true,
-      data: cars,
+      data: cars.map(carToApi),
       pagination: {
         page,
         limit,
@@ -62,50 +83,56 @@ async function getCars(request) {
 // POST - Create car baru (hanya admin)
 async function createCar(request) {
   try {
+    const body = await request.json();
     const {
       name,
-      brand,
-      model,
-      year,
-      pricePerDay,
       description,
-      imageUrl,
+      startingPrice,
       capacity,
       transmission,
       fuelType,
-      isAvailable = true,
-    } = await request.json();
+      available = true,
+      features,
+      specifications,
+    } = body;
 
     // Validasi input
-    if (!name || !brand || !model || !year || !pricePerDay) {
+    if (!name || startingPrice === undefined) {
       return NextResponse.json(
-        { error: "Name, brand, model, year, and pricePerDay are required" },
+        { error: "Name and startingPrice are required" },
+        { status: 400 }
+      );
+    }
+    if (startingPrice <= 0) {
+      return NextResponse.json(
+        { error: "startingPrice must be positive" },
+        { status: 400 }
+      );
+    }
+    if (features && !Array.isArray(features)) {
+      return NextResponse.json(
+        { error: "features must be an array of strings" },
+        { status: 400 }
+      );
+    }
+    if (features && !features.every((f) => typeof f === "string")) {
+      return NextResponse.json(
+        { error: "each feature must be string" },
         { status: 400 }
       );
     }
 
-    // Validasi harga harus positif
-    if (pricePerDay <= 0) {
-      return NextResponse.json(
-        { error: "Price per day must be positive" },
-        { status: 400 }
-      );
-    }
-
-    // Create car
     const car = await prisma.car.create({
       data: {
         name,
-        brand,
-        model,
-        year: parseInt(year),
-        pricePerDay: parseInt(pricePerDay),
-        description,
-        imageUrl,
-        capacity: capacity ? parseInt(capacity) : null,
+        description: description || null,
+        startingPrice: parseInt(startingPrice),
+        capacity: capacity ? parseInt(capacity) : 0,
         transmission,
         fuelType,
-        isAvailable,
+        available,
+        features: features || [],
+        specifications: specifications || null,
       },
     });
 
@@ -113,7 +140,7 @@ async function createCar(request) {
       {
         success: true,
         message: "Car created successfully",
-        data: car,
+        data: carToApi(car),
       },
       { status: 201 }
     );

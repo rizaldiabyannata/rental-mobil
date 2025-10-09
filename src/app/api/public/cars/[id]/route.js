@@ -7,24 +7,8 @@ export async function GET(request, { params }) {
     const { id } = params;
 
     const car = await prisma.car.findUnique({
-      where: {
-        id,
-        isAvailable: true, // Hanya tampilkan jika tersedia
-      },
-      select: {
-        id: true,
-        name: true,
-        brand: true,
-        model: true,
-        year: true,
-        pricePerDay: true,
-        description: true,
-        imageUrl: true,
-        capacity: true,
-        transmission: true,
-        fuelType: true,
-        createdAt: true,
-      },
+      where: { id, available: true },
+      include: { images: { orderBy: { order: "asc" } }, tariffs: true },
     });
 
     if (!car) {
@@ -36,7 +20,30 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      data: car,
+      data: {
+        id: car.id,
+        name: car.name,
+        description: car.description,
+        startingPrice: car.startingPrice,
+        capacity: car.capacity,
+        transmission: car.transmission,
+        fuelType: car.fuelType,
+        features: car.features,
+        coverImage: car.specifications?.coverImage || null,
+        gallery: car.images.map((i) => ({
+          id: i.id,
+          url: i.imageUrl,
+          alt: i.alt,
+          order: i.order,
+        })),
+        tariffs: car.tariffs.map((t) => ({
+          id: t.id,
+          name: t.name,
+          price: t.price,
+          description: t.description,
+        })),
+        createdAt: car.createdAt,
+      },
     });
   } catch (error) {
     console.error("Get public car by ID error:", error);

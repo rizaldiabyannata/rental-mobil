@@ -14,47 +14,30 @@ export async function GET(request) {
 
     const skip = (page - 1) * limit;
 
-    let where = {
-      isAvailable: true, // Hanya tampilkan mobil yang tersedia
-    };
+    let where = { available: true };
 
     // Filter berdasarkan pencarian
     if (search) {
       where.OR = [
         { name: { contains: search, mode: "insensitive" } },
-        { brand: { contains: search, mode: "insensitive" } },
-        { model: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+        { transmission: { contains: search, mode: "insensitive" } },
+        { fuelType: { contains: search, mode: "insensitive" } },
       ];
     }
 
-    // Filter berdasarkan brand
-    if (brand) {
-      where.brand = { contains: brand, mode: "insensitive" };
-    }
+    // brand not in schema explicitly, treat as feature match or skip (schema lacks brand/model fields now)
 
     // Filter berdasarkan harga
     if (minPrice || maxPrice) {
-      where.pricePerDay = {};
-      if (minPrice) where.pricePerDay.gte = parseInt(minPrice);
-      if (maxPrice) where.pricePerDay.lte = parseInt(maxPrice);
+      where.startingPrice = {};
+      if (minPrice) where.startingPrice.gte = parseInt(minPrice);
+      if (maxPrice) where.startingPrice.lte = parseInt(maxPrice);
     }
 
     const [cars, total] = await Promise.all([
       prisma.car.findMany({
         where,
-        select: {
-          id: true,
-          name: true,
-          brand: true,
-          model: true,
-          year: true,
-          pricePerDay: true,
-          description: true,
-          imageUrl: true,
-          capacity: true,
-          transmission: true,
-          fuelType: true,
-        },
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
@@ -64,7 +47,18 @@ export async function GET(request) {
 
     return NextResponse.json({
       success: true,
-      data: cars,
+      data: cars.map((c) => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        startingPrice: c.startingPrice,
+        capacity: c.capacity,
+        transmission: c.transmission,
+        fuelType: c.fuelType,
+        available: c.available,
+        features: c.features,
+        coverImage: c.specifications?.coverImage || null,
+      })),
       pagination: {
         page,
         limit,
