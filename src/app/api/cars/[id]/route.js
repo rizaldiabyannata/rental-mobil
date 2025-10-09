@@ -28,7 +28,6 @@ async function getCarById(request, { params }) {
 
     const car = await prisma.car.findUnique({
       where: { id },
-      include: { _count: true },
     });
 
     if (!car) {
@@ -134,25 +133,11 @@ async function deleteCar(request, { params }) {
     // Cek apakah car ada
     const existingCar = await prisma.car.findUnique({
       where: { id },
-      include: {
-        _count: {
-          select: {
-            carBookingForms: true,
-          },
-        },
-      },
+      include: {},
     });
 
     if (!existingCar) {
       return NextResponse.json({ error: "Car not found" }, { status: 404 });
-    }
-
-    // Cek apakah ada booking form yang terkait
-    if (existingCar._count.carBookingForms > 0) {
-      return NextResponse.json(
-        { error: "Cannot delete car with existing booking forms" },
-        { status: 400 }
-      );
     }
 
     // Hapus car

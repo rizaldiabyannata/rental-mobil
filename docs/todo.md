@@ -85,17 +85,7 @@
 
 > Fitur yang menangani input dari pengguna
 
-### 📧 Manajemen Pesan/Pertanyaan
-
-**Fungsi:** Menerima dan menyimpan data dari form kontak atau pemesanan
-
-**Data yang diterima:**
-
-- Nama Lengkap
-- Nomor Telepon
-- Tanggal Mulai Sewa
-- Alamat Penjemputan
-- Paket yang dipilih
+Catatan: Manajemen pesan/kontak internal sementara ditiadakan (model ContactMessage dihapus). Form kontak publik dapat diarahkan ke kanal eksternal (WhatsApp/Email) hingga ada keputusan fitur baru.
 
 ---
 
@@ -138,11 +128,17 @@
 - Upload dibatasi rate limiter.
 - Validasi array features & integer parsing.
 
+## 🧹 Pembersihan Fitur
+
+- Semua endpoint dan model Booking dihapus/dinonaktifkan.
+- Model `ContactMessage` dan endpoint terkait telah dihapus sesuai arahan. Seed dan migrasi sudah disesuaikan.
+
 ## ⚠️ Perhatian
 
 - Frontend lama yang masih mengirim `pricePerDay` / `isAvailable` akan gagal – butuh adapter jika backward compatibility diperlukan.
 - brand/model/year tidak ada di schema saat ini — bisa ditambahkan kembali jika dibutuhkan di UI/marketing.
 - coverImage belum jadi kolom khusus, masih di `specifications.coverImage`.
+- Semua endpoint terkait Booking telah dihapus/dinonaktifkan (admin `car-booking-forms` dan public `public/booking` mengembalikan 410). Skema `Booking` juga dihapus dari Prisma.
 
 ## 🔜 Rekomendasi Lanjutan
 
@@ -160,3 +156,7 @@
 ## 📝 Metadata
 
 Last updated: {{9/10/2025}}
+
+Migration status:
+
+- Created migration: `20251009184527_drop_booking_and_update_car_schema` (create-only). Apply with `prisma migrate dev` locally or `prisma migrate deploy` in CI.

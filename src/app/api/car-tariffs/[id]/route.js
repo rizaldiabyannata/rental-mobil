@@ -1,0 +1,69 @@
+import { NextResponse } from "next/server";
+import { withAuth } from "@/lib/auth/middleware";
+import { prisma } from "@/lib/prisma";
+
+async function getTariff(_req, { params }) {
+  try {
+    const { id } = params;
+    const item = await prisma.carTariff.findUnique({ where: { id } });
+    if (!item)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true, data: item });
+  } catch (error) {
+    console.error("Get car tariff error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+async function updateTariff(request, { params }) {
+  try {
+    const { id } = params;
+    const body = await request.json();
+    const { name, price, description } = body;
+
+    const exists = await prisma.carTariff.findUnique({ where: { id } });
+    if (!exists)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    const item = await prisma.carTariff.update({
+      where: { id },
+      data: {
+        name: name ?? exists.name,
+        price: price !== undefined ? parseInt(price) : exists.price,
+        description:
+          description !== undefined ? description : exists.description,
+      },
+    });
+    return NextResponse.json({ success: true, data: item });
+  } catch (error) {
+    console.error("Update car tariff error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+async function deleteTariff(_req, { params }) {
+  try {
+    const { id } = params;
+    await prisma.carTariff.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    if (error.code === "P2025") {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    console.error("Delete car tariff error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export const GET = withAuth(getTariff);
+export const PUT = withAuth(updateTariff);
+export const DELETE = withAuth(deleteTariff);

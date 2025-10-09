@@ -131,6 +131,12 @@ npm run db:seed
 
 # Reset DB (drop, migrasi ulang, lalu seed)
 npm run db:reset
+
+### Catatan Migrasi Prisma (penting)
+
+- Karena perintah `prisma migrate dev` bersifat interaktif, jalankan secara lokal di lingkungan pengembangan.
+- Untuk CI/lingkungan non-interaktif gunakan `prisma migrate deploy` untuk menerapkan migrasi yang sudah dibuat sebelumnya (gunakan `--create-only` saat membuat migrasi jika perlu).
+- Pada update terbaru, fitur Booking telah dihapus dan skema `Car` diperbarui (field: name, startingPrice, capacity, transmission, fuelType, available, features[], specifications). Pastikan untuk menerapkan migrasi terbaru sebelum menjalankan aplikasi.
 ```
 
 ## Environment
