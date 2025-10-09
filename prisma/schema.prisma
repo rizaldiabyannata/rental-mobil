@@ -1,5 +1,5 @@
 // Prisma schema for rental-mobil app
-// Default to SQLite for local dev. You can switch provider and DATABASE_URL later.
+// Schema berdasarkan todo list backend
 
 generator client {
     provider = "prisma-client-js"
@@ -10,45 +10,191 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-/// Example models — adjust to your needs
-model User {
-    id        Int       @id @default(autoincrement())
-    email     String    @unique
-    name      String?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    bookings  Booking[]
-}
-
+// 🚗 Manajemen Armada (Mobil)
 model Car {
-    id             Int       @id @default(autoincrement())
-    make           String
-    model          String
-    plateNumber    String    @unique
-    // store money as integer cents
-    dailyRateCents Int
-    available      Boolean   @default(true)
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
-    bookings       Booking[]
+    id             String   @id @default(uuid())
+    name           String // Nama mobil
+    description    String? // Deskripsi
+    startingPrice  Int // Harga mulai (dalam rupiah)
+    capacity       Int // Kapasitas penumpang
+    transmission   String // Transmisi (Manual/Automatic)
+    fuelType       String // Jenis bahan bakar
+    available      Boolean  @default(true)
+    features       String[] // Fitur unggulan (array)
+    specifications Json? // Spesifikasi lengkap
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+
+    // Relations
+    images       CarImage[]
+    tariffs      CarTariff[]
+    bookings     Booking[]
+    bookingForms CarBookingForm[]
 }
 
-model Booking {
-    id         Int      @id @default(autoincrement())
-    userId     Int
-    carId      Int
-    startDate  DateTime
-    endDate    DateTime
-    // total price in integer cents
-    totalCents Int
-    // Use string status (simple and portable), default PENDING
-    status     String   @default("PENDING")
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+// Galeri foto mobil
+model CarImage {
+    id        String   @id @default(uuid())
+    carId     String
+    imageUrl  String
+    alt       String?
+    order     Int      @default(0) // untuk urutan slider
+    createdAt DateTime @default(now())
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    car  Car  @relation(fields: [carId], references: [id], onDelete: Cascade)
+    car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
 
-    @@index([userId])
+// Detail tarif mobil
+model CarTariff {
+    id          String   @id @default(uuid())
+    carId       String
+    name        String // Nama tarif (12 jam, antar-jemput, dll)
+    price       Int // Harga dalam rupiah
+    description String?
+    createdAt   DateTime @default(now())
+
+    car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
+
+// 🎯 Manajemen Paket Tour
+model TourPackage {
+    id          String   @id @default(uuid())
+    name        String // Nama paket
+    description String // Deskripsi singkat
+    imageUrl    String? // Gambar utama
+    itinerary   Json? // Detail itinerary
+    price       Int? // Harga dalam rupiah
+    duration    String? // Durasi paket
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    bookings Booking[]
+}
+
+// ❓ Manajemen FAQ
+model FAQ {
+    id        String   @id @default(uuid())
+    question  String // Pertanyaan
+    answer    String // Jawaban
+    order     Int      @default(0) // untuk urutan tampil
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// 📋 Manajemen Syarat & Ketentuan
+model TermsAndConditions {
+    id        String   @id @default(uuid())
+    category  String // Kategori (Umum, Sewa Mobil, Pembayaran, dll.)
+    title     String // Judul poin syarat & ketentuan
+    content   String // Isi detail syarat & ketentuan
+    order     Int      @default(0) // untuk urutan tampil
+    isActive  Boolean  @default(true) // status aktif/nonaktif
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([category])
+    @@index([isActive])
+}
+
+// 🤝 Manajemen Mitra
+model Partner {
+    id        String   @id @default(uuid())
+    name      String // Nama mitra
+    logoUrl   String // File gambar logo
+    order     Int      @default(0) // untuk urutan tampil
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// 📧 Form Booking dari Halaman Detail Armada (Direct ke WhatsApp)
+model CarBookingForm {
+    id              String   @id @default(uuid())
+    carId           String // ID mobil yang dipilih (dari halaman detail)
+    fullName        String // Nama Lengkap
+    phoneNumber     String // Nomor Telepon
+    email           String? // Email (opsional)
+    whatsappSent    Boolean  @default(false) // Status apakah sudah dikirim ke WhatsApp
+    whatsappMessage String? // Template pesan WhatsApp yang digenerate
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    // Relations
+    car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+
     @@index([carId])
+    @@index([whatsappSent])
+}
+
+// 📧 Form WhatsApp Booking Umum (untuk paket tour atau inquiry umum)
+model GeneralBookingForm {
+    id              String   @id @default(uuid())
+    fullName        String // Nama Lengkap
+    phoneNumber     String // Nomor Telepon
+    email           String? // Email (opsional)
+    inquiryType     String // Jenis inquiry (TOUR_PACKAGE, GENERAL_RENTAL, OTHER)
+    selectedPackage String? // Paket yang dipilih (jika tour)
+    selectedCar     String? // Mobil yang dipilih (jika rental umum)
+    message         String? // Pesan tambahan
+    whatsappSent    Boolean  @default(false) // Status apakah sudah dikirim ke WhatsApp
+    whatsappMessage String? // Template pesan WhatsApp yang digenerate
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    @@index([inquiryType])
+    @@index([whatsappSent])
+}
+
+// 📧 Pesan umum/kontak (selain booking)
+model ContactMessage {
+    id          String   @id @default(uuid())
+    fullName    String // Nama Lengkap
+    phoneNumber String // Nomor Telepon
+    email       String? // Email (opsional)
+    subject     String? // Subjek pesan
+    message     String // Pesan
+    status      String   @default("UNREAD") // UNREAD, READ, REPLIED
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+// User untuk admin saja (saat ini)
+model User {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    name      String?
+    role      String   @default("ADMIN") // ADMIN (saat ini hanya admin)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // bookings  Booking[]
+}
+
+// 📋 Booking Record (untuk tracking setelah WhatsApp)
+model Booking {
+    id                    String    @id @default(uuid())
+    whatsappBookingFormId String? // Referensi ke form WhatsApp
+    userId                String?
+    carId                 String?
+    tourPackageId         String?
+    fullName              String // Nama pemesan
+    phoneNumber           String // Nomor telepon
+    email                 String? // Email
+    startDate             DateTime // Tanggal mulai
+    endDate               DateTime? // Tanggal selesai
+    pickupAddress         String? // Alamat penjemputan
+    totalPrice            Int? // Total harga dalam rupiah (jika sudah disepakati)
+    status                String    @default("INQUIRY") // INQUIRY, CONFIRMED, CANCELLED, COMPLETED
+    notes                 String? // Catatan dari admin
+    whatsappMessage       String? // Template pesan WhatsApp yang dikirim
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
+
+    // Relations
+    // user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+    car         Car?         @relation(fields: [carId], references: [id], onDelete: SetNull)
+    tourPackage TourPackage? @relation(fields: [tourPackageId], references: [id], onDelete: SetNull)
+
+    // @@index([userId])
+    @@index([carId])
+    @@index([status])
 }

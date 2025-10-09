@@ -1,20 +1,14 @@
 # Instruksi Penggunaan & Development
 
-#
-
 # Sebelum menjalankan project, salin file `.env.example` menjadi `.env` lalu sesuaikan value sesuai environment Anda.
-
-#
 
 # Contoh:
 
-# ```bash
+```bash
+  cp .env.example .env
+  Edit .env sesuai konfigurasi database dan kebutuhan lain
 
-# cp .env.example .env
-
-# # Edit .env sesuai konfigurasi database dan kebutuhan lain
-
-# ```
+```
 
 ## Menjalankan Project
 
