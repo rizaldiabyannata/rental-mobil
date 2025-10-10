@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // Mapping layer between legacy API field names and Prisma schema fields
 // Schema fields: startingPrice, available, features (String[]), specifications (Json?)
-function carToApi(car) {
+function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
   if (!car) return car;
-  return {
+
+  const base = {
     id: car.id,
     name: car.name,
     description: car.description,
@@ -15,11 +16,40 @@ function carToApi(car) {
     transmission: car.transmission,
     fuelType: car.fuelType,
     available: car.available,
-    features: car.features,
-    specifications: car.specifications,
+    features: Array.isArray(car.features) ? car.features : [],
+    specifications: car.specifications || null,
     createdAt: car.createdAt,
     updatedAt: car.updatedAt,
+    _count: car._count || undefined,
   };
+
+  if (includeImages && car.images) {
+    base.images = car.images.map((img) => ({
+      id: img.id,
+      imageUrl: img.imageUrl,
+      alt: img.alt,
+      order: img.order,
+      createdAt: img.createdAt,
+    }));
+  }
+
+  if (includeTariffs && car.tariffs) {
+    base.tariffs = car.tariffs.map((tariff) => ({
+      id: tariff.id,
+      name: tariff.name,
+      price: tariff.price,
+      description: tariff.description,
+      createdAt: tariff.createdAt,
+    }));
+  }
+
+  // Convenience: expose coverImage if stored di specifications
+  const coverImage = car.specifications?.coverImage;
+  if (coverImage) {
+    base.coverImage = coverImage;
+  }
+
+  return base;
 }
 
 function buildCarWhereFilters({ search, available }) {
@@ -57,13 +87,28 @@ async function getCars(request) {
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
+        include: {
+          _count: { select: { images: true, tariffs: true } },
+          images: {
+            orderBy: { order: "asc" },
+            take: 1,
+          },
+        },
       }),
       prisma.car.count({ where }),
     ]);
 
     return NextResponse.json({
       success: true,
-      data: cars.map(carToApi),
+      data: cars.map((car) =>
+        carToApi(
+          {
+            ...car,
+            images: car.images,
+          },
+          { includeTariffs: false }
+        )
+      ),
       pagination: {
         page,
         limit,
@@ -153,5 +198,5 @@ async function createCar(request) {
   }
 }
 
-export const GET = withAuth(getCars);
-export const POST = withAuth(createCar);
+export const GET = maybeWithAuth(getCars);
+export const POST = maybeWithAuth(createCar);

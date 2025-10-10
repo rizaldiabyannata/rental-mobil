@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET - List partners
@@ -45,4 +45,4 @@ async function getPartners(request) {
   }
 }
 
-export const GET = withAuth(getPartners);
+export const GET = maybeWithAuth(getPartners);

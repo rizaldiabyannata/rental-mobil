@@ -59,3 +59,8 @@ export function withLogin(handler) {
     }
   };
 }
+
+const isDevelopment = process.env.NODE_ENV === "development";
+
+export const maybeWithAuth = isDevelopment ? (handler) => handler : withAuth;
+export const maybeWithLogin = isDevelopment ? (handler) => handler : withLogin;

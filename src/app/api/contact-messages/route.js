@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 async function listMessages(request) {
@@ -47,4 +47,4 @@ async function listMessages(request) {
   }
 }
 
-export const GET = withAuth(listMessages);
+export const GET = maybeWithAuth(listMessages);

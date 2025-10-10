@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 function carToApi(car) {
@@ -13,11 +13,30 @@ function carToApi(car) {
     transmission: car.transmission,
     fuelType: car.fuelType,
     available: car.available,
-    features: car.features,
-    specifications: car.specifications,
+    features: Array.isArray(car.features) ? car.features : [],
+    specifications: car.specifications || null,
     createdAt: car.createdAt,
     updatedAt: car.updatedAt,
-    _count: car._count,
+    _count: car._count || undefined,
+    coverImage: car.specifications?.coverImage,
+    images: car.images
+      ? car.images.map((img) => ({
+          id: img.id,
+          imageUrl: img.imageUrl,
+          alt: img.alt,
+          order: img.order,
+          createdAt: img.createdAt,
+        }))
+      : undefined,
+    tariffs: car.tariffs
+      ? car.tariffs.map((tariff) => ({
+          id: tariff.id,
+          name: tariff.name,
+          price: tariff.price,
+          description: tariff.description,
+          createdAt: tariff.createdAt,
+        }))
+      : undefined,
   };
 }
 
@@ -28,6 +47,11 @@ async function getCarById(request, { params }) {
 
     const car = await prisma.car.findUnique({
       where: { id },
+      include: {
+        images: { orderBy: { order: "asc" } },
+        tariffs: { orderBy: { createdAt: "asc" } },
+        _count: { select: { images: true, tariffs: true } },
+      },
     });
 
     if (!car) {
@@ -108,7 +132,11 @@ async function updateCar(request, { params }) {
     const updatedCar = await prisma.car.update({
       where: { id },
       data: updateData,
-      include: { _count: true },
+      include: {
+        images: { orderBy: { order: "asc" } },
+        tariffs: { orderBy: { createdAt: "asc" } },
+        _count: { select: { images: true, tariffs: true } },
+      },
     });
 
     return NextResponse.json({
@@ -158,6 +186,6 @@ async function deleteCar(request, { params }) {
   }
 }
 
-export const GET = withAuth(getCarById);
-export const PUT = withAuth(updateCar);
-export const DELETE = withAuth(deleteCar);
+export const GET = maybeWithAuth(getCarById);
+export const PUT = maybeWithAuth(updateCar);
+export const DELETE = maybeWithAuth(deleteCar);

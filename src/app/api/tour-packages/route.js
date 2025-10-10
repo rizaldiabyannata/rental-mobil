@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 async function getTourPackages(request) {
@@ -76,5 +76,5 @@ async function createTourPackage(request) {
   }
 }
 
-export const GET = withAuth(getTourPackages);
-export const POST = withAuth(createTourPackage);
+export const GET = maybeWithAuth(getTourPackages);
+export const POST = maybeWithAuth(createTourPackage);

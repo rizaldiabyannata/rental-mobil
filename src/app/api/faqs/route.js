@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET - List semua FAQs dengan pagination dan search
@@ -89,5 +89,5 @@ async function createFAQ(request) {
   }
 }
 
-export const GET = withAuth(getFAQs);
-export const POST = withAuth(createFAQ);
+export const GET = maybeWithAuth(getFAQs);
+export const POST = maybeWithAuth(createFAQ);

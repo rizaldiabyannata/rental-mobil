@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 import { saveImageFile, deleteUploadedFile } from "@/lib/upload";
 
@@ -123,6 +123,6 @@ async function deletePartner(request, { params }) {
   }
 }
 
-export const GET = withAuth(getPartner);
-export const PUT = withAuth(updatePartner);
-export const DELETE = withAuth(deletePartner);
+export const GET = maybeWithAuth(getPartner);
+export const PUT = maybeWithAuth(updatePartner);
+export const DELETE = maybeWithAuth(deletePartner);

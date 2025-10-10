@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // POST /api/cars/images/reorder
@@ -51,4 +51,4 @@ async function reorderCarImagesHandler(request) {
   }
 }
 
-export const POST = withAuth(reorderCarImagesHandler);
+export const POST = maybeWithAuth(reorderCarImagesHandler);

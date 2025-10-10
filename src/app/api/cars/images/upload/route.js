@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 import {
   saveImageFile,
@@ -147,4 +147,4 @@ async function uploadCarImagesHandler(request) {
   }
 }
 
-export const POST = withAuth(uploadCarImagesHandler);
+export const POST = maybeWithAuth(uploadCarImagesHandler);

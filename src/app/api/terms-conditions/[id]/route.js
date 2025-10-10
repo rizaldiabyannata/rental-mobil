@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET - Detail Terms & Conditions by ID
@@ -112,6 +112,6 @@ async function deleteTermsAndConditions(request, { params }) {
   }
 }
 
-export const GET = withAuth(getTermsAndConditionsById);
-export const PUT = withAuth(updateTermsAndConditions);
-export const DELETE = withAuth(deleteTermsAndConditions);
+export const GET = maybeWithAuth(getTermsAndConditionsById);
+export const PUT = maybeWithAuth(updateTermsAndConditions);
+export const DELETE = maybeWithAuth(deleteTermsAndConditions);

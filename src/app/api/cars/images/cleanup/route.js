@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "@/lib/auth/middleware";
+import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 import { listUploadedFiles, deleteUploadedFile } from "@/lib/upload";
 
@@ -45,4 +45,4 @@ async function cleanupCarImagesHandler() {
   }
 }
 
-export const POST = withAuth(cleanupCarImagesHandler);
+export const POST = maybeWithAuth(cleanupCarImagesHandler);
