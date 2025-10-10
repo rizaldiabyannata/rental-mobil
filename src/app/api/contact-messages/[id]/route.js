@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
-async function getById(_req, { params }) {
+async function getById(_req, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const item = await prisma.contactMessage.findUnique({ where: { id } });
     if (!item)
@@ -18,8 +19,9 @@ async function getById(_req, { params }) {
   }
 }
 
-async function updateById(request, { params }) {
+async function updateById(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const body = await request.json();
     const { status, fullName, phoneNumber, email, subject, message } = body;
@@ -49,8 +51,9 @@ async function updateById(request, { params }) {
   }
 }
 
-async function deleteById(_req, { params }) {
+async function deleteById(_req, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     await prisma.contactMessage.delete({ where: { id } });
     return NextResponse.json({ success: true });

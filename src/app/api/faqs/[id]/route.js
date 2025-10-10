@@ -3,8 +3,9 @@ import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET - Detail FAQ by ID
-async function getFAQById(request, { params }) {
+async function getFAQById(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const faq = await prisma.fAQ.findUnique({
@@ -29,8 +30,9 @@ async function getFAQById(request, { params }) {
 }
 
 // PUT - Update FAQ by ID (hanya admin)
-async function updateFAQ(request, { params }) {
+async function updateFAQ(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const { question, answer, order } = await request.json();
 
@@ -70,8 +72,9 @@ async function updateFAQ(request, { params }) {
 }
 
 // DELETE - Hapus FAQ by ID (hanya admin)
-async function deleteFAQ(request, { params }) {
+async function deleteFAQ(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     // Cek apakah FAQ ada

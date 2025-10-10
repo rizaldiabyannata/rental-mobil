@@ -3,7 +3,7 @@ import { getCurrentUser } from "./jwt";
 
 // Middleware untuk proteksi route admin
 export function withAuth(handler) {
-  return async function authHandler(request) {
+  return async function authHandler(request, ...rest) {
     try {
       const user = getCurrentUser();
 
@@ -23,7 +23,7 @@ export function withAuth(handler) {
 
       // Attach user to request for use in handler
       request.user = user;
-      return handler(request);
+      return handler(request, ...rest);
     } catch (error) {
       console.error("Auth middleware error:", error);
       return NextResponse.json(
@@ -36,7 +36,7 @@ export function withAuth(handler) {
 
 // Middleware untuk route yang hanya butuh login (tidak harus admin)
 export function withLogin(handler) {
-  return async function loginHandler(request) {
+  return async function loginHandler(request, ...rest) {
     try {
       const user = getCurrentUser();
 
@@ -49,7 +49,7 @@ export function withLogin(handler) {
 
       // Attach user to request for use in handler
       request.user = user;
-      return handler(request);
+      return handler(request, ...rest);
     } catch (error) {
       console.error("Login middleware error:", error);
       return NextResponse.json(
@@ -60,7 +60,6 @@ export function withLogin(handler) {
   };
 }
 
-const isDevelopment = process.env.NODE_ENV === "development";
-
-export const maybeWithAuth = isDevelopment ? (handler) => handler : withAuth;
-export const maybeWithLogin = isDevelopment ? (handler) => handler : withLogin;
+// Enforce auth in all environments for protected endpoints/pages
+export const maybeWithAuth = withAuth;
+export const maybeWithLogin = withLogin;

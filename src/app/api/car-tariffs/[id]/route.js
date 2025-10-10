@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
-async function getTariff(_req, { params }) {
+async function getTariff(_req, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const item = await prisma.carTariff.findUnique({ where: { id } });
     if (!item)
@@ -18,8 +19,9 @@ async function getTariff(_req, { params }) {
   }
 }
 
-async function updateTariff(request, { params }) {
+async function updateTariff(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const body = await request.json();
     const { name, price, description } = body;
@@ -47,8 +49,9 @@ async function updateTariff(request, { params }) {
   }
 }
 
-async function deleteTariff(_req, { params }) {
+async function deleteTariff(_req, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     await prisma.carTariff.delete({ where: { id } });
     return NextResponse.json({ success: true });

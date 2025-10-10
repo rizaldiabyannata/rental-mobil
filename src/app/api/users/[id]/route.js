@@ -4,8 +4,9 @@ import { hashPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/prisma";
 
 // GET - Detail user by ID (hanya admin)
-async function getUserById(request, { params }) {
+async function getUserById(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const user = await prisma.user.findUnique({
@@ -38,8 +39,9 @@ async function getUserById(request, { params }) {
 }
 
 // PUT - Update user by ID (hanya admin)
-async function updateUser(request, { params }) {
+async function updateUser(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const { email, name, password, role } = await request.json();
 
@@ -104,8 +106,9 @@ async function updateUser(request, { params }) {
 }
 
 // DELETE - Hapus user by ID (hanya admin)
-async function deleteUser(request, { params }) {
+async function deleteUser(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const user = request.user;
 

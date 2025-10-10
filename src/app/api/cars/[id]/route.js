@@ -41,8 +41,9 @@ function carToApi(car) {
 }
 
 // GET - Detail car by ID
-async function getCarById(request, { params }) {
+async function getCarById(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const car = await prisma.car.findUnique({
@@ -69,8 +70,9 @@ async function getCarById(request, { params }) {
 }
 
 // PUT - Update car by ID (hanya admin)
-async function updateCar(request, { params }) {
+async function updateCar(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const body = await request.json();
     const {
@@ -154,8 +156,9 @@ async function updateCar(request, { params }) {
 }
 
 // DELETE - Hapus car by ID (hanya admin)
-async function deleteCar(request, { params }) {
+async function deleteCar(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     // Cek apakah car ada

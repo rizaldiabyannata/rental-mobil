@@ -4,8 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { saveImageFile, deleteUploadedFile } from "@/lib/upload";
 
 // GET - Detail partner
-async function getPartner(request, { params }) {
+async function getPartner(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const partner = await prisma.partner.findUnique({ where: { id } });
     if (!partner) {
@@ -22,8 +23,9 @@ async function getPartner(request, { params }) {
 }
 
 // PUT - Update partner (name, order, optional new logo)
-async function updatePartner(request, { params }) {
+async function updatePartner(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const existing = await prisma.partner.findUnique({ where: { id } });
@@ -95,8 +97,9 @@ async function updatePartner(request, { params }) {
 }
 
 // DELETE - Hapus partner
-async function deletePartner(request, { params }) {
+async function deletePartner(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const existing = await prisma.partner.findUnique({ where: { id } });

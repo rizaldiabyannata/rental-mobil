@@ -1,4 +1,5 @@
-import { AppSidebar } from "@/components/app-sidebar"
+"use client";
+import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,35 +7,35 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { Car, Save, ArrowLeft, Plus, X } from "lucide-react"
-import { useState } from "react"
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Car, Save, ArrowLeft, Plus, X } from "lucide-react";
+import { useState } from "react";
 
 export default function AddCarPage() {
   const [features, setFeatures] = useState([]);
@@ -48,7 +49,7 @@ export default function AddCarPage() {
   };
 
   const removeFeature = (featureToRemove) => {
-    setFeatures(features.filter(feature => feature !== featureToRemove));
+    setFeatures(features.filter((feature) => feature !== featureToRemove));
   };
 
   return (
@@ -57,7 +58,10 @@ export default function AddCarPage() {
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
@@ -111,16 +115,16 @@ export default function AddCarPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Nama Mobil *</Label>
-                    <Input 
-                      id="name" 
+                    <Input
+                      id="name"
                       placeholder="Contoh: Toyota Avanza"
-                      className="focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="capacity">Kapasitas Penumpang *</Label>
                     <Select>
-                      <SelectTrigger className="focus:ring-emerald-500 focus:border-emerald-500">
+                      <SelectTrigger className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60">
                         <SelectValue placeholder="Pilih kapasitas" />
                       </SelectTrigger>
                       <SelectContent>
@@ -137,10 +141,10 @@ export default function AddCarPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Deskripsi *</Label>
-                  <Textarea 
+                  <Textarea
                     id="description"
                     placeholder="Deskripsi detail tentang mobil..."
-                    className="min-h-[100px] focus:ring-emerald-500 focus:border-emerald-500"
+                    className="min-h-[100px] border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                   />
                 </div>
 
@@ -148,7 +152,7 @@ export default function AddCarPage() {
                   <div className="space-y-2">
                     <Label htmlFor="transmission">Transmisi *</Label>
                     <Select>
-                      <SelectTrigger className="focus:ring-emerald-500 focus:border-emerald-500">
+                      <SelectTrigger className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60">
                         <SelectValue placeholder="Pilih transmisi" />
                       </SelectTrigger>
                       <SelectContent>
@@ -161,7 +165,7 @@ export default function AddCarPage() {
                   <div className="space-y-2">
                     <Label htmlFor="fuelType">Bahan Bakar *</Label>
                     <Select>
-                      <SelectTrigger className="focus:ring-emerald-500 focus:border-emerald-500">
+                      <SelectTrigger className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60">
                         <SelectValue placeholder="Pilih bahan bakar" />
                       </SelectTrigger>
                       <SelectContent>
@@ -174,11 +178,11 @@ export default function AddCarPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="year">Tahun Kendaraan</Label>
-                    <Input 
-                      id="year" 
-                      type="number" 
+                    <Input
+                      id="year"
+                      type="number"
                       placeholder="2024"
-                      className="focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                 </div>
@@ -195,18 +199,24 @@ export default function AddCarPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-2">
-                  <Input 
+                  <Input
                     value={newFeature}
                     onChange={(e) => setNewFeature(e.target.value)}
                     placeholder="Tambah fitur (AC, Audio, etc.)"
-                    className="focus:ring-emerald-500 focus:border-emerald-500"
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature())}
+                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addFeature())
+                    }
                   />
-                  <Button type="button" onClick={addFeature} className="bg-emerald-600 hover:bg-emerald-700">
+                  <Button
+                    type="button"
+                    onClick={addFeature}
+                    className="bg-emerald-600 hover:bg-emerald-700"
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                
+
                 {features.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {features.map((feature, index) => (
@@ -236,16 +246,18 @@ export default function AddCarPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="startingPrice">Harga Mulai (per hari) *</Label>
+                  <Label htmlFor="startingPrice">
+                    Harga Mulai (per hari) *
+                  </Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
                       Rp
                     </span>
-                    <Input 
-                      id="startingPrice" 
-                      type="number" 
+                    <Input
+                      id="startingPrice"
+                      type="number"
                       placeholder="300000"
-                      className="pl-8 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="pl-8 border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                 </div>
@@ -269,18 +281,18 @@ export default function AddCarPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="licensePlate">Nomor Polisi</Label>
-                    <Input 
-                      id="licensePlate" 
+                    <Input
+                      id="licensePlate"
                       placeholder="B 1234 ABC"
-                      className="focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="color">Warna</Label>
-                    <Input 
-                      id="color" 
+                    <Input
+                      id="color"
                       placeholder="Putih"
-                      className="focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                 </div>
@@ -288,20 +300,20 @@ export default function AddCarPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="engineCapacity">Kapasitas Mesin (CC)</Label>
-                    <Input 
-                      id="engineCapacity" 
-                      type="number" 
+                    <Input
+                      id="engineCapacity"
+                      type="number"
                       placeholder="1500"
-                      className="focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="mileage">Kilometer (KM)</Label>
-                    <Input 
-                      id="mileage" 
-                      type="number" 
+                    <Input
+                      id="mileage"
+                      type="number"
                       placeholder="50000"
-                      className="focus:ring-emerald-500 focus:border-emerald-500"
+                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                     />
                   </div>
                 </div>
@@ -313,7 +325,10 @@ export default function AddCarPage() {
               <Button type="button" variant="outline">
                 Batal
               </Button>
-              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+              <Button
+                type="submit"
+                className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+              >
                 <Save className="h-4 w-4" />
                 Simpan Mobil
               </Button>

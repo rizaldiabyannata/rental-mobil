@@ -3,8 +3,9 @@ import { maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET - Detail Terms & Conditions by ID
-async function getTermsAndConditionsById(request, { params }) {
+async function getTermsAndConditionsById(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const terms = await prisma.termsAndConditions.findUnique({
@@ -32,8 +33,9 @@ async function getTermsAndConditionsById(request, { params }) {
 }
 
 // PUT - Update Terms & Conditions by ID (hanya admin)
-async function updateTermsAndConditions(request, { params }) {
+async function updateTermsAndConditions(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
     const { category, title, content, order, isActive } = await request.json();
 
@@ -78,8 +80,9 @@ async function updateTermsAndConditions(request, { params }) {
 }
 
 // DELETE - Hapus Terms & Conditions by ID (hanya admin)
-async function deleteTermsAndConditions(request, { params }) {
+async function deleteTermsAndConditions(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     // Cek apakah Terms & Conditions ada

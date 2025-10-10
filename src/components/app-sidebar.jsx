@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   Car,
   Users,
@@ -11,19 +11,19 @@ import {
   BarChart3,
   Settings2,
   Package,
-} from "lucide-react"
+} from "lucide-react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // This is sample data.
 const data = {
@@ -48,28 +48,14 @@ const data = {
     },
     {
       title: "Manajemen Armada",
-      url: "#",
+      url: "/admin/cars",
       icon: Car,
-      items: [
-        {
-          title: "Daftar Mobil",
-          url: "/admin/cars",
-        },
-        {
-          title: "Galeri & Upload",
-          url: "/admin/cars/images",
-        },
-        {
-          title: "Tarif Sewa",
-          url: "/admin/car-tariffs",
-        },
-      ],
     },
-    {
-      title: "Paket Tour",
-      url: "/admin/tour-packages",
-      icon: MapPin,
-    },
+    // {
+    //   title: "Paket Tour",
+    //   url: "/admin/tour-packages",
+    //   icon: MapPin,
+    // },
     {
       title: "Konten",
       url: "#",
@@ -82,10 +68,6 @@ const data = {
         {
           title: "Syarat & Ketentuan",
           url: "/admin/terms-conditions",
-        },
-        {
-          title: "Kategori S&K",
-          url: "/admin/terms-conditions/categories",
         },
       ],
     },
@@ -100,18 +82,16 @@ const data = {
       icon: Users,
     },
   ],
-  projects: [
-    {
-      name: "Status Sistem",
-      url: "/admin/health",
-      icon: Package,
-    },
-  ],
-}
+};
 
-export function AppSidebar({
-  ...props
-}) {
+export function AppSidebar({ ...props }) {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
+  // Render nothing on server and until mounted on client to avoid
+  // hydration id mismatches from Radix primitives (Dropdown/Collapsible).
+  if (!mounted) return null;
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -119,7 +99,6 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

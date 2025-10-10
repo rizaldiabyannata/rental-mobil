@@ -31,6 +31,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Car as CarIcon,
   Plus,
   Search,
@@ -67,6 +75,12 @@ export default function CarsPage() {
   const [transmissionFilter, setTransmissionFilter] = useState("all");
   const [page, setPage] = useState(1);
   const limit = 20;
+
+  // Delete dialog state
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [carToDelete, setCarToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
   useEffect(() => {
     const handler = setTimeout(
@@ -161,6 +175,38 @@ export default function CarsPage() {
 
   const handleNextPage = () => {
     if (page < totalPages) setPage((prev) => prev + 1);
+  };
+
+  const openDeleteDialog = (car) => {
+    setCarToDelete(car);
+    setDeleteError(null);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!carToDelete) return;
+    try {
+      setIsDeleting(true);
+      setDeleteError(null);
+      const res = await fetch(`/api/cars/${carToDelete.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || "Gagal menghapus kendaraan");
+      }
+      // Optimistically remove from list
+      setCars((prev) => prev.filter((c) => c.id !== carToDelete.id));
+      // Adjust pagination.total if present
+      setPagination((p) => ({ ...p, total: Math.max(0, (p.total || 0) - 1) }));
+      setIsDeleteDialogOpen(false);
+      setCarToDelete(null);
+    } catch (err) {
+      console.error("Delete car failed", err);
+      setDeleteError(err.message || "Terjadi kesalahan saat menghapus");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -281,7 +327,7 @@ export default function CarsPage() {
                   setPage(1);
                 }}
                 placeholder="Cari nama mobil atau deskripsi..."
-                className="pl-10"
+                className="pl-10 border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
               />
             </div>
             <div className="flex flex-wrap gap-2">
@@ -476,7 +522,7 @@ export default function CarsPage() {
                               variant="ghost"
                               size="sm"
                               className="text-red-600 hover:text-red-700"
-                              disabled
+                              onClick={() => openDeleteDialog(car)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -515,6 +561,44 @@ export default function CarsPage() {
             )}
           </CardContent>
         </Card>
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Hapus Kendaraan</DialogTitle>
+              <DialogDescription>
+                Tindakan ini akan menghapus kendaraan
+                {carToDelete ? ` "${carToDelete.name}" ` : " "}dari armada.
+                Tindakan tidak dapat dibatalkan.
+              </DialogDescription>
+            </DialogHeader>
+            {deleteError && (
+              <p className="text-sm text-red-600">{deleteError}</p>
+            )}
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsDeleteDialogOpen(false)}
+                disabled={isDeleting}
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                className="bg-red-600 hover:bg-red-700"
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" /> Menghapus...
+                  </span>
+                ) : (
+                  "Hapus"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );

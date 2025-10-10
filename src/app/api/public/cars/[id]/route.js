@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 // GET - Detail car by ID (public endpoint)
-export async function GET(request, { params }) {
+export async function GET(request, props) {
   try {
+    const { params } = await props;
     const { id } = params;
 
     const car = await prisma.car.findUnique({
