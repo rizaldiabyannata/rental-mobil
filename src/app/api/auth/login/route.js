@@ -54,7 +54,7 @@ export async function POST(request) {
     const token = generateToken(tokenPayload);
 
     // Set token di cookie
-    setTokenCookie(token);
+    await setTokenCookie(token);
 
     // Return user data (tanpa password)
     const { password: _, ...userWithoutPassword } = user;

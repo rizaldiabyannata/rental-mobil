@@ -21,8 +21,8 @@ export function verifyToken(token) {
 }
 
 // Set JWT token in cookie
-export function setTokenCookie(token) {
-  const cookieStore = cookies();
+export async function setTokenCookie(token) {
+  const cookieStore = await cookies();
   cookieStore.set("auth-token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -33,14 +33,14 @@ export function setTokenCookie(token) {
 }
 
 // Get JWT token from cookie
-export function getTokenFromCookie() {
-  const cookieStore = cookies();
+export async function getTokenFromCookie() {
+  const cookieStore = await cookies();
   return cookieStore.get("auth-token")?.value;
 }
 
 // Remove JWT token from cookie
-export function removeTokenCookie() {
-  const cookieStore = cookies();
+export async function removeTokenCookie() {
+  const cookieStore = await cookies();
   cookieStore.set("auth-token", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -51,10 +51,9 @@ export function removeTokenCookie() {
 }
 
 // Get current user from token
-export function getCurrentUser() {
-  const token = getTokenFromCookie();
+export async function getCurrentUser() {
+  const token = await getTokenFromCookie();
   if (!token) return null;
-
   const decoded = verifyToken(token);
   return decoded;
 }

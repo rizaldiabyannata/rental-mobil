@@ -46,7 +46,9 @@ model CarImage {
 model CarTariff {
     id          String   @id @default(uuid())
     carId       String
-    name        String // Nama tarif (12 jam, antar-jemput, dll)
+    name        String // Nama item tarif (contoh: "Dengan Driver", "Tujuan Mataram")
+    category    String? // Kategori/kelompok tarif (contoh: "Sewa Per 12 Jam", "Antar Jemput Bandara")
+    order       Int      @default(0) // Urutan tampil dalam kategori
     price       Int // Harga dalam rupiah
     description String?
     createdAt   DateTime @default(now())
@@ -65,8 +67,6 @@ model TourPackage {
     duration    String? // Durasi paket
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-
-    // Relations
 }
 
 // ❓ Manajemen FAQ
@@ -104,19 +104,15 @@ model Partner {
     updatedAt DateTime @updatedAt
 }
 
-// Booking-related forms removed per requirements
-
-// ContactMessage removed per requirements
-
 // User untuk admin saja (saat ini)
 model User {
     id        String   @id @default(uuid())
     email     String   @unique
     name      String?
     role      String   @default("ADMIN") // ADMIN (saat ini hanya admin)
+    // Hashed password for authentication (bcrypt hash)
+    password  String   @default("")
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     // bookings  Booking[]
 }
-
-// Booking record model removed per requirements

@@ -7,9 +7,19 @@ export async function GET(request, props) {
     const { params } = await props;
     const { id } = params;
 
-    const car = await prisma.car.findUnique({
+    // Align to Prisma: find by id and availability; include images and tariffs with ordering
+    const car = await prisma.car.findFirst({
       where: { id, available: true },
-      include: { images: { orderBy: { order: "asc" } }, tariffs: true },
+      include: {
+        images: { orderBy: { order: "asc" } },
+        tariffs: {
+          orderBy: [
+            { category: "asc" },
+            { order: "asc" },
+            { createdAt: "asc" },
+          ],
+        },
+      },
     });
 
     if (!car) {
@@ -31,6 +41,9 @@ export async function GET(request, props) {
         fuelType: car.fuelType,
         features: car.features,
         coverImage: car.specifications?.coverImage || null,
+        featureCards: Array.isArray(car.specifications?.featureCards)
+          ? car.specifications.featureCards
+          : [],
         gallery: car.images.map((i) => ({
           id: i.id,
           url: i.imageUrl,
@@ -42,6 +55,8 @@ export async function GET(request, props) {
           name: t.name,
           price: t.price,
           description: t.description,
+          category: t.category || null,
+          order: typeof t.order === "number" ? t.order : 0,
         })),
         createdAt: car.createdAt,
       },

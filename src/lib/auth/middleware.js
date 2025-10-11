@@ -5,7 +5,7 @@ import { getCurrentUser } from "./jwt";
 export function withAuth(handler) {
   return async function authHandler(request, ...rest) {
     try {
-      const user = getCurrentUser();
+      const user = await getCurrentUser();
 
       if (!user) {
         return NextResponse.json(
@@ -38,7 +38,7 @@ export function withAuth(handler) {
 export function withLogin(handler) {
   return async function loginHandler(request, ...rest) {
     try {
-      const user = getCurrentUser();
+      const user = await getCurrentUser();
 
       if (!user) {
         return NextResponse.json(

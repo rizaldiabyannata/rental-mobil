@@ -4,7 +4,7 @@ import { removeTokenCookie } from "@/lib/auth/jwt";
 export async function POST() {
   try {
     // Remove token dari cookie
-    removeTokenCookie();
+    await removeTokenCookie();
 
     return NextResponse.json({
       success: true,

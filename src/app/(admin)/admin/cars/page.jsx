@@ -246,7 +246,7 @@ export default function CarsPage() {
             </p>
           </div>
           <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
-            <Link href="/admin/cars/new" className="flex items-center gap-2">
+            <Link href="/admin/cars/add" className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Tambah Mobil
             </Link>

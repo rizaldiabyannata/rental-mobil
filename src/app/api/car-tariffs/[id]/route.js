@@ -24,7 +24,7 @@ async function updateTariff(request, props) {
     const { params } = await props;
     const { id } = params;
     const body = await request.json();
-    const { name, price, description } = body;
+    const { name, price, description, category, order } = body;
 
     const exists = await prisma.carTariff.findUnique({ where: { id } });
     if (!exists)
@@ -37,6 +37,13 @@ async function updateTariff(request, props) {
         price: price !== undefined ? parseInt(price) : exists.price,
         description:
           description !== undefined ? description : exists.description,
+        category: category !== undefined ? category : exists.category,
+        order:
+          order !== undefined
+            ? typeof order === "number"
+              ? order
+              : exists.order
+            : exists.order,
       },
     });
     return NextResponse.json({ success: true, data: item });

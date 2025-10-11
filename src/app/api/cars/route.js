@@ -39,6 +39,8 @@ function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
       name: tariff.name,
       price: tariff.price,
       description: tariff.description,
+      category: tariff.category || null,
+      order: typeof tariff.order === "number" ? tariff.order : 0,
       createdAt: tariff.createdAt,
     }));
   }
@@ -47,6 +49,9 @@ function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
   const coverImage = car.specifications?.coverImage;
   if (coverImage) {
     base.coverImage = coverImage;
+  }
+  if (Array.isArray(car.specifications?.featureCards)) {
+    base.featureCards = car.specifications.featureCards;
   }
 
   return base;

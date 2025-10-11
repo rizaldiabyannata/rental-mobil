@@ -7,9 +7,9 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 
-export default function AdminLayout({ children }) {
+export default async function AdminLayout({ children }) {
   // Server component guard: if not logged-in ADMIN, redirect to login
-  const user = getCurrentUser();
+  const user = await getCurrentUser();
   if (!user || user.role !== "ADMIN") {
     redirect("/login");
   }

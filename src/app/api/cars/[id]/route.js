@@ -34,9 +34,14 @@ function carToApi(car) {
           name: tariff.name,
           price: tariff.price,
           description: tariff.description,
+          category: tariff.category || null,
+          order: typeof tariff.order === "number" ? tariff.order : 0,
           createdAt: tariff.createdAt,
         }))
       : undefined,
+    featureCards: Array.isArray(car.specifications?.featureCards)
+      ? car.specifications.featureCards
+      : [],
   };
 }
 
@@ -44,7 +49,7 @@ function carToApi(car) {
 async function getCarById(request, props) {
   try {
     const { params } = await props;
-    const { id } = params;
+    const { id } = await params;
 
     const car = await prisma.car.findUnique({
       where: { id },
@@ -73,7 +78,7 @@ async function getCarById(request, props) {
 async function updateCar(request, props) {
   try {
     const { params } = await props;
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const {
       name,
@@ -159,7 +164,7 @@ async function updateCar(request, props) {
 async function deleteCar(request, props) {
   try {
     const { params } = await props;
-    const { id } = params;
+    const { id } = await params;
 
     // Cek apakah car ada
     const existingCar = await prisma.car.findUnique({

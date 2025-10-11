@@ -1,8 +1,14 @@
-import Image from "next/image"
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/jwt";
+import { LoginForm } from "@/components/login-form";
 
-import { LoginForm } from "@/components/login-form"
-
-export default function LoginPage() {
+export default async function LoginPage() {
+  // Jika sudah login, redirect ke dashboard admin
+  const user = await getCurrentUser();
+  if (user) {
+    redirect("/admin/dashboard");
+  }
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -33,7 +39,8 @@ export default function LoginPage() {
         <img
           src="/login-image.png"
           alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale" />
+          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+        />
       </div>
     </div>
   );

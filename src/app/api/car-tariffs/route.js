@@ -21,7 +21,7 @@ async function getCarTariffs(request) {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ category: "asc" }, { order: "asc" }, { createdAt: "desc" }],
       }),
       prisma.carTariff.count({ where }),
     ]);
@@ -44,7 +44,7 @@ async function getCarTariffs(request) {
 async function createCarTariff(request) {
   try {
     const body = await request.json();
-    const { carId, name, price, description } = body;
+    const { carId, name, price, description, category, order } = body;
 
     if (!carId || !name || price === undefined) {
       return NextResponse.json(
@@ -65,6 +65,8 @@ async function createCarTariff(request) {
         name,
         price: parseInt(price),
         description: description || null,
+        category: category || null,
+        order: typeof order === "number" ? order : 0,
       },
     });
 
