@@ -1,3 +1,14 @@
+import HeroMobil from "@/components/sewa-mobil-layanan/HeroMobil";
+import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
+import ServicesSection from "@/components/homepage/ServicesSection";
+import Pertanyaan from "@/components/sewa-mobil-layanan/Pertanyaan";
 export default function SewaMobilLayanan() {
-  return <h1>Sewa Mobil & Layanan</h1>;
+  return (
+    <>
+      <HeroMobil />
+      <PaketTourSection />
+      <ServicesSection />
+      <Pertanyaan />
+    </>
+  );
 }

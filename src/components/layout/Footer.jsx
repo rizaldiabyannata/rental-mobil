@@ -75,7 +75,7 @@ const Footer = () => {
                 <Image src="/Fb.svg" alt="Facebook" width={24} height={24} />
               </Link> */}
               <Link
-                href="https://www.instagram.com/rebornlomboktrans?igsh=MWc0NHI3bXptbDJicg=="
+                href="https://www.instagram.com/rebornlomboktrans/"
                 className="hover:opacity-80"
               >
                 <Image src="/Ig.svg" alt="Instagram" width={24} height={24} />
@@ -216,7 +216,7 @@ const Footer = () => {
                   <Image src="/Fb.svg" alt="Facebook" width={24} height={24} />
                 </Link> */}
                 <Link
-                  href="https://www.instagram.com/rebornlomboktrans?igsh=MWc0NHI3bXptbDJicg=="
+                  href="https://www.instagram.com/rebornlomboktrans/"
                   className="hover:opacity-80"
                 >
                   <Image src="/Ig.svg" alt="Instagram" width={24} height={24} />

@@ -83,16 +83,16 @@ const cars = [
       { icon: CarIcon, label: "MPV" },
     ],
   },
-  {
-    name: "All of Request semua jenis mobil",
-    description: "sesuai kebutuhan pelanggan",
-    image: "/armada.png",
-    specs: [
-      { icon: SeatIcon, label: "-" },
-      { icon: FuelIcon, label: "-" },
-      { icon: CarIcon, label: "-" },
-    ],
-  },
+  // {
+  //   name: "All of Request semua jenis mobil",
+  //   description: "sesuai kebutuhan pelanggan",
+  //   image: "/armada.png",
+  //   specs: [
+  //     { icon: SeatIcon, label: "-" },
+  //     { icon: FuelIcon, label: "-" },
+  //     { icon: CarIcon, label: "-" },
+  //   ],
+  // },
 ];
 
 const FleetSection = () => {

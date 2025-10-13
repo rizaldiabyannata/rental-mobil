@@ -71,7 +71,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-lg">
+    <header className="sticky top-0 bg-white shadow-lg z-30">
       <div className="container mx-auto px-4 h-[108px] flex items-center justify-between">
         {/* <Link href="/"> */}
         <Image
@@ -89,7 +89,7 @@ const Header = () => {
               Beranda
             </Button>
           </Link>
-          <Link href="/sewa-mobil">
+          <Link href="/sewa-mobil-layanan">
             <Button
               variant={
                 pathname.startsWith("/sewa-mobil-layanan") ? "default" : "ghost"
