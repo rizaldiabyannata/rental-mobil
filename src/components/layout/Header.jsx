@@ -12,7 +12,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       <Button
         size="icon"
         variant="ghost"
-        className="self-end mb-8"
+        className="self-end mb-8 size-12"
         onClick={onClose}
       >
         <svg
@@ -25,9 +25,11 @@ const MobileMenu = ({ isOpen, onClose }) => {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          className="size-6"
         >
-          <line x1="18" x2="6" y1="6" y2="18" />
-          <line x1="6" x2="18" y1="6" y2="18" />
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="18" y2="18" />
         </svg>
       </Button>
       <nav className="flex flex-col items-start gap-4">
@@ -77,10 +79,11 @@ const Header = () => {
           alt="Reborn Lombok Trans Logo"
           width={100}
           height={99}
+          className="h-auto w-14 md:w-18 lg:w-24"
         />
         {/* </Link> */}
 
-        <nav className="hidden md:flex items-center gap-2">
+        <nav className="hidden lg:flex items-center gap-2">
           <Link href="/">
             <Button variant={pathname === "/" ? "default" : "ghost"}>
               Beranda
@@ -115,7 +118,7 @@ const Header = () => {
           href="https://wa.me/6287741861681"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex items-center gap-2 text-sm"
+          className="hidden lg:flex items-center gap-2 text-sm"
         >
           <Image
             src="/ic_baseline-whatsapp.svg"
@@ -131,7 +134,7 @@ const Header = () => {
         </a>
 
         {/* Tombol menu untuk mobile */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <Button
             size="icon"
             variant="outline"
