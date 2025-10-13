@@ -9,6 +9,89 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Suspense } from "react";
+
+async function getStats() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/admin/stats`,
+      {
+        cache: "no-store",
+        credentials: "include",
+        // In app router server components, cookies are forwarded automatically; using absolute/relative accordingly
+      }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.data || null;
+  } catch {
+    return null;
+  }
+}
+
+async function StatsCards() {
+  const stats = await getStats();
+  const carsTotal = stats?.cars?.total ?? 0;
+  const carsAvailable = stats?.cars?.available ?? 0;
+  const tourTotal = stats?.tourPackages?.total ?? 0;
+  const partnersTotal = stats?.partners?.total ?? 0;
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
+        <div className="flex items-center justify-between space-y-0 pb-2">
+          <h3 className="tracking-tight text-sm font-medium">
+            Total Jenis Armada
+          </h3>
+          <span className="h-4 w-4 text-muted-foreground">🚗</span>
+        </div>
+        <div className="space-y-1">
+          <div className="text-2xl font-bold">{carsTotal}</div>
+          <p className="text-xs text-muted-foreground">
+            Data sinkron dari database
+          </p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
+        <div className="flex items-center justify-between space-y-0 pb-2">
+          <h3 className="tracking-tight text-sm font-medium">
+            Armada Tersedia
+          </h3>
+          <span className="h-4 w-4 text-muted-foreground">✅</span>
+        </div>
+        <div className="space-y-1">
+          <div className="text-2xl font-bold">{carsAvailable}</div>
+          <p className="text-xs text-muted-foreground">
+            Jenis yang aktif disewakan
+          </p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
+        <div className="flex items-center justify-between space-y-0 pb-2">
+          <h3 className="tracking-tight text-sm font-medium">Paket Tour</h3>
+          <span className="h-4 w-4 text-muted-foreground">🧭</span>
+        </div>
+        <div className="space-y-1">
+          <div className="text-2xl font-bold">{tourTotal}</div>
+          <p className="text-xs text-muted-foreground">Paket aktif</p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
+        <div className="flex items-center justify-between space-y-0 pb-2">
+          <h3 className="tracking-tight text-sm font-medium">Mitra</h3>
+          <span className="h-4 w-4 text-muted-foreground">🤝</span>
+        </div>
+        <div className="space-y-1">
+          <div className="text-2xl font-bold">{partnersTotal}</div>
+          <p className="text-xs text-muted-foreground">Partner terdaftar</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   return (
@@ -42,110 +125,11 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
-            <div className="flex items-center justify-between space-y-0 pb-2">
-              <h3 className="tracking-tight text-sm font-medium">
-                Total Mobil
-              </h3>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M14 16H9m10 0h3m-3-16L12 7l-7-7v16l7-7 7 7V0Z" />
-                <circle cx="12" cy="13" r="5" />
-              </svg>
-            </div>
-            <div className="space-y-1">
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground">
-                +2 dari bulan lalu
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
-            <div className="flex items-center justify-between space-y-0 pb-2">
-              <h3 className="tracking-tight text-sm font-medium">
-                Mobil Tersedia
-              </h3>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M9 12l2 2 4-4" />
-                <circle cx="12" cy="12" r="10" />
-              </svg>
-            </div>
-            <div className="space-y-1">
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">
-                67% dari total armada
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
-            <div className="flex items-center justify-between space-y-0 pb-2">
-              <h3 className="tracking-tight text-sm font-medium">Paket Tour</h3>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-            </div>
-            <div className="space-y-1">
-              <div className="text-2xl font-bold">5</div>
-              <p className="text-xs text-muted-foreground">Paket aktif</p>
-            </div>
-          </div>
-
-          <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
-            <div className="flex items-center justify-between space-y-0 pb-2">
-              <h3 className="tracking-tight text-sm font-medium">Mitra</h3>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-            </div>
-            <div className="space-y-1">
-              <div className="text-2xl font-bold">15</div>
-              <p className="text-xs text-muted-foreground">Partner terdaftar</p>
-            </div>
-          </div>
-        </div>
+        {/* Stats Cards (Server render, real data) */}
+        <Suspense>
+          {/* @ts-expect-error Server Component */}
+          <StatsCards />
+        </Suspense>
 
         {/* Quick Actions & Recent Activity */}
         <div className="grid gap-6 md:grid-cols-2">
