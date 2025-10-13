@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,31 +9,17 @@ import { useState } from "react";
 const MobileMenu = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start p-6">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5">
       <Button
         size="icon"
         variant="ghost"
         className="self-end mb-8 size-12"
         onClick={onClose}
+        aria-label="Tutup menu"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="size-6"
-        >
-          <line x1="4" x2="20" y1="12" y2="12" />
-          <line x1="4" x2="20" y1="6" y2="6" />
-          <line x1="4" x2="20" y1="18" y2="18" />
-        </svg>
+        <X className="size-6" />
       </Button>
-      <nav className="flex flex-col items-start gap-4">
+      <nav className="flex flex-col items-start gap-8">
         <Link
           href="/"
           className="text-2xl font-semibold hover:text-primary"
@@ -71,17 +58,14 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-lg">
-      <div className="container mx-auto px-4 h-[108px] flex items-center justify-between">
-        {/* <Link href="/"> */}
+    <header className="bg-white shadow-md sticky w-full top-0 left-0 z-40">
+      <div className="container mx-auto px-4 lg:px-32 py-4 flex items-center justify-between">
         <Image
           src="/logo.png"
           alt="Reborn Lombok Trans Logo"
-          width={100}
-          height={99}
-          className="h-auto w-14 md:w-18 lg:w-24"
+          width={70}
+          height={70}
         />
-        {/* </Link> */}
 
         <nav className="hidden lg:flex items-center gap-2">
           <Link href="/">
@@ -125,7 +109,6 @@ const Header = () => {
             alt="WhatsApp Icon"
             width={40}
             height={40}
-            // className="text-green-500"
           />
           <div>
             <p className="font-medium">Butuh Rental?</p>
@@ -133,29 +116,15 @@ const Header = () => {
           </div>
         </a>
 
-        {/* Tombol menu untuk mobile */}
         <div className="lg:hidden">
           <Button
             size="icon"
-            variant="outline"
+            variant="ghost"
+            className="self-end size-12"
             onClick={() => setIsMenuOpen(true)}
+            aria-label="Buka menu"
           >
-            {/* Icon menu (hamburger) */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="6" y2="6" />
-              <line x1="4" x2="20" y1="18" y2="18" />
-            </svg>
+            <Menu className="size-6" />
           </Button>
         </div>
       </div>

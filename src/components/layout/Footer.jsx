@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { MapPin, Mail, Phone, Instagram } from "lucide-react";
 
 const usefulLinks = [
   { href: "/tentang-kami", label: "Tentang Kami" },
@@ -14,53 +15,48 @@ const carLinks = [
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-gray-300">
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Mobile/Tablet Layout (<=1024px)*/}
         <div className="lg:hidden">
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Image
-                  src="/location.png"
-                  alt="Alamat"
-                  width={24}
-                  height={24}
-                />
+              <div className="flex items-center gap-3">
+                <MapPin className="w-6 h-6 text-gray-400 flex-shrink-0" />
                 <div>
-                  <h3 className="font-poppins text-base font-normal text-white">
+                  <h3 className="font-poppins text-sm md:text-base font-medium text-gray-400">
                     Alamat
                   </h3>
-                  <p className="font-poppins text-base font-semibold text-white">
+                  <p className="font-poppins text-base md:text-lg font-semibold text-white leading-relaxed">
                     Jl. Dukuh salah no 17, pejeruk, ampenan, mataram, lombok
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-center gap-3">
                 <a
                   href="mailto:rebornlombokmandiri@gmail.com"
-                  className="flex items-start gap-3 hover:opacity-80"
+                  className="flex items-center gap-3 hover:opacity-80"
                 >
-                  <Image src="/email.png" alt="Email" width={24} height={24} />
+                  <Mail className="w-6 h-6 text-gray-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-poppins text-base font-normal text-white">
+                    <h3 className="font-poppins text-sm md:text-base font-medium text-gray-400">
                       Email
                     </h3>
-                    <p className="font-poppins text-base font-semibold text-white">
+                    <p className="font-poppins text-base md:text-lg font-semibold text-white">
                       rebornlombokmandiri@gmail.com
                     </p>
                   </div>
                 </a>
               </div>
-              <div className="flex items-start gap-3">
-                <Image src="/telp.svg" alt="Telepon" width={24} height={24} />
+              <div className="flex items-center gap-3">
+                <Phone className="w-6 h-6 text-gray-400 flex-shrink-0" />
                 <div>
-                  <h3 className="font-poppins text-base font-normal text-white">
+                  <h3 className="font-poppins text-sm md:text-base font-medium text-gray-400">
                     Telepon
                   </h3>
-                  <p className="font-poppins text-base font-semibold text-white">
+                  <p className="font-poppins text-base md:text-lg font-semibold text-white">
                     +62-877-4186-1681
                   </p>
-                  <p className="font-poppins text-base font-semibold text-white">
+                  <p className="font-poppins text-base md:text-lg font-semibold text-white">
                     +62-853-5381-8685
                   </p>
                 </div>
@@ -76,9 +72,10 @@ const Footer = () => {
               </Link> */}
               <Link
                 href="https://www.instagram.com/rebornlomboktrans?igsh=MWc0NHI3bXptbDJicg=="
-                className="hover:opacity-80"
+                className="hover:opacity-80 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
+                aria-label="Instagram Reborn Lombok Trans"
               >
-                <Image src="/Ig.svg" alt="Instagram" width={24} height={24} />
+                <Instagram className="w-5 h-5 text-gray-300" />
               </Link>
               {/* <Link href="#" className="hover:opacity-80">
                 <Image src="/x.svg" alt="X" width={24} height={24} />
@@ -101,7 +98,7 @@ const Footer = () => {
                 height={100}
                 className="bg-white rounded-md"
               />
-              <h2 className="font-poppins text-xl font-semibold text-white max-w-xs">
+              <h2 className="font-poppins text-lg md:text-xl font-semibold text-white max-w-xs">
                 Kepuasan anda adalah yang utama
                 <br />
                 Ingat Lombok ingat Reborn Lombok Trans !!!!
@@ -111,10 +108,10 @@ const Footer = () => {
             {/* Links */}
             <div className="space-y-6">
               <div>
-                <h3 className="font-bold text-lg text-white mb-4">
+                <h3 className="font-semibold text-base md:text-lg text-white mb-3">
                   Useful links
                 </h3>
-                <ul className="space-y-2 text-sm">
+                <ul className="space-y-2 text-sm md:text-base text-gray-400">
                   {usefulLinks.map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} className="hover:text-white">
@@ -125,8 +122,10 @@ const Footer = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-white mb-4">Mobil</h3>
-                <ul className="space-y-2 text-sm">
+                <h3 className="font-semibold text-base md:text-lg text-white mb-3">
+                  Mobil
+                </h3>
+                <ul className="space-y-2 text-sm md:text-base text-gray-400">
                   {carLinks.map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} className="hover:text-white">
@@ -140,9 +139,8 @@ const Footer = () => {
           </div>
         </div>
 
-        {/*DESKTOP (>=1024px)*/}
         <div className="hidden lg:block">
-          <div className="flex flex-wrap justify-between items-start gap-8 gap-x-4 pb-8 border-b border-gray-700">
+          <div className="flex flex-wrap justify-between items-start gap-10 pb-8">
             <div className="flex-shrink-0">
               <Image
                 src="/logo.png"
@@ -154,30 +152,25 @@ const Footer = () => {
             </div>
 
             <div className="flex flex-wrap justify-end gap-x-12 gap-y-8">
-              <div className="flex items-start gap-4">
-                <Image
-                  src="/location.png"
-                  alt="Alamat"
-                  width={40}
-                  height={40}
-                />
+              <div className="flex items-center gap-4">
+                <MapPin className="w-8 h-8 text-gray-400 flex-shrink-0" />
                 <div>
-                  <h3 className="font-poppins text-base font-normal text-white mb-1">
+                  <h3 className="font-poppins text-sm font-medium text-gray-400 mb-1">
                     Alamat
                   </h3>
-                  <p className="font-poppins text-base font-semibold text-white max-w-[240px]">
+                  <p className="font-poppins text-base font-semibold text-white leading-relaxed max-w-[280px]">
                     Jl. Dukuh salah no 17, pejeruk, ampenan, mataram, lombok
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4">
+              <div className="flex items-center gap-4">
                 <a
                   href="mailto:rebornlombokmandiri@gmail.com"
-                  className="flex items-start gap-3 hover:opacity-80"
+                  className="flex items-center gap-4 hover:opacity-80"
                 >
-                  <Image src="/email.png" alt="Email" width={40} height={40} />
+                  <Mail className="w-8 h-8 text-gray-400 flex-shrink-0" />
                   <div>
-                    <h3 className="font-poppins text-base font-normal text-white mb-1">
+                    <h3 className="font-poppins text-sm font-medium text-gray-400 mb-1">
                       Email
                     </h3>
                     <p className="font-poppins text-base font-semibold text-white">
@@ -186,10 +179,10 @@ const Footer = () => {
                   </div>
                 </a>
               </div>
-              <div className="flex items-start gap-4">
-                <Image src="/telp.svg" alt="Telepon" width={40} height={40} />
+              <div className="flex items-center gap-4">
+                <Phone className="w-8 h-8 text-gray-400 flex-shrink-0" />
                 <div>
-                  <h3 className="font-poppins text-base font-normal text-white mb-1">
+                  <h3 className="font-poppins text-sm font-medium text-gray-400 mb-1">
                     Telepon
                   </h3>
                   <p className="font-poppins text-base font-semibold text-white">
@@ -203,7 +196,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Grid Bawah untuk Desktop */}
           <div className="grid grid-cols-3 gap-16">
             <div className="space-y-4">
               <h2 className="font-poppins text-xl font-semibold text-white max-w-xs pt-4">
@@ -217,9 +209,10 @@ const Footer = () => {
                 </Link> */}
                 <Link
                   href="https://www.instagram.com/rebornlomboktrans?igsh=MWc0NHI3bXptbDJicg=="
-                  className="hover:opacity-80"
+                  className="hover:opacity-80 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
+                  aria-label="Instagram Reborn Lombok Trans"
                 >
-                  <Image src="/Ig.svg" alt="Instagram" width={24} height={24} />
+                  <Instagram className="w-5 h-5 text-gray-300" />
                 </Link>
                 {/* <Link href="#" className="hover:opacity-80">
                   <Image src="/x.svg" alt="X" width={24} height={24} />
@@ -236,10 +229,10 @@ const Footer = () => {
             </div>
 
             <div>
-              <h3 className="font-bold text-lg text-white mb-4">
+              <h3 className="font-semibold text-lg text-white mb-4">
                 Useful links
               </h3>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-sm text-gray-400">
                 {usefulLinks.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="hover:text-white">
@@ -250,8 +243,8 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg text-white mb-4">Mobil</h3>
-              <ul className="space-y-2 text-sm">
+              <h3 className="font-semibold text-lg text-white mb-4">Mobil</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
                 {carLinks.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="hover:text-white">
@@ -263,10 +256,11 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="border-t border-gray-700 mt-12 pt-8 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()}. Reborn Lombok Trans</p>
+        {/* Bottom bar */}
+        <div className="border-t border-gray-700 mt-12 pt-8 text-center text-sm text-gray-400">
+          <p>&copy; {new Date().getFullYear()}. Reborn Lombok Trans</p>
+        </div>
       </div>
     </footer>
   );
