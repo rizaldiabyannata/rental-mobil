@@ -59,104 +59,117 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
+import { formatIDR } from "@/lib/utils";
 
 export default function CarTariffsPage() {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingTariff, setEditingTariff] = useState(null);
+  const params = useParams();
+  const carId = params?.id;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [car, setCar] = useState(null);
+  const [generalCategories, setGeneralCategories] = useState([]); // TariffCategory + items (general)
+  const [effectiveCategories, setEffectiveCategories] = useState([]); // TariffCategory + items (per-car when overridden else general)
 
-  // Mock data - nanti bisa diambil dari API berdasarkan car ID
-  const car = {
-    id: "1",
-    name: "Toyota Avanza",
+  const fetchAll = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const [carRes, generalRes, effectiveRes] = await Promise.all([
+        fetch(`/api/cars/${carId}`),
+        fetch(`/api/tariffs`),
+        fetch(`/api/tariffs?carId=${carId}`),
+      ]);
+      const carData = await carRes.json();
+      const genData = await generalRes.json();
+      const effData = await effectiveRes.json();
+      if (!carRes.ok)
+        throw new Error(carData.error || "Gagal mengambil data mobil");
+      if (!generalRes.ok)
+        throw new Error(genData.error || "Gagal mengambil tarif umum");
+      if (!effectiveRes.ok)
+        throw new Error(effData.error || "Gagal mengambil tarif armada");
+      setCar(carData.data);
+      setGeneralCategories(genData.data || []);
+      setEffectiveCategories(effData.data || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const [tariffs, setTariffs] = useState([
-    {
-      id: "1",
-      durationType: "Harian",
-      durationValue: 1,
-      price: 350000,
-      createdAt: "2024-01-15",
-    },
-    {
-      id: "2",
-      durationType: "Mingguan",
-      durationValue: 7,
-      price: 2100000,
-      createdAt: "2024-01-15",
-    },
-    {
-      id: "3",
-      durationType: "Bulanan",
-      durationValue: 30,
-      price: 8500000,
-      createdAt: "2024-01-15",
-    },
-    {
-      id: "4",
-      durationType: "Custom",
-      durationValue: 3,
-      price: 950000,
-      createdAt: "2024-01-20",
-    },
-  ]);
+  useEffect(() => {
+    if (carId) fetchAll();
+  }, [carId]);
 
-  const [newTariff, setNewTariff] = useState({
-    durationType: "",
-    durationValue: "",
-    price: "",
-  });
+  // Map effective categories by id for quick lookup
+  const effectiveById = useMemo(() => {
+    const m = new Map();
+    (effectiveCategories || []).forEach((c) => m.set(c.id, c));
+    return m;
+  }, [effectiveCategories]);
 
-  const handleAddTariff = () => {
-    const tariff = {
-      id: Date.now().toString(),
-      ...newTariff,
-      durationValue: parseInt(newTariff.durationValue),
-      price: parseInt(newTariff.price),
-      createdAt: new Date().toISOString().split("T")[0],
-    };
-    setTariffs([...tariffs, tariff]);
-    setNewTariff({ durationType: "", durationValue: "", price: "" });
-    setIsAddDialogOpen(false);
+  const isOverridden = (category) => {
+    const eff = effectiveById.get(category.id);
+    if (!eff) return false;
+    const items = eff.items || [];
+    return items.some((it) => it.carId === carId);
   };
 
-  const handleEditTariff = (tariff) => {
-    setEditingTariff(tariff);
-    setIsEditDialogOpen(true);
+  const createTariffItem = async (payload) => {
+    const res = await fetch(`/api/tariffs/items`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Gagal membuat item tarif");
+    await fetchAll();
+    return data.data;
   };
 
-  const handleUpdateTariff = () => {
-    setTariffs(
-      tariffs.map((t) =>
-        t.id === editingTariff.id
-          ? {
-              ...editingTariff,
-              durationValue: parseInt(editingTariff.durationValue),
-              price: parseInt(editingTariff.price),
-            }
-          : t
-      )
-    );
-    setEditingTariff(null);
-    setIsEditDialogOpen(false);
+  const updateTariffItem = async (id, payload) => {
+    const res = await fetch(`/api/tariffs/items/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Gagal memperbarui item");
+    await fetchAll();
+    return data.data;
   };
 
-  const handleDeleteTariff = (id) => {
-    setTariffs(tariffs.filter((t) => t.id !== id));
+  const deleteTariffItem = async (id) => {
+    const res = await fetch(`/api/tariffs/items/${id}`, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Gagal menghapus item");
+    await fetchAll();
   };
 
-  const getDurationLabel = (type, value) => {
-    switch (type) {
-      case "Harian":
-        return `${value} Hari`;
-      case "Mingguan":
-        return `${value} Hari (${Math.round(value / 7)} Minggu)`;
-      case "Bulanan":
-        return `${value} Hari (${Math.round(value / 30)} Bulan)`;
-      default:
-        return `${value} Hari`;
+  const overrideFromGeneral = async (category) => {
+    const items = category.items || [];
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      await createTariffItem({
+        categoryId: category.id,
+        carId,
+        name: it.name,
+        price: it.price,
+        serviceType: it.serviceType || null,
+        packageType: it.packageType || null,
+        order: it.order ?? i,
+      });
+    }
+  };
+
+  const removeOverrideCategory = async (category) => {
+    const eff = effectiveById.get(category.id);
+    const rows = (eff?.items || []).filter((it) => it.carId === carId);
+    for (const r of rows) {
+      await deleteTariffItem(r.id);
     }
   };
 
@@ -185,8 +198,8 @@ export default function CarTariffsPage() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={`/admin/cars/${car.id}`}>
-                    {car.name}
+                  <BreadcrumbLink href={`/admin/cars/${carId}`}>
+                    {car?.name || "..."}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
@@ -204,10 +217,11 @@ export default function CarTariffsPage() {
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
                 <CreditCard className="h-8 w-8 text-emerald-600" />
-                Tarif Sewa - {car.name}
+                Tarif Sewa - {car?.name || "..."}
               </h1>
               <p className="text-muted-foreground">
-                Kelola harga sewa berdasarkan durasi rental
+                Kelola tarif per kategori, aktifkan override per-armada atau
+                fallback ke tarif umum
               </p>
             </div>
             <div className="flex gap-2">
@@ -215,337 +229,169 @@ export default function CarTariffsPage() {
                 <ArrowLeft className="h-4 w-4" />
                 Kembali
               </Button>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-                    <Plus className="h-4 w-4" />
-                    Tambah Tarif
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Tambah Tarif Baru</DialogTitle>
-                    <DialogDescription>
-                      Buat tarif sewa baru untuk kendaraan ini
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="durationType">Jenis Durasi</Label>
-                      <Select
-                        value={newTariff.durationType}
-                        onValueChange={(value) =>
-                          setNewTariff({ ...newTariff, durationType: value })
-                        }
-                      >
-                        <SelectTrigger className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60">
-                          <SelectValue placeholder="Pilih jenis durasi" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Harian">Harian</SelectItem>
-                          <SelectItem value="Mingguan">Mingguan</SelectItem>
-                          <SelectItem value="Bulanan">Bulanan</SelectItem>
-                          <SelectItem value="Custom">Custom</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="durationValue">Jumlah Hari</Label>
-                      <Input
-                        type="number"
-                        value={newTariff.durationValue}
-                        onChange={(e) =>
-                          setNewTariff({
-                            ...newTariff,
-                            durationValue: e.target.value,
-                          })
-                        }
-                        placeholder="Contoh: 7"
-                        className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="price">Harga Total</Label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                          Rp
-                        </span>
-                        <Input
-                          type="number"
-                          value={newTariff.price}
-                          onChange={(e) =>
-                            setNewTariff({
-                              ...newTariff,
-                              price: e.target.value,
-                            })
-                          }
-                          placeholder="350000"
-                          className="pl-8 border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsAddDialogOpen(false)}
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      onClick={handleAddTariff}
-                      className="bg-emerald-600 hover:bg-emerald-700"
-                      disabled={
-                        !newTariff.durationType ||
-                        !newTariff.durationValue ||
-                        !newTariff.price
-                      }
-                    >
-                      Simpan
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
             </div>
           </div>
-
-          {/* Stats Summary */}
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Tarif
-                </CardTitle>
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{tariffs.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  Paket harga tersedia
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Harga Terendah
-                </CardTitle>
-                <DollarSign className="h-4 w-4 text-green-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">
-                  Rp{" "}
-                  {Math.min(
-                    ...tariffs.map((t) => Math.round(t.price / t.durationValue))
-                  ).toLocaleString("id-ID")}
-                </div>
-                <p className="text-xs text-muted-foreground">Per hari</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Harga Tertinggi
-                </CardTitle>
-                <DollarSign className="h-4 w-4 text-blue-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-blue-600">
-                  Rp{" "}
-                  {Math.max(
-                    ...tariffs.map((t) => Math.round(t.price / t.durationValue))
-                  ).toLocaleString("id-ID")}
-                </div>
-                <p className="text-xs text-muted-foreground">Per hari</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Rata-rata</CardTitle>
-                <DollarSign className="h-4 w-4 text-emerald-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-emerald-600">
-                  Rp{" "}
-                  {Math.round(
-                    tariffs.reduce(
-                      (sum, t) => sum + t.price / t.durationValue,
-                      0
-                    ) / tariffs.length
-                  ).toLocaleString("id-ID")}
-                </div>
-                <p className="text-xs text-muted-foreground">Per hari</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Tariffs Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Daftar Tarif</CardTitle>
-              <CardDescription>
-                Kelola semua paket harga sewa untuk kendaraan ini
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Jenis Durasi</TableHead>
-                    <TableHead>Durasi</TableHead>
-                    <TableHead>Harga Total</TableHead>
-                    <TableHead>Harga per Hari</TableHead>
-                    <TableHead>Dibuat</TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {tariffs.map((tariff) => (
-                    <TableRow key={tariff.id}>
-                      <TableCell>
-                        <Badge variant="outline">{tariff.durationType}</Badge>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {getDurationLabel(
-                          tariff.durationType,
-                          tariff.durationValue
+          {loading ? (
+            <div>Memuat...</div>
+          ) : error ? (
+            <div className="text-red-600 text-sm">{error}</div>
+          ) : (
+            <div className="space-y-6">
+              {generalCategories.map((cat) => {
+                const overridden = isOverridden(cat);
+                const eff = effectiveById.get(cat.id);
+                const rows = overridden
+                  ? (eff?.items || []).filter((it) => it.carId === carId)
+                  : (cat.items || []).filter((it) => it.carId == null);
+                return (
+                  <Card key={cat.id}>
+                    <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                      <div>
+                        <CardTitle>{cat.name}</CardTitle>
+                        <CardDescription>
+                          {overridden ? (
+                            <span className="text-emerald-700">
+                              Override aktif untuk armada ini
+                            </span>
+                          ) : (
+                            <span className="text-neutral-600">
+                              Menggunakan tarif umum (fallback)
+                            </span>
+                          )}
+                        </CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        {!overridden ? (
+                          <Button
+                            onClick={() => overrideFromGeneral(cat)}
+                            className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+                          >
+                            <Plus className="h-4 w-4" /> Override kategori ini
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            onClick={() => removeOverrideCategory(cat)}
+                            className="gap-2"
+                          >
+                            <Trash2 className="h-4 w-4" /> Hapus override
+                          </Button>
                         )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-semibold">
-                          Rp {tariff.price.toLocaleString("id-ID")}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          Rp{" "}
-                          {Math.round(
-                            tariff.price / tariff.durationValue
-                          ).toLocaleString("id-ID")}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">
-                            {new Date(tariff.createdAt).toLocaleDateString(
-                              "id-ID"
-                            )}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditTariff(tariff)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700"
-                            onClick={() => handleDeleteTariff(tariff.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-
-          {/* Edit Dialog */}
-          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Tarif</DialogTitle>
-                <DialogDescription>Ubah informasi tarif sewa</DialogDescription>
-              </DialogHeader>
-              {editingTariff && (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="editDurationType">Jenis Durasi</Label>
-                    <Select
-                      value={editingTariff.durationType}
-                      onValueChange={(value) =>
-                        setEditingTariff({
-                          ...editingTariff,
-                          durationType: value,
-                        })
-                      }
-                    >
-                      <SelectTrigger className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Harian">Harian</SelectItem>
-                        <SelectItem value="Mingguan">Mingguan</SelectItem>
-                        <SelectItem value="Bulanan">Bulanan</SelectItem>
-                        <SelectItem value="Custom">Custom</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="editDurationValue">Jumlah Hari</Label>
-                    <Input
-                      type="number"
-                      value={editingTariff.durationValue}
-                      onChange={(e) =>
-                        setEditingTariff({
-                          ...editingTariff,
-                          durationValue: e.target.value,
-                        })
-                      }
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="editPrice">Harga Total</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                        Rp
-                      </span>
-                      <Input
-                        type="number"
-                        value={editingTariff.price}
-                        onChange={(e) =>
-                          setEditingTariff({
-                            ...editingTariff,
-                            price: e.target.value,
-                          })
-                        }
-                        className="pl-8 border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditDialogOpen(false)}
-                >
-                  Batal
-                </Button>
-                <Button
-                  onClick={handleUpdateTariff}
-                  className="bg-emerald-600 hover:bg-emerald-700 gap-2"
-                >
-                  <Save className="h-4 w-4" />
-                  Simpan Perubahan
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {rows && rows.length ? (
+                          rows.map((row, idx) => (
+                            <div
+                              key={row.id || idx}
+                              className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 items-center"
+                            >
+                              <div className="md:col-span-6">
+                                <Label className="text-xs text-neutral-600">
+                                  Nama
+                                </Label>
+                                <Input
+                                  value={row.name}
+                                  disabled={!overridden}
+                                  onChange={(e) =>
+                                    updateTariffItem(row.id, {
+                                      name: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className="md:col-span-3">
+                                <Label className="text-xs text-neutral-600">
+                                  Harga
+                                </Label>
+                                <Input
+                                  type="number"
+                                  value={row.price}
+                                  disabled={!overridden}
+                                  onChange={(e) =>
+                                    updateTariffItem(row.id, {
+                                      price: parseInt(e.target.value || 0),
+                                    })
+                                  }
+                                />
+                                <div className="text-xs text-neutral-500 mt-1">
+                                  {formatIDR(row.price || 0)}
+                                </div>
+                              </div>
+                              <div className="md:col-span-2">
+                                <Label className="text-xs text-neutral-600">
+                                  Urutan
+                                </Label>
+                                <Input
+                                  type="number"
+                                  value={row.order ?? 0}
+                                  disabled={!overridden}
+                                  onChange={(e) =>
+                                    updateTariffItem(row.id, {
+                                      order: parseInt(e.target.value || 0),
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className="md:col-span-1 flex justify-end gap-2">
+                                {overridden ? (
+                                  <>
+                                    <Button
+                                      size="sm"
+                                      variant="secondary"
+                                      onClick={() =>
+                                        updateTariffItem(row.id, {})
+                                      }
+                                    >
+                                      Simpan
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="destructive"
+                                      onClick={() => deleteTariffItem(row.id)}
+                                    >
+                                      Hapus
+                                    </Button>
+                                  </>
+                                ) : null}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-sm text-neutral-600">
+                            Belum ada item.
+                          </div>
+                        )}
+                        {overridden ? (
+                          <div className="pt-2">
+                            <Button
+                              variant="outline"
+                              className="gap-2"
+                              onClick={() =>
+                                createTariffItem({
+                                  categoryId: cat.id,
+                                  carId,
+                                  name: "Item Baru",
+                                  price: 0,
+                                  order:
+                                    (eff?.items || []).filter(
+                                      (it) => it.carId === carId
+                                    ).length || 0,
+                                })
+                              }
+                            >
+                              <Plus className="h-4 w-4" /> Tambah Item
+                            </Button>
+                          </div>
+                        ) : null}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       </SidebarInset>
     </SidebarProvider>

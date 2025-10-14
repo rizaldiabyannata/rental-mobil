@@ -10,6 +10,8 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// Musim tarif dihapus (tidak digunakan)
+
 // 🚗 Manajemen Armada (Mobil)
 model Car {
     id             String   @id @default(uuid())
@@ -26,8 +28,9 @@ model Car {
     updatedAt      DateTime @updatedAt
 
     // Relations
-    images  CarImage[]
-    tariffs CarTariff[]
+    images        CarImage[]
+    tariffItems   TariffItem[]
+    featureBlocks CarFeature[]
 }
 
 // Galeri foto mobil
@@ -42,18 +45,20 @@ model CarImage {
     car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
 }
 
-// Detail tarif mobil
-model CarTariff {
+// Fitur unggulan per mobil (dengan icon, title, description)
+model CarFeature {
     id          String   @id @default(uuid())
     carId       String
-    name        String // Nama item tarif (contoh: "Dengan Driver", "Tujuan Mataram")
-    category    String? // Kategori/kelompok tarif (contoh: "Sewa Per 12 Jam", "Antar Jemput Bandara")
-    order       Int      @default(0) // Urutan tampil dalam kategori
-    price       Int // Harga dalam rupiah
-    description String?
+    icon        String // nama icon atau URL
+    title       String
+    description String
+    order       Int      @default(0)
     createdAt   DateTime @default(now())
 
     car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+    @@index([carId])
+    @@index([order])
 }
 
 // 🎯 Manajemen Paket Tour
@@ -102,6 +107,42 @@ model Partner {
     order     Int      @default(0) // untuk urutan tampil
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+//  Tariff Penyewaan Umum (bukan per-mobil)
+model TariffCategory {
+    id          String   @id @default(uuid())
+    name        String
+    description String?
+    order       Int      @default(0)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    items TariffItem[]
+
+    @@index([order])
+}
+
+model TariffItem {
+    id          String   @id @default(uuid())
+    categoryId  String
+    carId       String? // optional per-armada target
+    name        String // contoh: "Dengan Driver", "Driver + BBM", "Tujuan Mataram"
+    price       Int // dalam rupiah
+    serviceType String? // e.g., "12-hour rental", "Airport transfer"
+    packageType String? // e.g., "With Driver", "Driver + Fuel"
+    order       Int      @default(0)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    category TariffCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    car      Car?           @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+    @@index([categoryId])
+    @@index([carId])
+    @@index([order])
+    @@index([serviceType])
+    @@index([packageType])
 }
 
 // User untuk admin saja (saat ini)

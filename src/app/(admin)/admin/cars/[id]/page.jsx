@@ -13,6 +13,17 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +70,7 @@ export default function CarDetailPage() {
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!carId) return;
@@ -90,6 +102,32 @@ export default function CarDetailPage() {
     fetchDetail();
     return () => controller.abort();
   }, [carId]);
+
+  const handleDelete = async () => {
+    if (!carId) return;
+
+    try {
+      setDeleting(true);
+      const res = await fetch(`/api/cars/${carId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `Gagal menghapus (status ${res.status})`
+        );
+      }
+
+      // Redirect to cars list after successful deletion
+      router.push("/admin/cars");
+    } catch (err) {
+      console.error("Delete car error:", err);
+      setError(err.message || "Terjadi kesalahan saat menghapus mobil");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const specifications = useMemo(() => {
     if (!car?.specifications || typeof car.specifications !== "object")
@@ -245,9 +283,41 @@ export default function CarDetailPage() {
                 <Edit className="h-4 w-4" /> Edit
               </Link>
             </Button>
-            <Button variant="destructive" className="gap-2" disabled>
-              <Trash2 className="h-4 w-4" /> Hapus
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  className="gap-2"
+                  disabled={deleting}
+                >
+                  {deleting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
+                  {deleting ? "Menghapus..." : "Hapus"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Hapus Kendaraan</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Apakah Anda yakin ingin menghapus kendaraan "{car.name}"?
+                    Tindakan ini tidak dapat dibatalkan dan akan menghapus semua
+                    data terkait termasuk gambar, tarif, dan riwayat pemesanan.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDelete}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Ya, Hapus
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
 
@@ -312,17 +382,6 @@ export default function CarDetailPage() {
               <CardContent>
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                   <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Nomor Polisi
-                      </p>
-                      <p className="font-semibold">
-                        {specifications.licensePlate || "-"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
                     <Palette className="h-5 w-5 text-emerald-600" />
                     <div>
                       <p className="text-sm text-muted-foreground">Warna</p>
@@ -340,17 +399,6 @@ export default function CarDetailPage() {
                       <p className="font-semibold">
                         {specifications.engineCapacity
                           ? `${formatNumber(specifications.engineCapacity)} CC`
-                          : "-"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Gauge className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Kilometer</p>
-                      <p className="font-semibold">
-                        {specifications.mileage
-                          ? `${formatNumber(specifications.mileage)} KM`
                           : "-"}
                       </p>
                     </div>
@@ -384,18 +432,51 @@ export default function CarDetailPage() {
                 <CardTitle>Fitur & Fasilitas</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {(car.features || []).length === 0 && (
-                    <span className="text-sm text-muted-foreground">
-                      Belum ada fitur yang ditambahkan.
-                    </span>
-                  )}
-                  {(car.features || []).map((feature) => (
-                    <Badge key={feature} variant="secondary">
-                      {feature}
-                    </Badge>
-                  ))}
-                </div>
+                {/* Show new featureBlocks if available */}
+                {car.featureBlocks && car.featureBlocks.length > 0 ? (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {car.featureBlocks.map((feature) => (
+                      <div
+                        key={feature.id}
+                        className="flex items-start gap-3 p-3 rounded-lg border bg-muted/50"
+                      >
+                        <div className="flex-shrink-0">
+                          {feature.icon && (
+                            <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                              <span className="text-emerald-600 text-sm font-semibold">
+                                {feature.icon.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm text-foreground">
+                            {feature.title}
+                          </h4>
+                          {feature.description && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {feature.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  /* Fallback to legacy features array */
+                  <div className="flex flex-wrap gap-2">
+                    {(car.features || []).length === 0 && (
+                      <span className="text-sm text-muted-foreground">
+                        Belum ada fitur yang ditambahkan.
+                      </span>
+                    )}
+                    {(car.features || []).map((feature) => (
+                      <Badge key={feature} variant="secondary">
+                        {feature}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
 

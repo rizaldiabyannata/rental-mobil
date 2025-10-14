@@ -33,16 +33,22 @@ function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
     }));
   }
 
-  if (includeTariffs && car.tariffs) {
-    base.tariffs = car.tariffs.map((tariff) => ({
-      id: tariff.id,
-      name: tariff.name,
-      price: tariff.price,
-      description: tariff.description,
-      category: tariff.category || null,
-      order: typeof tariff.order === "number" ? tariff.order : 0,
-      createdAt: tariff.createdAt,
-    }));
+  if (includeTariffs) {
+    const items = car.tariffItems || car.tariffs;
+    if (items) {
+      base.tariffs = items.map((t) => ({
+        id: t.id,
+        name: t.name,
+        price: t.price,
+        description: t.description,
+        category: t.category?.name || t.category || null,
+        order: typeof t.order === "number" ? t.order : 0,
+        createdAt: t.createdAt,
+        serviceType: t.serviceType,
+        packageType: t.packageType,
+        carId: t.carId || null,
+      }));
+    }
   }
 
   // Convenience: expose coverImage if stored di specifications
@@ -93,7 +99,7 @@ async function getCars(request) {
         take: limit,
         orderBy: { createdAt: "desc" },
         include: {
-          _count: { select: { images: true, tariffs: true } },
+          _count: { select: { images: true, tariffItems: true } },
           images: {
             orderBy: { order: "asc" },
             take: 1,

@@ -51,6 +51,11 @@ const data = {
       url: "/admin/cars",
       icon: Car,
     },
+    {
+      title: "Tarif",
+      url: "/admin/tariffs",
+      icon: Package,
+    },
     // {
     //   title: "Paket Tour",
     //   url: "/admin/tour-packages",

@@ -355,30 +355,71 @@ export default function AddCarPage() {
         }
       }
 
-      // 2) Create tariffs if any
+      // 2) Create tariffs (TariffCategory + TariffItem per-car) if any
       try {
-        const requests = [];
-        tariffCategories.forEach((cat) => {
-          (cat.items || []).forEach((it, idx) => {
-            const body = {
-              carId,
-              name: it.name,
-              price: Number(it.price) || 0,
-              description: it.description || null,
-              category: cat.title,
-              order: typeof it.order === "number" ? it.order : idx,
-            };
-            requests.push(
-              fetch("/api/car-tariffs", {
+        if (tariffCategories.length) {
+          // Load existing categories once
+          const catRes = await fetch("/api/tariffs/categories", {
+            method: "GET",
+            credentials: "include",
+          });
+          const catJson = await catRes.json().catch(() => ({ data: [] }));
+          const existing = Array.isArray(catJson?.data) ? catJson.data : [];
+          const byName = new Map(
+            existing.map((c) => [c.name?.trim()?.toLowerCase(), c])
+          );
+
+          // Ensure all categories exist (create missing)
+          for (const cat of tariffCategories) {
+            const key = (cat.title || "").trim().toLowerCase();
+            if (!key) continue;
+            if (!byName.has(key)) {
+              const createRes = await fetch("/api/tariffs/categories", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify(body),
-              })
-            );
-          });
-        });
-        if (requests.length) await Promise.allSettled(requests);
+                body: JSON.stringify({
+                  name: cat.title,
+                  description: "",
+                  order: 0,
+                }),
+              });
+              const createJson = await createRes.json().catch(() => ({}));
+              if (createRes.ok && createJson?.data) {
+                byName.set(key, createJson.data);
+              }
+            }
+          }
+
+          // Create items under their categories for this car
+          const requests = [];
+          for (const cat of tariffCategories) {
+            const key = (cat.title || "").trim().toLowerCase();
+            const catObj = byName.get(key);
+            if (!catObj?.id) continue;
+            (cat.items || []).forEach((it, idx) => {
+              const body = {
+                categoryId: catObj.id,
+                carId,
+                name: it.name,
+                price: Number(it.price) || 0,
+                serviceType: null,
+                packageType: null,
+                description: it.description || null,
+                order: typeof it.order === "number" ? it.order : idx,
+              };
+              requests.push(
+                fetch("/api/tariffs/items", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify(body),
+                })
+              );
+            });
+          }
+          if (requests.length) await Promise.allSettled(requests);
+        }
       } catch (e) {
         console.warn("Failed to create tariffs:", e);
       }
@@ -767,7 +808,8 @@ export default function AddCarPage() {
               <CardHeader>
                 <CardTitle>Harga & Ketersediaan Jenis</CardTitle>
                 <CardDescription>
-                  Atur harga mulai untuk jenis ini dan status ketersediaan disewakan
+                  Atur harga mulai untuk jenis ini dan status ketersediaan
+                  disewakan
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -1060,7 +1102,9 @@ export default function AddCarPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Detail Spesifikasi (Opsional)</CardTitle>
-                <CardDescription>Informasi teknis umum untuk jenis ini</CardDescription>
+                <CardDescription>
+                  Informasi teknis umum untuk jenis ini
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

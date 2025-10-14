@@ -253,7 +253,7 @@ export default function CarsPage() {
           </Button>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Mobil</CardTitle>
@@ -294,21 +294,6 @@ export default function CarsPage() {
               <p className="text-xs text-muted-foreground">
                 Sedang disewa / maintenance
               </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Harga Rata-rata
-              </CardTitle>
-              <span className="text-xs text-muted-foreground">Rp</span>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {formatCurrency(Math.round(averagePrice))}
-              </div>
-              <p className="text-xs text-muted-foreground">Per hari</p>
             </CardContent>
           </Card>
         </div>

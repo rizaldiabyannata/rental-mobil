@@ -28,15 +28,19 @@ function carToApi(car) {
           createdAt: img.createdAt,
         }))
       : undefined,
-    tariffs: car.tariffs
-      ? car.tariffs.map((tariff) => ({
-          id: tariff.id,
-          name: tariff.name,
-          price: tariff.price,
-          description: tariff.description,
-          category: tariff.category || null,
-          order: typeof tariff.order === "number" ? tariff.order : 0,
-          createdAt: tariff.createdAt,
+    // Back-compat: expose 'tariffs' from TariffItem
+    tariffs: car.tariffItems
+      ? car.tariffItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          description: item.description,
+          category: item.category?.name || undefined,
+          order: typeof item.order === "number" ? item.order : 0,
+          createdAt: item.createdAt,
+          serviceType: item.serviceType,
+          packageType: item.packageType,
+          carId: item.carId || null,
         }))
       : undefined,
     featureCards: Array.isArray(car.specifications?.featureCards)
@@ -55,8 +59,12 @@ async function getCarById(request, props) {
       where: { id },
       include: {
         images: { orderBy: { order: "asc" } },
-        tariffs: { orderBy: { createdAt: "asc" } },
-        _count: { select: { images: true, tariffs: true } },
+        tariffItems: {
+          orderBy: { order: "asc" },
+          include: { category: true },
+        },
+        featureBlocks: { orderBy: { order: "asc" } },
+        _count: { select: { images: true, tariffItems: true } },
       },
     });
 
@@ -64,7 +72,18 @@ async function getCarById(request, props) {
       return NextResponse.json({ error: "Car not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, data: carToApi(car) });
+    const api = carToApi(car);
+    // Add featureBlocks from CarFeature model
+    api.featureBlocks = car.featureBlocks
+      ? car.featureBlocks.map((fb) => ({
+          id: fb.id,
+          icon: fb.icon,
+          title: fb.title,
+          description: fb.description,
+          order: fb.order,
+        }))
+      : [];
+    return NextResponse.json({ success: true, data: api });
   } catch (error) {
     console.error("Get car by ID error:", error);
     return NextResponse.json(
@@ -92,35 +111,6 @@ async function updateCar(request, props) {
       specifications,
     } = body;
 
-    // Cek apakah car ada
-    const existingCar = await prisma.car.findUnique({
-      where: { id },
-    });
-
-    if (!existingCar) {
-      return NextResponse.json({ error: "Car not found" }, { status: 404 });
-    }
-
-    // Validasi harga jika diubah
-    if (startingPrice !== undefined && startingPrice <= 0) {
-      return NextResponse.json(
-        { error: "startingPrice must be positive" },
-        { status: 400 }
-      );
-    }
-    if (features && !Array.isArray(features)) {
-      return NextResponse.json(
-        { error: "features must be an array of strings" },
-        { status: 400 }
-      );
-    }
-    if (features && !features.every((f) => typeof f === "string")) {
-      return NextResponse.json(
-        { error: "each feature must be string" },
-        { status: 400 }
-      );
-    }
-
     // Siapkan data update
     const updateData = {};
     if (name !== undefined) updateData.name = name;
@@ -141,15 +131,20 @@ async function updateCar(request, props) {
       data: updateData,
       include: {
         images: { orderBy: { order: "asc" } },
-        tariffs: { orderBy: { createdAt: "asc" } },
-        _count: { select: { images: true, tariffs: true } },
+        tariffItems: {
+          orderBy: { order: "asc" },
+          include: { category: true },
+        },
+        featureBlocks: { orderBy: { order: "asc" } },
+        _count: { select: { images: true, tariffItems: true } },
       },
     });
 
+    const api = carToApi(updatedCar);
     return NextResponse.json({
       success: true,
       message: "Car updated successfully",
-      data: carToApi(updatedCar),
+      data: api,
     });
   } catch (error) {
     console.error("Update car error:", error);

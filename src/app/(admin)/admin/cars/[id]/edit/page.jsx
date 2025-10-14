@@ -33,8 +33,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Car, Save, ArrowLeft, Plus, X } from "lucide-react";
+import {
+  Car,
+  Save,
+  ArrowLeft,
+  Plus,
+  X,
+  Shield,
+  Music,
+  Snowflake,
+  Wifi,
+  Camera,
+  Navigation,
+  Battery,
+  Bluetooth,
+  Smartphone,
+  Zap,
+  Wind,
+  Sun,
+  Fuel,
+  Users,
+  Lock,
+  MapPin,
+  Radio,
+  Volume2,
+  Thermometer,
+  Settings,
+  Star,
+  Award,
+  CheckCircle,
+  Heart,
+  Coffee,
+  Briefcase,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -44,14 +75,47 @@ export default function EditCarPage() {
   const router = useRouter();
   const carId = useMemo(() => (params?.id ? String(params.id) : ""), [params]);
 
+  // Icon options for features
+  const iconOptions = [
+    { name: "Shield", icon: Shield, label: "Keamanan" },
+    { name: "Music", icon: Music, label: "Musik/Audio" },
+    { name: "Snowflake", icon: Snowflake, label: "AC" },
+    { name: "Wifi", icon: Wifi, label: "WiFi" },
+    { name: "Camera", icon: Camera, label: "Kamera" },
+    { name: "Navigation", icon: Navigation, label: "GPS/Navigasi" },
+    { name: "Battery", icon: Battery, label: "Charger" },
+    { name: "Bluetooth", icon: Bluetooth, label: "Bluetooth" },
+    { name: "Smartphone", icon: Smartphone, label: "USB/Phone" },
+    { name: "Zap", icon: Zap, label: "Power" },
+    { name: "Wind", icon: Wind, label: "Ventilasi" },
+    { name: "Sun", icon: Sun, label: "Sunroof" },
+    { name: "Fuel", icon: Fuel, label: "Bahan Bakar" },
+    { name: "Users", icon: Users, label: "Kapasitas" },
+    { name: "Lock", icon: Lock, label: "Central Lock" },
+    { name: "MapPin", icon: MapPin, label: "Tracking" },
+    { name: "Radio", icon: Radio, label: "Radio" },
+    { name: "Volume2", icon: Volume2, label: "Speaker" },
+    { name: "Thermometer", icon: Thermometer, label: "Climate" },
+    { name: "Settings", icon: Settings, label: "Otomatis" },
+    { name: "Star", icon: Star, label: "Premium" },
+    { name: "Award", icon: Award, label: "Berkualitas" },
+    { name: "CheckCircle", icon: CheckCircle, label: "Terjamin" },
+    { name: "Heart", icon: Heart, label: "Nyaman" },
+    { name: "Coffee", icon: Coffee, label: "Refreshment" },
+    { name: "Briefcase", icon: Briefcase, label: "Bisnis" },
+  ];
+
   // Local states
-  const [features, setFeatures] = useState([
-    "AC",
-    "Audio System",
-    "USB Charger",
-    "Bluetooth",
-  ]);
-  const [newFeature, setNewFeature] = useState("");
+  // Structured feature blocks: { id?, icon, title, description, order? }
+  const [featureBlocks, setFeatureBlocks] = useState([]);
+  const [fbDraft, setFbDraft] = useState({
+    icon: "",
+    title: "",
+    description: "",
+  });
+  // Flexible Specification Details: array of { label, value }
+  const [specDetails, setSpecDetails] = useState([]);
+  const [specDraft, setSpecDraft] = useState({ label: "", value: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -72,6 +136,9 @@ export default function EditCarPage() {
     color: "",
     engineCapacity: "",
     mileage: "",
+    engine: "",
+    luggageCapacity: "",
+    entertainment: "",
   });
 
   // Fetch car by id
@@ -95,7 +162,15 @@ export default function EditCarPage() {
         if (aborted) return;
         const specs = car.specifications || {};
         originalSpecsRef.current = specs;
-        setFeatures(Array.isArray(car.features) ? car.features : []);
+        setFeatureBlocks(
+          Array.isArray(car.featureBlocks) ? car.featureBlocks : []
+        );
+        const details = Array.isArray(specs.details) ? specs.details : [];
+        setSpecDetails(
+          details.filter(
+            (d) => d && typeof d === "object" && d.label && d.value
+          )
+        );
         setFormData({
           name: car.name || "",
           description: car.description || "",
@@ -112,6 +187,9 @@ export default function EditCarPage() {
             ? String(specs.engineCapacity)
             : "",
           mileage: specs.mileage ? String(specs.mileage) : "",
+          engine: "",
+          luggageCapacity: "",
+          entertainment: "",
         });
       } catch (e) {
         console.error(e);
@@ -126,15 +204,16 @@ export default function EditCarPage() {
     };
   }, [carId]);
 
-  const addFeature = () => {
-    if (newFeature.trim() && !features.includes(newFeature.trim())) {
-      setFeatures([...features, newFeature.trim()]);
-      setNewFeature("");
-    }
+  const addSpecDetail = () => {
+    if (!specDraft.label.trim() || !specDraft.value.trim()) return;
+    setSpecDetails((prev) => [
+      ...prev,
+      { label: specDraft.label.trim(), value: specDraft.value.trim() },
+    ]);
+    setSpecDraft({ label: "", value: "" });
   };
-
-  const removeFeature = (featureToRemove) => {
-    setFeatures(features.filter((feature) => feature !== featureToRemove));
+  const removeSpecDetail = (idx) => {
+    setSpecDetails((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const handleInputChange = (field, value) => {
@@ -142,6 +221,25 @@ export default function EditCarPage() {
       ...prev,
       [field]: value,
     }));
+  };
+
+  const addFeatureBlock = () => {
+    if (!fbDraft.icon || !fbDraft.title || !fbDraft.description) return;
+    setFeatureBlocks((prev) => [
+      ...prev,
+      {
+        icon: fbDraft.icon,
+        title: fbDraft.title,
+        description: fbDraft.description,
+        order: prev.length,
+      },
+    ]);
+    setFbDraft({ icon: "", title: "", description: "" });
+  };
+  const removeFeatureBlock = (idx) => {
+    setFeatureBlocks((prev) =>
+      prev.filter((_, i) => i !== idx).map((f, i) => ({ ...f, order: i }))
+    );
   };
 
   const baseFieldClasses =
@@ -158,12 +256,10 @@ export default function EditCarPage() {
       const nextSpecs = {
         ...originalSpecsRef.current,
         year: formData.year ? parseInt(formData.year) : undefined,
-        licensePlate: formData.licensePlate || undefined,
-        color: formData.color || undefined,
-        engineCapacity: formData.engineCapacity
-          ? parseInt(formData.engineCapacity)
-          : undefined,
-        mileage: formData.mileage ? parseInt(formData.mileage) : undefined,
+        details:
+          specDetails && specDetails.length
+            ? specDetails.map((d) => ({ label: d.label, value: d.value }))
+            : undefined,
       };
 
       // Remove undefined keys from specs
@@ -181,8 +277,8 @@ export default function EditCarPage() {
         transmission: formData.transmission,
         fuelType: formData.fuelType,
         available: !!formData.available,
-        features: features,
         specifications: nextSpecs,
+        featureBlocks: featureBlocks,
       };
 
       const res = await fetch(`/api/cars/${carId}`, {
@@ -255,7 +351,11 @@ export default function EditCarPage() {
                 Ubah informasi kendaraan dalam armada rental
               </p>
             </div>
-            <Button variant="outline" className="gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => router.back()}
+            >
               <ArrowLeft className="h-4 w-4" />
               Kembali
             </Button>
@@ -387,48 +487,345 @@ export default function EditCarPage() {
               </CardContent>
             </Card>
 
-            {/* Features */}
+            {/* Spesifikasi Lengkap (fleksibel) */}
             <Card>
               <CardHeader>
-                <CardTitle>Fitur & Fasilitas</CardTitle>
+                <CardTitle>Spesifikasi Lengkap</CardTitle>
                 <CardDescription>
-                  Kelola fitur yang tersedia pada kendaraan
+                  Tambah detail spesifikasi secara bebas (label & nilai)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Input
-                    value={newFeature}
-                    onChange={(e) => setNewFeature(e.target.value)}
-                    placeholder="Tambah fitur baru"
-                    className={cn(baseFieldClasses)}
-                    onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addFeature())
+                    placeholder="Label (contoh: Mesin)"
+                    value={specDraft.label}
+                    onChange={(e) =>
+                      setSpecDraft({ ...specDraft, label: e.target.value })
                     }
+                    className={cn(baseFieldClasses)}
                   />
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nilai (contoh: 2.4L Diesel / 2.0L Bensin)"
+                      value={specDraft.value}
+                      onChange={(e) =>
+                        setSpecDraft({ ...specDraft, value: e.target.value })
+                      }
+                      className={cn(baseFieldClasses)}
+                    />
+                    <Button
+                      type="button"
+                      onClick={addSpecDetail}
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                {specDetails.length > 0 && (
+                  <div className="mt-2 space-y-2">
+                    {specDetails.map((d, idx) => (
+                      <div key={idx} className="flex items-start gap-2">
+                        <Input
+                          value={d.label}
+                          onChange={(e) =>
+                            setSpecDetails((prev) =>
+                              prev.map((p, i) =>
+                                i === idx ? { ...p, label: e.target.value } : p
+                              )
+                            )
+                          }
+                          className={cn(baseFieldClasses)}
+                        />
+                        <Input
+                          value={d.value}
+                          onChange={(e) =>
+                            setSpecDetails((prev) =>
+                              prev.map((p, i) =>
+                                i === idx ? { ...p, value: e.target.value } : p
+                              )
+                            )
+                          }
+                          className={cn(baseFieldClasses)}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => removeSpecDetail(idx)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            {/* Structured Feature Blocks */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Fitur Unggulan</CardTitle>
+                <CardDescription>
+                  Kelola fitur (icon, judul, deskripsi). Jumlah fitur harus
+                  genap.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">
+                      Fitur Unggulan (Icon, Judul, Deskripsi)
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Jumlah fitur harus genap.
+                    </p>
+                  </div>
+                  <div className="text-sm">
+                    <span
+                      className={cn(
+                        featureBlocks.length % 2 === 0
+                          ? "text-emerald-600"
+                          : "text-red-600"
+                      )}
+                    >
+                      {featureBlocks.length} item
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label>Pilih Icon</Label>
+                    <div className="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2 p-3 border rounded-md bg-gray-50">
+                      {iconOptions.map((option) => {
+                        const IconComponent = option.icon;
+                        return (
+                          <button
+                            key={option.name}
+                            type="button"
+                            onClick={() =>
+                              setFbDraft({ ...fbDraft, icon: option.name })
+                            }
+                            className={cn(
+                              "flex flex-col items-center justify-center p-2 rounded-md border-2 transition-colors hover:bg-white",
+                              fbDraft.icon === option.name
+                                ? "border-emerald-500 bg-emerald-50 text-emerald-600"
+                                : "border-gray-200 hover:border-gray-300"
+                            )}
+                            title={option.label}
+                          >
+                            <IconComponent className="h-4 w-4 mb-1" />
+                            <span className="text-xs truncate w-full text-center">
+                              {option.label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="featureTitle">Judul Fitur</Label>
+                      <Input
+                        id="featureTitle"
+                        placeholder="Judul fitur"
+                        value={fbDraft.title}
+                        onChange={(e) =>
+                          setFbDraft({ ...fbDraft, title: e.target.value })
+                        }
+                        className={cn(baseFieldClasses)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="featureDescription">Deskripsi</Label>
+                      <Input
+                        id="featureDescription"
+                        placeholder="Deskripsi singkat"
+                        value={fbDraft.description}
+                        onChange={(e) =>
+                          setFbDraft({
+                            ...fbDraft,
+                            description: e.target.value,
+                          })
+                        }
+                        className={cn(baseFieldClasses)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Preview */}
+                  {fbDraft.icon && fbDraft.title && (
+                    <div className="p-3 border rounded-md bg-white">
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Preview:
+                      </p>
+                      <div className="flex items-start gap-3">
+                        <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                          {(() => {
+                            const selectedIcon = iconOptions.find(
+                              (opt) => opt.name === fbDraft.icon
+                            );
+                            if (selectedIcon) {
+                              const IconComponent = selectedIcon.icon;
+                              return (
+                                <IconComponent className="h-4 w-4 text-emerald-600" />
+                              );
+                            }
+                            return (
+                              <span className="text-emerald-600 text-sm font-semibold">
+                                {fbDraft.icon.charAt(0).toUpperCase()}
+                              </span>
+                            );
+                          })()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm text-foreground">
+                            {fbDraft.title}
+                          </h4>
+                          {fbDraft.description && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {fbDraft.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-2">
                   <Button
                     type="button"
-                    onClick={addFeature}
-                    className="bg-emerald-600 hover:bg-emerald-700"
+                    onClick={addFeatureBlock}
+                    disabled={
+                      !fbDraft.icon || !fbDraft.title || !fbDraft.description
+                    }
                   >
-                    <Plus className="h-4 w-4" />
+                    Tambah Fitur Unggulan
                   </Button>
                 </div>
 
-                {features.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {features.map((feature, index) => (
-                      <Badge key={index} variant="secondary" className="gap-1">
-                        {feature}
-                        <button
-                          type="button"
-                          onClick={() => removeFeature(feature)}
-                          className="hover:text-red-600"
+                {featureBlocks.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    {featureBlocks.map((fb, idx) => {
+                      const selectedIcon = iconOptions.find(
+                        (opt) => opt.name === fb.icon
+                      );
+                      const IconComponent = selectedIcon?.icon;
+
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-3 rounded-md border border-emerald-100 bg-white p-4"
                         >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
+                          <div className="flex items-center gap-2">
+                            <span className="w-6 text-center font-mono text-xs text-muted-foreground">
+                              #{idx + 1}
+                            </span>
+                            <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                              {IconComponent ? (
+                                <IconComponent className="h-4 w-4 text-emerald-600" />
+                              ) : (
+                                <span className="text-emerald-600 text-sm font-semibold">
+                                  {fb.icon.charAt(0).toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex-1 space-y-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div>
+                                <Label className="text-xs text-muted-foreground">
+                                  Judul
+                                </Label>
+                                <Input
+                                  value={fb.title}
+                                  onChange={(e) =>
+                                    setFeatureBlocks((prev) =>
+                                      prev.map((p, i) =>
+                                        i === idx
+                                          ? { ...p, title: e.target.value }
+                                          : p
+                                      )
+                                    )
+                                  }
+                                  className={cn(baseFieldClasses, "mt-1")}
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs text-muted-foreground">
+                                  Deskripsi
+                                </Label>
+                                <Input
+                                  value={fb.description}
+                                  onChange={(e) =>
+                                    setFeatureBlocks((prev) =>
+                                      prev.map((p, i) =>
+                                        i === idx
+                                          ? {
+                                              ...p,
+                                              description: e.target.value,
+                                            }
+                                          : p
+                                      )
+                                    )
+                                  }
+                                  className={cn(baseFieldClasses, "mt-1")}
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <Label className="text-xs text-muted-foreground">
+                                Icon
+                              </Label>
+                              <Select
+                                value={fb.icon}
+                                onValueChange={(value) =>
+                                  setFeatureBlocks((prev) =>
+                                    prev.map((p, i) =>
+                                      i === idx ? { ...p, icon: value } : p
+                                    )
+                                  )
+                                }
+                              >
+                                <SelectTrigger
+                                  className={cn(baseFieldClasses, "mt-1")}
+                                >
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {iconOptions.map((option) => {
+                                    const OptionIcon = option.icon;
+                                    return (
+                                      <SelectItem
+                                        key={option.name}
+                                        value={option.name}
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <OptionIcon className="h-4 w-4" />
+                                          <span>{option.label}</span>
+                                        </div>
+                                      </SelectItem>
+                                    );
+                                  })}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700"
+                            onClick={() => removeFeatureBlock(idx)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
@@ -476,70 +873,14 @@ export default function EditCarPage() {
               </CardContent>
             </Card>
 
-            {/* Vehicle Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Detail Kendaraan</CardTitle>
-                <CardDescription>
-                  Informasi teknis dan identitas kendaraan
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="licensePlate">Nomor Polisi</Label>
-                    <Input
-                      id="licensePlate"
-                      value={formData.licensePlate}
-                      onChange={(e) =>
-                        handleInputChange("licensePlate", e.target.value)
-                      }
-                      className={cn(baseFieldClasses)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="color">Warna</Label>
-                    <Input
-                      id="color"
-                      value={formData.color}
-                      onChange={(e) =>
-                        handleInputChange("color", e.target.value)
-                      }
-                      className={cn(baseFieldClasses)}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="engineCapacity">Kapasitas Mesin (CC)</Label>
-                    <Input
-                      id="engineCapacity"
-                      type="number"
-                      value={formData.engineCapacity}
-                      onChange={(e) =>
-                        handleInputChange("engineCapacity", e.target.value)
-                      }
-                      className={cn(baseFieldClasses)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mileage">Kilometer (KM)</Label>
-                    <Input
-                      id="mileage"
-                      type="number"
-                      value={formData.mileage}
-                      onChange={(e) =>
-                        handleInputChange("mileage", e.target.value)
-                      }
-                      className={cn(baseFieldClasses)}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Vehicle Details removed per request */}
 
             {/* Action Buttons */}
+            {featureBlocks.length % 2 !== 0 && (
+              <div className="text-sm text-red-600 text-right">
+                Jumlah fitur unggulan harus genap agar dapat disimpan.
+              </div>
+            )}
             <div className="flex gap-4 justify-end">
               <Button
                 type="button"
@@ -551,7 +892,7 @@ export default function EditCarPage() {
               <Button
                 type="submit"
                 className="bg-emerald-600 hover:bg-emerald-700 gap-2"
-                disabled={saving}
+                disabled={saving || featureBlocks.length % 2 !== 0}
               >
                 <Save className="h-4 w-4" />
                 {saving ? "Menyimpan..." : "Simpan Perubahan"}

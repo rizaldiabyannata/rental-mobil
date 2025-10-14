@@ -377,7 +377,7 @@ export default function CarImagesPage() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Foto</CardTitle>
@@ -402,7 +402,7 @@ export default function CarImagesPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Total Ukuran
@@ -413,7 +413,7 @@ export default function CarImagesPage() {
               <div className="text-2xl font-bold">-</div>
               <p className="text-xs text-muted-foreground">Storage terpakai</p>
             </CardContent>
-          </Card>
+          </Card> */}
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -475,12 +475,6 @@ export default function CarImagesPage() {
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">Order</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {primaryImage.order ?? 0}
-                      </p>
-                    </div>
-                    <div>
                       <Label className="text-sm font-medium">Diunggah</Label>
                       <p className="text-sm text-muted-foreground">
                         {formatDate(primaryImage.createdAt)}
@@ -497,26 +491,16 @@ export default function CarImagesPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="gap-2"
-                      disabled
+                      className="gap-2 text-red-600 hover:bg-red-700"
+                      onClick={() => {
+                        if (!primaryImage?.id) return;
+                        const ok = window.confirm(
+                          "Hapus foto utama ini? Tindakan ini tidak dapat dibatalkan."
+                        );
+                        if (ok) handleDelete(primaryImage.id);
+                      }}
                     >
-                      <Eye className="h-4 w-4" /> Preview
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-2"
-                      disabled
-                    >
-                      <Edit className="h-4 w-4" /> Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-2"
-                      disabled
-                    >
-                      <Download className="h-4 w-4" /> Download
+                      <Trash2 className="h-4 w-4 hover:text-white" /> Hapus
                     </Button>
                   </div>
                 </div>
@@ -573,23 +557,7 @@ export default function CarImagesPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="gap-1"
-                        disabled
-                      >
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-1"
-                        disabled
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-1 text-red-600 hover:text-red-700"
+                        className="gap-1 text-red-600 hover:bg-red-700"
                         onClick={() => handleDelete(image.id)}
                       >
                         <Trash2 className="h-3 w-3" />
