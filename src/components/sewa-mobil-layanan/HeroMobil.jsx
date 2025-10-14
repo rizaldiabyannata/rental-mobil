@@ -54,7 +54,7 @@ const HeroMobil = () => {
                 </Button>
               </Link>
             </div>
-            <div className="w-[1/2] flex justify-end">
+            <div className="w-1/2 flex justify-end">
               <Image
                 src="/fotoLayanan.png"
                 alt="Armada Reborn Lombok Trans"
