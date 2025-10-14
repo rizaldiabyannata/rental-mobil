@@ -23,7 +23,7 @@ const HeroMobil = () => {
             Ingat Lombok! Ingat Reborn Lombok Trans!!
           </p>
           <Link href="https://wa.me/6287741861681">
-            <Button size="lg" className="mt-4 rounded-full">
+            <Button size="lg" className="mt-4">
               Hubungi Kami
             </Button>
           </Link>
