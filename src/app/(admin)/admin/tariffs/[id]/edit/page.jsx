@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useToast } from "@/components/ui/toast";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,6 +60,7 @@ import {
 export default function EditTariffCategoryPage() {
   const params = useParams();
   const id = params?.id;
+  const { push: toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -142,8 +144,17 @@ export default function EditTariffCategoryPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal menyimpan kategori");
+      toast({
+        title: "Kategori disimpan",
+        description: "Perubahan kategori berhasil.",
+      });
     } catch (err) {
       setError(err.message);
+      toast({
+        title: "Gagal menyimpan kategori",
+        description: err.message,
+        variant: "destructive",
+      });
     } finally {
       setSavingCat(false);
     }
@@ -168,31 +179,62 @@ export default function EditTariffCategoryPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal menambah item");
       setItems((prev) => [...prev, data.data]);
+      toast({ title: "Item ditambah", description: "Item tarif baru dibuat." });
     } catch (err) {
       setError(err.message);
+      toast({
+        title: "Gagal menambah item",
+        description: err.message,
+        variant: "destructive",
+      });
     } finally {
       setAddingItem(false);
     }
   };
 
   const saveItem = async (item) => {
-    const res = await fetch(`/api/tariffs/items/${item.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Gagal menyimpan item");
+    try {
+      const res = await fetch(`/api/tariffs/items/${item.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal menyimpan item");
+      toast({
+        title: "Item disimpan",
+        description: `Perubahan untuk '${item.name}' berhasil.`,
+      });
+    } catch (err) {
+      toast({
+        title: "Gagal menyimpan item",
+        description: err.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const deleteItem = async (item) => {
     if (!confirm(`Hapus item "${item.name}"?`)) return;
-    const res = await fetch(`/api/tariffs/items/${item.id}`, {
-      method: "DELETE",
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Gagal menghapus item");
-    setItems((prev) => prev.filter((i) => i.id !== item.id));
+    try {
+      const res = await fetch(`/api/tariffs/items/${item.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Gagal menghapus item");
+      setItems((prev) => prev.filter((i) => i.id !== item.id));
+      toast({
+        title: "Item dihapus",
+        description: `Item '${item.name}' berhasil dihapus.`,
+      });
+    } catch (err) {
+      toast({
+        title: "Gagal menghapus item",
+        description: err.message,
+        variant: "destructive",
+      });
+      throw err; // rethrow if caller needs to handle
+    }
   };
 
   if (!id) return <div>Invalid ID</div>;

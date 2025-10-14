@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useToast } from "@/components/ui/toast";
 import { useParams, useRouter } from "next/navigation";
 import {
   Breadcrumb,
@@ -44,6 +45,28 @@ import {
   FileText,
   Loader2,
   AlertCircle,
+  Shield,
+  Music,
+  Snowflake,
+  Wifi,
+  Camera,
+  Navigation,
+  Battery,
+  Bluetooth,
+  Smartphone,
+  Zap,
+  Wind,
+  Sun,
+  Lock,
+  Radio,
+  Volume2,
+  Thermometer,
+  Star,
+  Award,
+  CheckCircle,
+  Heart,
+  Coffee,
+  Briefcase,
 } from "lucide-react";
 
 const currencyFormatter = new Intl.NumberFormat("id-ID", {
@@ -67,6 +90,7 @@ export default function CarDetailPage() {
   const router = useRouter();
   const carId = params?.id;
 
+  const { push: toast } = useToast();
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -108,22 +132,26 @@ export default function CarDetailPage() {
 
     try {
       setDeleting(true);
-      const res = await fetch(`/api/cars/${carId}`, {
-        method: "DELETE",
-      });
-
+      const res = await fetch(`/api/cars/${carId}`, { method: "DELETE" });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(
           errorData.error || `Gagal menghapus (status ${res.status})`
         );
       }
-
-      // Redirect to cars list after successful deletion
+      toast({
+        title: "Kendaraan dihapus",
+        description: "Data berhasil dihapus.",
+      });
       router.push("/admin/cars");
     } catch (err) {
       console.error("Delete car error:", err);
       setError(err.message || "Terjadi kesalahan saat menghapus mobil");
+      toast({
+        title: "Gagal menghapus",
+        description: err.message,
+        variant: "destructive",
+      });
     } finally {
       setDeleting(false);
     }
@@ -358,9 +386,7 @@ export default function CarDetailPage() {
                     <Calendar className="h-5 w-5 text-emerald-600" />
                     <div>
                       <p className="text-sm text-muted-foreground">Tahun</p>
-                      <p className="font-semibold">
-                        {formatNumber(specifications.year)}
-                      </p>
+                      <p className="font-semibold">{specifications.year}</p>
                     </div>
                   </div>
                 </div>
@@ -380,47 +406,55 @@ export default function CarDetailPage() {
                 <CardTitle>Detail Kendaraan</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                  <div className="flex items-center gap-3">
-                    <Palette className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Warna</p>
-                      <p className="font-semibold">
-                        {specifications.color || "-"}
-                      </p>
-                    </div>
+                {/* Spesifikasi fleksibel dari specifications.details */}
+                {specifications.details &&
+                Array.isArray(specifications.details) &&
+                specifications.details.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {specifications.details.map((detail, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <Settings className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">
+                            {detail.label}
+                          </p>
+                          <p className="font-semibold">{detail.value || "-"}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Settings className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Kapasitas Mesin
-                      </p>
-                      <p className="font-semibold">
-                        {specifications.engineCapacity
-                          ? `${formatNumber(specifications.engineCapacity)} CC`
-                          : "-"}
-                      </p>
-                    </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Settings className="h-12 w-12 mx-auto mb-2" />
+                    <p>Belum ada detail kendaraan yang ditambahkan</p>
+                    <p className="text-xs mt-1">
+                      Detail dapat dikelola di halaman edit kendaraan
+                    </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Dibuat</p>
-                      <p className="font-semibold">
-                        {new Date(car.createdAt).toLocaleDateString("id-ID")}
-                      </p>
+                )}
+
+                {/* Info sistem dan timestamp */}
+                <div className="border-t pt-4 mt-6">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-5 w-5 text-emerald-600" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Dibuat</p>
+                        <p className="font-semibold">
+                          {new Date(car.createdAt).toLocaleDateString("id-ID")}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <FileText className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Terakhir Update
-                      </p>
-                      <p className="font-semibold">
-                        {new Date(car.updatedAt).toLocaleDateString("id-ID")}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <FileText className="h-5 w-5 text-emerald-600" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Terakhir Update
+                        </p>
+                        <p className="font-semibold">
+                          {new Date(car.updatedAt).toLocaleDateString("id-ID")}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -432,49 +466,92 @@ export default function CarDetailPage() {
                 <CardTitle>Fitur & Fasilitas</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Show new featureBlocks if available */}
+                {/* Show new featureBlocks with proper icon rendering */}
                 {car.featureBlocks && car.featureBlocks.length > 0 ? (
                   <div className="grid gap-4 sm:grid-cols-2">
-                    {car.featureBlocks.map((feature) => (
-                      <div
-                        key={feature.id}
-                        className="flex items-start gap-3 p-3 rounded-lg border bg-muted/50"
-                      >
-                        <div className="flex-shrink-0">
-                          {feature.icon && (
+                    {car.featureBlocks.map((feature) => {
+                      // Map icon names to actual Lucide React components
+                      const getIconComponent = (iconName) => {
+                        const iconMap = {
+                          Shield: Shield,
+                          Music: Music,
+                          Snowflake: Snowflake,
+                          Wifi: Wifi,
+                          Camera: Camera,
+                          Navigation: Navigation,
+                          Battery: Battery,
+                          Bluetooth: Bluetooth,
+                          Smartphone: Smartphone,
+                          Zap: Zap,
+                          Wind: Wind,
+                          Sun: Sun,
+                          Fuel: Fuel,
+                          Users: Users,
+                          Lock: Lock,
+                          MapPin: MapPin,
+                          Radio: Radio,
+                          Volume2: Volume2,
+                          Thermometer: Thermometer,
+                          Settings: Settings,
+                          Star: Star,
+                          Award: Award,
+                          CheckCircle: CheckCircle,
+                          Heart: Heart,
+                          Coffee: Coffee,
+                          Briefcase: Briefcase,
+                        };
+                        return iconMap[iconName] || Settings;
+                      };
+
+                      const IconComponent = getIconComponent(feature.icon);
+
+                      return (
+                        <div
+                          key={feature.id}
+                          className="flex items-start gap-3 p-3 rounded-lg border bg-muted/50"
+                        >
+                          <div className="flex-shrink-0">
                             <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                              <span className="text-emerald-600 text-sm font-semibold">
-                                {feature.icon.charAt(0).toUpperCase()}
-                              </span>
+                              <IconComponent className="h-4 w-4 text-emerald-600" />
                             </div>
-                          )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-sm text-foreground">
+                              {feature.title}
+                            </h4>
+                            {feature.description && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {feature.description}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-sm text-foreground">
-                            {feature.title}
-                          </h4>
-                          {feature.description && (
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {feature.description}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
-                  /* Fallback to legacy features array */
-                  <div className="flex flex-wrap gap-2">
-                    {(car.features || []).length === 0 && (
-                      <span className="text-sm text-muted-foreground">
-                        Belum ada fitur yang ditambahkan.
-                      </span>
-                    )}
-                    {(car.features || []).map((feature) => (
-                      <Badge key={feature} variant="secondary">
-                        {feature}
-                      </Badge>
-                    ))}
+                  /* Fallback to legacy features array if no featureBlocks */
+                  <div>
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Star className="h-12 w-12 mx-auto mb-2" />
+                      <p className="font-medium">
+                        Belum ada fitur unggulan yang ditambahkan
+                      </p>
+                      <p className="text-xs mt-1">
+                        Tambahkan fitur dengan icon dan deskripsi di halaman
+                        edit kendaraan
+                      </p>
+                      {(car.features || []).length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-xs text-amber-600 mb-2">
+                            ⚠️ Fitur lama ditemukan: {car.features.join(", ")}
+                          </p>
+                          <p className="text-xs text-amber-600">
+                            Silakan tambahkan ulang sebagai fitur unggulan baru
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -529,9 +606,9 @@ export default function CarDetailPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle>Harga Sewa</CardTitle>
                   <Button asChild variant="outline" size="sm" className="gap-2">
-                    <Link href={`/admin/cars/${car.id}/tariffs`}>
+                    <Link href="/admin/tariffs">
                       <CreditCard className="h-4 w-4" />
-                      Edit Tarif
+                      Kelola Tarif
                     </Link>
                   </Button>
                 </div>
@@ -546,32 +623,151 @@ export default function CarDetailPage() {
                   </p>
                   <p className="text-sm text-emerald-600">per hari</p>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-6">
                   {(car.tariffs || []).length === 0 && (
-                    <p className="text-sm text-muted-foreground">
-                      Belum ada data tarif yang ditambahkan.
-                    </p>
-                  )}
-                  {(car.tariffs || []).map((tariff) => (
-                    <div
-                      key={tariff.id}
-                      className="flex items-center justify-between gap-3 border-b border-muted py-2"
-                    >
-                      <div>
-                        <p className="font-medium">{tariff.name}</p>
-                        {tariff.description && (
-                          <p className="text-xs text-muted-foreground">
-                            {tariff.description}
-                          </p>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">
-                          {formatCurrency(tariff.price)}
-                        </p>
-                      </div>
+                    <div className="text-center py-4">
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Belum ada data tarif yang ditambahkan.
+                      </p>
+                      <Button asChild variant="outline" size="sm">
+                        <Link href="/admin/tariffs">
+                          Kelola Tarif di Halaman Tarif
+                        </Link>
+                      </Button>
                     </div>
-                  ))}
+                  )}
+
+                  {/* Group tariffs by category */}
+                  {(() => {
+                    // Group tariffs by category first
+                    const groupedByCategory = {};
+                    (car.tariffs || []).forEach((t) => {
+                      const cat = t.category || "Tanpa Kategori";
+                      if (!groupedByCategory[cat]) groupedByCategory[cat] = [];
+                      groupedByCategory[cat].push(t);
+                    });
+
+                    const categoryNames = Object.keys(groupedByCategory).sort(
+                      (a, b) => {
+                        if (a === "Tanpa Kategori") return 1;
+                        if (b === "Tanpa Kategori") return -1;
+                        return a.localeCompare(b, "id-ID");
+                      }
+                    );
+
+                    return categoryNames.map((catName) => {
+                      const rawItems = groupedByCategory[catName];
+                      // Build map for base + drop variants
+                      const baseMap = new Map();
+                      rawItems.forEach((item) => {
+                        const isDrop = /\(\s*Drop\s*\)$/i.test(item.name);
+                        if (isDrop) {
+                          const baseName = item.name
+                            .replace(/\(\s*Drop\s*\)$/i, "")
+                            .trim();
+                          const existing = baseMap.get(baseName);
+                          if (existing) {
+                            existing.dropVariant = item;
+                          } else {
+                            // If base not yet encountered, create placeholder then fill later when base appears
+                            baseMap.set(baseName, {
+                              base: null,
+                              dropVariant: item,
+                            });
+                          }
+                        } else {
+                          const existing = baseMap.get(item.name);
+                          if (existing) {
+                            existing.base = item;
+                          } else {
+                            baseMap.set(item.name, {
+                              base: item,
+                              dropVariant: null,
+                            });
+                          }
+                        }
+                      });
+
+                      // Convert map to array objects with sorting by base.order or fallback name
+                      const combined = Array.from(baseMap.entries()).map(
+                        ([name, pair]) => {
+                          return {
+                            name,
+                            base: pair.base,
+                            dropVariant: pair.dropVariant,
+                            order:
+                              pair.base?.order ??
+                              pair.dropVariant?.order ??
+                              9999,
+                          };
+                        }
+                      );
+
+                      combined.sort((a, b) => {
+                        if (
+                          typeof a.order === "number" &&
+                          typeof b.order === "number"
+                        ) {
+                          return a.order - b.order;
+                        }
+                        return a.name.localeCompare(b.name, "id-ID");
+                      });
+
+                      return (
+                        <div key={catName} className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-semibold text-emerald-700">
+                              {catName}
+                            </h4>
+                            <span className="text-xs text-muted-foreground">
+                              {rawItems.length} item
+                            </span>
+                          </div>
+                          <div className="rounded-md border divide-y bg-white">
+                            {combined.map((row) => {
+                              const { base, dropVariant } = row;
+                              return (
+                                <div
+                                  key={row.name}
+                                  className="px-3 py-2 space-y-1"
+                                >
+                                  <div className="flex items-center justify-between gap-3">
+                                    <div className="min-w-0">
+                                      <p className="font-medium text-sm truncate">
+                                        {row.name}
+                                      </p>
+                                      {base?.description && (
+                                        <p className="text-xs text-muted-foreground truncate">
+                                          {base.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="font-semibold text-sm">
+                                        {formatCurrency(
+                                          base?.price || dropVariant?.price || 0
+                                        )}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  {dropVariant && (
+                                    <div className="flex items-center justify-between gap-3 border-t pt-1 text-xs">
+                                      <p className="text-muted-foreground truncate">
+                                        {row.name} (Drop)
+                                      </p>
+                                      <p className="font-semibold">
+                                        {formatCurrency(dropVariant.price)}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
               </CardContent>
             </Card>
@@ -604,8 +800,8 @@ export default function CarDetailPage() {
                   className="w-full justify-start gap-2"
                   variant="outline"
                 >
-                  <Link href={`/admin/cars/${car.id}/tariffs`}>
-                    <CreditCard className="h-4 w-4" /> Atur Tarif
+                  <Link href="/admin/tariffs">
+                    <CreditCard className="h-4 w-4" /> Kelola Tarif Global
                   </Link>
                 </Button>
               </CardContent>

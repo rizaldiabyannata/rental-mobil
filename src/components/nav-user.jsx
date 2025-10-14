@@ -84,21 +84,21 @@ export function NavUser({ user }) {
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <Link href="/admin/profile" className="flex items-center gap-2">
-                  <BadgeCheck />
+                  <BadgeCheck className="hover:text-white" />
                   <span>Account</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell />
+                <Bell className="hover:text-white" />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onSelect={handleLogout}
-              className="text-red-600 focus:text-red-700"
+              className="group text-red-600 data-[highlighted]:bg-red-600 data-[highlighted]:text-white focus:bg-red-600 focus:text-white"
             >
-              <LogOut />
+              <LogOut className="text-current group-data-[highlighted]:text-white" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -61,18 +61,7 @@ model CarFeature {
     @@index([order])
 }
 
-// 🎯 Manajemen Paket Tour
-model TourPackage {
-    id          String   @id @default(uuid())
-    name        String // Nama paket
-    description String // Deskripsi singkat
-    imageUrl    String? // Gambar utama
-    itinerary   Json? // Detail itinerary
-    price       Int? // Harga dalam rupiah
-    duration    String? // Durasi paket
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-}
+// 🎯 Manajemen Paket Tour (dihapus)
 
 // ❓ Manajemen FAQ
 model FAQ {

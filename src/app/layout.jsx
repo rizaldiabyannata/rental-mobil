@@ -1,5 +1,6 @@
 import { Inter, Lora, Fira_Code } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 // Map Next fonts to the CSS variables you defined in globals.css
 const inter = Inter({
@@ -27,9 +28,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${inter.variable} ${lora.variable} ${firaCode.variable}`}>
+    <html
+      lang="id"
+      className={`${inter.variable} ${lora.variable} ${firaCode.variable}`}
+    >
       <body className="font-sans antialiased">
         {children}
+        <Toaster />
       </body>
     </html>
   );

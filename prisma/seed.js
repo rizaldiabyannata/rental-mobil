@@ -171,40 +171,7 @@ async function main() {
     }
   }
 
-  // 5) Tour Packages
-  const tourCount = await prisma.tourPackage.count();
-  if (tourCount === 0) {
-    await prisma.tourPackage.createMany({
-      data: [
-        {
-          name: "Paket City Tour 1 Hari",
-          description: "Jelajahi destinasi populer dalam 1 hari.",
-          imageUrl: "/file.svg",
-          itinerary: {
-            schedule: [
-              "08:00 Jemput",
-              "09:00 Museum",
-              "12:00 Kuliner",
-              "15:00 Taman Kota",
-              "18:00 Kembali",
-            ],
-          },
-          price: 750000,
-          duration: "1 Hari",
-        },
-        {
-          name: "Paket Wisata Alam 2 Hari",
-          description: "Menikmati alam dan pegunungan.",
-          imageUrl: "/globe.svg",
-          itinerary: {
-            schedule: ["Hari 1: Air Terjun", "Hari 2: Danau & Perkebunan"],
-          },
-          price: 1500000,
-          duration: "2 Hari",
-        },
-      ],
-    });
-  }
+  // 5) Tour Packages (removed)
 
   // 6) FAQ
   const faqCount = await prisma.fAQ.count();

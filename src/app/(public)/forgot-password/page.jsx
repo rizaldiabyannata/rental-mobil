@@ -77,6 +77,12 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading || sent}
+              className={cn(
+                // Base visibility
+                "w-full h-11 rounded-xl bg-white border border-slate-300 shadow-sm px-4 placeholder:text-slate-400",
+                // Focus styles
+                "focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-0"
+              )}
             />
           </div>
           {!sent ? (
@@ -91,6 +97,12 @@ export default function ForgotPasswordPage() {
                 onChange={(e) => setOtp(e.target.value)}
                 maxLength={6}
                 disabled={loading}
+                className={cn(
+                  // Base visibility
+                  "w-full h-11 rounded-xl bg-white border border-slate-300 shadow-sm px-4 placeholder:text-slate-400",
+                  // Focus styles
+                  "focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-0"
+                )}
               />
               <div className="flex gap-2">
                 <Button onClick={verifyOtp} disabled={loading}>

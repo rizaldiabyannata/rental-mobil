@@ -7,17 +7,19 @@ async function getStats() {
     const [
       totalCars,
       availableCars,
-      tourPackages,
       partners,
       faqs,
       activeTerms,
+      tariffCategories,
+      tariffItems,
     ] = await Promise.all([
       prisma.car.count(),
       prisma.car.count({ where: { available: true } }),
-      prisma.tourPackage.count(),
       prisma.partner.count(),
       prisma.fAQ.count(),
       prisma.termsAndConditions.count({ where: { isActive: true } }),
+      prisma.tariffCategory.count(),
+      prisma.tariffItem.count(),
     ]);
 
     return NextResponse.json({
@@ -28,7 +30,10 @@ async function getStats() {
           available: availableCars,
           unavailable: Math.max(totalCars - availableCars, 0),
         },
-        tourPackages: { total: tourPackages },
+        tariffs: {
+          categories: tariffCategories,
+          items: tariffItems,
+        },
         partners: { total: partners },
         faqs: { total: faqs },
         terms: { active: activeTerms },

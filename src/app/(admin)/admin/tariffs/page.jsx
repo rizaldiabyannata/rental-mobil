@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Table,
@@ -37,7 +38,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Plus, Search, Edit, Trash2, RefreshCcw } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  RefreshCcw,
+  Package,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -46,8 +55,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatIDR } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export default function TariffsPage() {
+  const searchParams = useSearchParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -70,6 +81,14 @@ export default function TariffsPage() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Set initial carId from URL parameter
+  useEffect(() => {
+    const carIdFromUrl = searchParams.get("carId");
+    if (carIdFromUrl) {
+      setSelectedCarId(carIdFromUrl);
+    }
+  }, [searchParams]);
   const [deleteError, setDeleteError] = useState("");
 
   const load = async () => {
@@ -207,10 +226,12 @@ export default function TariffsPage() {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight">
-              Tarif Penyewaan
+              Manajemen Tarif Penyewaan
             </h1>
             <p className="text-muted-foreground">
-              Kelola kategori dan item tarif
+              Kelola semua kategori dan item tarif (umum & per-kendaraan).
+              Gunakan filter mobil untuk melihat atau mengatur tarif khusus
+              kendaraan tertentu.
             </p>
           </div>
           <div className="flex gap-2">
@@ -228,11 +249,33 @@ export default function TariffsPage() {
           </div>
         </div>
 
+        <Card className="border-emerald-200 bg-emerald-50/50">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <div className="rounded-full bg-emerald-100 p-2">
+                <Package className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-emerald-800">
+                  Sistem Manajemen Tarif Terpusat
+                </h3>
+                <p className="text-xs text-emerald-700 mt-1">
+                  Halaman ini adalah pusat kendali untuk semua tarif penyewaan.
+                  Anda dapat mengelola tarif umum (berlaku untuk semua
+                  kendaraan) dan tarif khusus per kendaraan. Gunakan filter
+                  "Mobil" untuk melihat atau mengatur tarif spesifik suatu
+                  kendaraan.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Daftar Tarif (Kategori & Item)</CardTitle>
             <CardDescription>
-              Tampilan lengkap dengan pencarian dan filter
+              Tampilan lengkap dengan pencarian dan filter per mobil
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -289,6 +332,18 @@ export default function TariffsPage() {
                 </Select>
                 {/* season filter removed */}
               </div>
+              {selectedCarId !== "all" && (
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="secondary"
+                    className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                  >
+                    📋 Menampilkan tarif untuk:{" "}
+                    {carOptions.find((c) => c.id === selectedCarId)?.name ||
+                      "Kendaraan"}
+                  </Badge>
+                </div>
+              )}
             </div>
 
             {loading && (
@@ -357,11 +412,9 @@ export default function TariffsPage() {
                               <TableHead>Service Type</TableHead>
                               <TableHead>Package Type</TableHead>
                               <TableHead className="w-[160px]">Price</TableHead>
-                              {/* Season column removed */}
                               <TableHead className="w-[200px]">
                                 Armada
                               </TableHead>
-                              {/* Order removed */}
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -380,11 +433,11 @@ export default function TariffsPage() {
                                   {it.carId ? (
                                     <Link
                                       className="underline"
-                                      href={`/admin/cars/${it.carId}/tariffs`}
+                                      href={`/admin/cars/${it.carId}`}
                                     >
                                       {carOptions.find(
                                         (co) => co.id === it.carId
-                                      )?.name || "Lihat Armada"}
+                                      )?.name || "Lihat Detail Mobil"}
                                     </Link>
                                   ) : (
                                     <span className="text-muted-foreground">

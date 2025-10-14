@@ -4,7 +4,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/jwt";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 
 export default async function AdminLayout({ children }) {

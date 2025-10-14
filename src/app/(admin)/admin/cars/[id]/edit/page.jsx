@@ -67,6 +67,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useToast } from "@/components/ui/toast";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -245,6 +246,8 @@ export default function EditCarPage() {
   const baseFieldClasses =
     "bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60";
 
+  const { push: toast } = useToast();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!carId) return;
@@ -291,11 +294,20 @@ export default function EditCarPage() {
         throw new Error(json?.error || "Gagal menyimpan perubahan");
       }
       setSuccess("Perubahan berhasil disimpan.");
+      toast({
+        title: "Disimpan",
+        description: "Perubahan kendaraan berhasil.",
+      });
       // Update original specs snapshot with what we sent
       originalSpecsRef.current = payload.specifications || {};
     } catch (e) {
       console.error(e);
       setError(e.message || "Terjadi kesalahan saat menyimpan data");
+      toast({
+        title: "Gagal Menyimpan",
+        description: e.message,
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }

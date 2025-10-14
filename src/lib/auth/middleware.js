@@ -23,6 +23,16 @@ export function withAuth(handler) {
 
       // Attach user to request for use in handler
       request.user = user;
+
+      // Normalize potential context argument (Next passes (request, { params }))
+      if (rest.length === 1) {
+        let ctx = rest[0];
+        if (ctx && typeof ctx.then === "function") {
+          // If it's a promise (older pattern accidentally used), await it
+          ctx = await ctx;
+        }
+        return handler(request, ctx);
+      }
       return handler(request, ...rest);
     } catch (error) {
       console.error("Auth middleware error:", error);
@@ -49,6 +59,14 @@ export function withLogin(handler) {
 
       // Attach user to request for use in handler
       request.user = user;
+
+      if (rest.length === 1) {
+        let ctx = rest[0];
+        if (ctx && typeof ctx.then === "function") {
+          ctx = await ctx;
+        }
+        return handler(request, ctx);
+      }
       return handler(request, ...rest);
     } catch (error) {
       console.error("Login middleware error:", error);

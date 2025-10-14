@@ -109,6 +109,7 @@ async function updateCar(request, props) {
       available,
       features,
       specifications,
+      featureBlocks, // array of {id?, icon, title, description, order?}
     } = body;
 
     // Siapkan data update
@@ -125,22 +126,121 @@ async function updateCar(request, props) {
     if (specifications !== undefined)
       updateData.specifications = specifications;
 
-    // Update car
-    const updatedCar = await prisma.car.update({
-      where: { id },
-      data: updateData,
-      include: {
-        images: { orderBy: { order: "asc" } },
-        tariffItems: {
-          orderBy: { order: "asc" },
-          include: { category: true },
+    let updatedCar;
+
+    // Jika featureBlocks dikirim, lakukan sinkronisasi dalam transaksi
+    if (Array.isArray(featureBlocks)) {
+      updatedCar = await prisma.$transaction(async (tx) => {
+        // Update data utama kendaraan terlebih dahulu
+        const baseCar = await tx.car.update({
+          where: { id },
+          data: updateData,
+        });
+
+        // Ambil fitur yang sudah ada di DB
+        const existingBlocks = await tx.carFeature.findMany({
+          where: { carId: id },
+        });
+        const existingMap = new Map(existingBlocks.map((b) => [b.id, b]));
+
+        // Normalisasi input (pastikan order berurutan dimulai dari 0)
+        const normalized = featureBlocks
+          .filter(
+            (b) =>
+              b &&
+              b.icon &&
+              b.title &&
+              typeof b.title === "string" &&
+              b.title.trim() !== ""
+          )
+          .map((b, idx) => ({
+            id: b.id || null,
+            icon: String(b.icon),
+            title: String(b.title).trim(),
+            description: b.description ? String(b.description).trim() : "",
+            order: idx,
+          }));
+
+        const incomingIds = new Set(
+          normalized.filter((b) => b.id).map((b) => b.id)
+        );
+
+        // Hapus fitur yang tidak lagi ada dalam input
+        const toDelete = existingBlocks.filter((b) => !incomingIds.has(b.id));
+        if (toDelete.length) {
+          await tx.carFeature.deleteMany({
+            where: { id: { in: toDelete.map((d) => d.id) } },
+          });
+        }
+
+        // Upsert (update yang ada, create yang baru tanpa id)
+        for (const block of normalized) {
+          if (block.id && existingMap.has(block.id)) {
+            // Update
+            await tx.carFeature.update({
+              where: { id: block.id },
+              data: {
+                icon: block.icon,
+                title: block.title,
+                description: block.description,
+                order: block.order,
+              },
+            });
+          } else if (!block.id) {
+            await tx.carFeature.create({
+              data: {
+                carId: id,
+                icon: block.icon,
+                title: block.title,
+                description: block.description,
+                order: block.order,
+              },
+            });
+          }
+        }
+
+        // Ambil kembali data lengkap sesudah sinkronisasi
+        return tx.car.findUnique({
+          where: { id },
+          include: {
+            images: { orderBy: { order: "asc" } },
+            tariffItems: {
+              orderBy: { order: "asc" },
+              include: { category: true },
+            },
+            featureBlocks: { orderBy: { order: "asc" } },
+            _count: { select: { images: true, tariffItems: true } },
+          },
+        });
+      });
+    } else {
+      // Tidak ada perubahan fitur – update standar
+      updatedCar = await prisma.car.update({
+        where: { id },
+        data: updateData,
+        include: {
+          images: { orderBy: { order: "asc" } },
+          tariffItems: {
+            orderBy: { order: "asc" },
+            include: { category: true },
+          },
+          featureBlocks: { orderBy: { order: "asc" } },
+          _count: { select: { images: true, tariffItems: true } },
         },
-        featureBlocks: { orderBy: { order: "asc" } },
-        _count: { select: { images: true, tariffItems: true } },
-      },
-    });
+      });
+    }
 
     const api = carToApi(updatedCar);
+    // Pastikan featureBlocks dikembalikan dalam response API
+    api.featureBlocks = updatedCar.featureBlocks
+      ? updatedCar.featureBlocks.map((fb) => ({
+          id: fb.id,
+          icon: fb.icon,
+          title: fb.title,
+          description: fb.description,
+          order: fb.order,
+        }))
+      : [];
     return NextResponse.json({
       success: true,
       message: "Car updated successfully",
