@@ -167,19 +167,31 @@ const PaketTourPage = () => {
     (item) => item.armada === "TOYOTA HIACE"
   );
 
-  return (
-    <main className="container mx-auto px-4 py-12 md:py-16">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Daftar Harga Paket Tour
-        </h1>
-        <p className="mt-2 text-lg text-gray-600">
-          Jelajahi Lombok dengan paket tour eksklusif kami.
-        </p>
-      </div>
+import PageHero from "@/components/shared/PageHero";
 
-      <div className="space-y-8">
-        <FilterControls
+const PaketTourPage = () => {
+  const { filters, filteredData, handleFilterChange } =
+    usePriceFilter(dataTour);
+
+  const innovaFilteredData = filteredData.filter(
+    (item) => item.armada === "INNOVA REBORN"
+  );
+  const hiaceFilteredData = filteredData.filter(
+    (item) => item.armada === "TOYOTA HIACE"
+  );
+
+  return (
+    <>
+      <PageHero
+        title="Harga Paket Tour"
+        breadcrumbs={[
+          { label: "Harga", href: "/harga/sewa-harian" },
+          { label: "Paket Tour" },
+        ]}
+      />
+      <main className="container mx-auto px-4 py-12 md:py-16">
+        <div className="space-y-8">
+          <FilterControls
           filters={filters}
           onFilterChange={handleFilterChange}
           options={filterOptions}

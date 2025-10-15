@@ -52,19 +52,31 @@ const SewaHarianPage = () => {
     (item) => item.armada === "TOYOTA HIACE"
   );
 
-  return (
-    <main className="container mx-auto px-4 py-12 md:py-16">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Daftar Harga Sewa Harian
-        </h1>
-        <p className="mt-2 text-lg text-gray-600">
-          Temukan tarif terbaik untuk kebutuhan sewa harian Anda.
-        </p>
-      </div>
+import PageHero from "@/components/shared/PageHero";
 
-      <div className="space-y-8">
-        <FilterControls
+const SewaHarianPage = () => {
+  const { filters, filteredData, handleFilterChange } =
+    usePriceFilter(dataSewaHarian);
+
+  const innovaFilteredData = filteredData.filter(
+    (item) => item.armada === "INNOVA REBORN"
+  );
+  const hiaceFilteredData = filteredData.filter(
+    (item) => item.armada === "TOYOTA HIACE"
+  );
+
+  return (
+    <>
+      <PageHero
+        title="Harga Sewa Harian"
+        breadcrumbs={[
+          { label: "Harga", href: "/harga/sewa-harian" },
+          { label: "Sewa Harian" },
+        ]}
+      />
+      <main className="container mx-auto px-4 py-12 md:py-16">
+        <div className="space-y-8">
+          <FilterControls
           filters={filters}
           onFilterChange={handleFilterChange}
           options={filterOptions}
