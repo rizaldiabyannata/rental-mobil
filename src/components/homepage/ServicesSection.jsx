@@ -29,25 +29,28 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section className="bg-white py-[25px] md:py-[50px]">
+    <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-emerald-700">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Jenis Layanan Kami
           </h2>
-          <div className="w-[147px] md:w-[268px] h-[1px] bg-[#FF9700] mt-2 mx-auto" />
+          <p className="mt-2 text-lg text-gray-600">
+            Kami menawarkan berbagai layanan untuk memenuhi setiap kebutuhan
+            perjalanan Anda.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
             <Card
               key={index}
-              className="rounded-lg border border-gray-200 bg-white shadow-md p-4 md:p-6 flex flex-col items-start gap-2"
+              className="flex flex-col gap-2 rounded-lg p-6 shadow-sm"
             >
-              <CardTitle className="font-geist text-sm md:text-[16px] lg:text-xl font-semibold text-gray-900 leading-tight">
+              <CardTitle className="font-sans text-lg font-semibold text-gray-900">
                 {service.title}
               </CardTitle>
-              <p className="font-geist text-[10px] md:text-[12px] lg:text-sm font-normal text-gray-500 leading-normal">
+              <p className="font-sans text-sm text-gray-600">
                 {service.description}
               </p>
             </Card>

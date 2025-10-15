@@ -168,30 +168,45 @@ const PaketTourPage = () => {
   );
 
   return (
-    <main className="container mx-auto py-16 px-4">
-      <h1 className="text-4xl font-bold text-center mb-12 text-emerald-700">
-        Daftar Harga Paket Tour
-        <div className="w-[147px] md:w-[268px] h-[1px] bg-[#FF9700] mt-2 mx-auto" />
-      </h1>
-
-      <FilterControls
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        options={filterOptions}
-      />
-      {innovaFilteredData.length > 0 && (
-        <PriceTable title="Armada: Innova Reborn" data={innovaFilteredData} />
-      )}
-
-      {hiaceFilteredData.length > 0 && (
-        <PriceTable title="Armada: Toyota Hiace" data={hiaceFilteredData} />
-      )}
-
-      {filteredData.length === 0 && (
-        <p className="text-center text-gray-500">
-          Tidak ada hasil yang cocok dengan filter Anda.
+    <main className="container mx-auto px-4 py-12 md:py-16">
+      <div className="mb-10 text-center">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Daftar Harga Paket Tour
+        </h1>
+        <p className="mt-2 text-lg text-gray-600">
+          Jelajahi Lombok dengan paket tour eksklusif kami.
         </p>
-      )}
+      </div>
+
+      <div className="space-y-8">
+        <FilterControls
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          options={filterOptions}
+        />
+
+        <div className="space-y-12">
+          {innovaFilteredData.length > 0 && (
+            <PriceTable
+              title="Armada: Innova Reborn"
+              data={innovaFilteredData}
+            />
+          )}
+
+          {hiaceFilteredData.length > 0 && (
+            <PriceTable
+              title="Armada: Toyota Hiace"
+              data={hiaceFilteredData}
+            />
+          )}
+
+          {filteredData.length === 0 && (
+            <p className="text-center text-gray-500">
+              Tidak ada hasil yang cocok dengan filter Anda.
+            </p>
+          )}
+        </div>
+      </div>
     </main>
   );
 };

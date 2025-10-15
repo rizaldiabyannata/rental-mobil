@@ -50,49 +50,45 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Reset Password</CardTitle>
-          <CardDescription>Masukkan password baru Anda</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {error && <div className="text-red-600 text-sm">{error}</div>}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Password baru</label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-              className={cn(
-                // Base visibility
-                "w-full h-11 rounded-xl bg-white border border-slate-300 shadow-sm px-4 placeholder:text-slate-400",
-                // Focus styles
-                "focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-0"
-              )}
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Konfirmasi password</label>
-            <Input
-              type="password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              disabled={loading}
-              className={cn(
-                // Base visibility
-                "w-full h-11 rounded-xl bg-white border border-slate-300 shadow-sm px-4 placeholder:text-slate-400",
-                // Focus styles
-                "focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-0"
-              )}
-            />
-          </div>
-          <Button onClick={submit} disabled={loading}>
-            Simpan Password
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+    <main className="container mx-auto flex min-h-[calc(100vh-180px)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Atur Ulang Password
+          </h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Masukkan password baru Anda di bawah ini.
+          </p>
+        </div>
+        <Card>
+          <CardContent className="space-y-6 p-6 sm:p-8">
+            {error && <div className="text-red-600 text-sm">{error}</div>}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Password baru</label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">
+                Konfirmasi password
+              </label>
+              <Input
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+            <Button onClick={submit} disabled={loading} className="w-full">
+              Simpan Password
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 }

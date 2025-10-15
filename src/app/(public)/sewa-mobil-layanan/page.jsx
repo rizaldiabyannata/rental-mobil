@@ -4,11 +4,11 @@ import ServicesSection from "@/components/homepage/ServicesSection";
 import Pertanyaan from "@/components/sewa-mobil-layanan/Pertanyaan";
 export default function SewaMobilLayanan() {
   return (
-    <>
+    <main>
       <HeroMobil />
       <PaketTourSection />
       <ServicesSection />
       <Pertanyaan />
-    </>
+    </main>
   );
 }
