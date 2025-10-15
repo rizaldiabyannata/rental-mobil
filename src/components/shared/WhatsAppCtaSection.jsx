@@ -1,0 +1,83 @@
+"use client";
+
+import React from "react";
+import Image from "next/image";
+import SectionHeading from "@/components/SectionHeading";
+import WhatsAppCta from "@/components/shared/WhatsAppCta";
+import { cn } from "@/lib/utils";
+import { ShieldCheck, Clock3, ThumbsUp } from "lucide-react";
+
+const perks = [
+  { icon: ShieldCheck, text: "Driver berpengalaman & ramah" },
+  { icon: Clock3, text: "Respon cepat via WhatsApp" },
+  { icon: ThumbsUp, text: "Jadwal fleksibel sesuai kebutuhan" },
+];
+
+export default function WhatsAppCtaSection({
+  carName,
+  waUrlBase,
+  imageSrc = "/imageforctasection.png",
+  imageAlt = "Armada siap berangkat",
+  className,
+}) {
+  return (
+    <section className={cn("w-full py-10 md:py-14 bg-neutral-50", className)}>
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+          {/* Left: Text + CTA */}
+          <div>
+            <SectionHeading
+              title="Siap Berangkat? Chat Kami Sekarang"
+              align="left"
+              size="lg"
+              underline
+              underlineColor="bg-amber-500"
+              underlineWidth="lg"
+              underlineOffset="sm"
+              titleClassName="text-emerald-700"
+              underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+              className="mb-4"
+            />
+            <p className="text-neutral-700 md:text-lg">
+              Tanyakan ketersediaan {carName ? <b>{carName}</b> : "armada"} dan
+              dapatkan penawaran terbaik langsung via WhatsApp.
+            </p>
+
+            <ul className="mt-4 space-y-2">
+              {perks.map((p, i) => (
+                <li
+                  key={i}
+                  className="flex items-center gap-3 text-neutral-800"
+                >
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                    <p.icon className="h-4 w-4" />
+                  </span>
+                  <span className="text-sm md:text-base">{p.text}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6">
+              <WhatsAppCta carName={carName} waUrlBase={waUrlBase} />
+            </div>
+          </div>
+
+          {/* Right: Image */}
+          <div className="relative overflow-hidden rounded-2xl shadow-lg">
+            <div className="relative w-full h-64 md:h-[360px] lg:h-[440px]">
+              <Image
+                src={imageSrc}
+                alt={imageAlt}
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+                priority={false}
+              />
+            </div>
+            <div className="pointer-events-none absolute inset-0 ring-1 ring-black/5 rounded-2xl" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
