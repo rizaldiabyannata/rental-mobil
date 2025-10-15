@@ -55,7 +55,7 @@ const SewaHarianPage = () => {
 
   return (
     <>
-      <HeroSection imageOnRight={false} imageSrc="/HeroSewa.png" />
+      <HeroSection imageOnRight={false} imageSrc="/Hero-2.png" />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="space-y-8">
