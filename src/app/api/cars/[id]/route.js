@@ -83,6 +83,22 @@ async function getCarById(request, props) {
           order: fb.order,
         }))
       : [];
+
+    // Fallback: jika belum ada record di CarFeature, gunakan specifications.featureCards untuk tampil
+    if (
+      (!api.featureBlocks || api.featureBlocks.length === 0) &&
+      Array.isArray(car.specifications?.featureCards) &&
+      car.specifications.featureCards.length > 0
+    ) {
+      api.featureBlocks = car.specifications.featureCards
+        .filter((b) => b && b.icon && b.title)
+        .map((b, idx) => ({
+          icon: String(b.icon),
+          title: String(b.title),
+          description: b.description ? String(b.description) : "",
+          order: typeof b.order === "number" ? b.order : idx,
+        }));
+    }
     return NextResponse.json({ success: true, data: api });
   } catch (error) {
     console.error("Get car by ID error:", error);

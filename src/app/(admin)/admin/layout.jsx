@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth/jwt";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
+import { ToastProvider } from "@/components/ui/toast";
 
 export default async function AdminLayout({ children }) {
   // Server component guard: if not logged-in ADMIN, redirect to login
@@ -15,12 +16,14 @@ export default async function AdminLayout({ children }) {
   }
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full bg-gray-50 flex">
-        <AppSidebar />
-        <SidebarInset>
-          <main className="flex-1">{children}</main>
-        </SidebarInset>
-      </div>
+      <ToastProvider>
+        <div className="min-h-screen w-full bg-gray-50 flex">
+          <AppSidebar />
+          <SidebarInset>
+            <main className="flex-1">{children}</main>
+          </SidebarInset>
+        </div>
+      </ToastProvider>
     </SidebarProvider>
   );
 }

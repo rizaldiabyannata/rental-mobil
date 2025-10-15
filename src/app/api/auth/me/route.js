@@ -24,7 +24,11 @@ export async function GET() {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      // Samakan perilaku: treat as unauthorized jika user di token tidak ada di DB
+      return NextResponse.json(
+        { error: "Unauthorized - User not found" },
+        { status: 401 }
+      );
     }
 
     return NextResponse.json({

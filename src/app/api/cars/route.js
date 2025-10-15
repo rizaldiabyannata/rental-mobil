@@ -152,7 +152,7 @@ async function createCar(request) {
       specifications,
     } = body;
 
-    // Validasi input
+    // Validasi input dasar
     if (!name || startingPrice === undefined) {
       return NextResponse.json(
         { error: "Name and startingPrice are required" },
@@ -165,38 +165,109 @@ async function createCar(request) {
         { status: 400 }
       );
     }
-    if (features && !Array.isArray(features)) {
+
+    // Normalisasi specifications: boleh object atau array (akan jadi { details: [...] })
+    let specsNormalized = null;
+    if (Array.isArray(specifications)) {
+      specsNormalized = { details: specifications };
+    } else if (
+      specifications &&
+      typeof specifications === "object" &&
+      !Array.isArray(specifications)
+    ) {
+      specsNormalized = { ...specifications };
+    } else if (specifications == null) {
+      specsNormalized = null;
+    } else {
       return NextResponse.json(
-        { error: "features must be an array of strings" },
-        { status: 400 }
-      );
-    }
-    if (features && !features.every((f) => typeof f === "string")) {
-      return NextResponse.json(
-        { error: "each feature must be string" },
+        { error: "specifications must be an object or array" },
         { status: 400 }
       );
     }
 
-    const car = await prisma.car.create({
-      data: {
-        name,
-        description: description || null,
-        startingPrice: parseInt(startingPrice),
-        capacity: capacity ? parseInt(capacity) : 0,
-        transmission,
-        fuelType,
-        available,
-        features: features || [],
-        specifications: specifications || null,
-      },
+    // Normalisasi features: terima array string ATAU array objek fitur unggulan
+    let featuresStrings = [];
+    if (features == null) {
+      featuresStrings = [];
+    } else if (
+      Array.isArray(features) &&
+      features.every((f) => typeof f === "string")
+    ) {
+      featuresStrings = features;
+    } else if (
+      Array.isArray(features) &&
+      features.every((f) => f && typeof f === "object" && !Array.isArray(f))
+    ) {
+      // Pindahkan ke specifications.featureCards
+      specsNormalized = specsNormalized || {};
+      specsNormalized.featureCards = features;
+      featuresStrings = [];
+    } else {
+      return NextResponse.json(
+        { error: "features must be an array of strings or array of objects" },
+        { status: 400 }
+      );
+    }
+
+    // Kumpulkan featureBlocks dari body atau dari specifications.featureCards
+    const incomingFeatureBlocks = Array.isArray(body.featureBlocks)
+      ? body.featureBlocks
+      : Array.isArray(specsNormalized?.featureCards)
+      ? specsNormalized.featureCards
+      : [];
+
+    // Buat dalam transaksi agar konsisten
+    const created = await prisma.$transaction(async (tx) => {
+      const newCar = await tx.car.create({
+        data: {
+          name,
+          description: description || null,
+          startingPrice: parseInt(startingPrice),
+          capacity: capacity ? parseInt(capacity) : 0,
+          transmission,
+          fuelType,
+          available,
+          features: featuresStrings,
+          specifications: specsNormalized,
+        },
+      });
+
+      // Normalisasi dan simpan featureBlocks jika ada
+      if (
+        Array.isArray(incomingFeatureBlocks) &&
+        incomingFeatureBlocks.length
+      ) {
+        const normalized = incomingFeatureBlocks
+          .filter(
+            (b) =>
+              b &&
+              b.icon &&
+              b.title &&
+              typeof b.title === "string" &&
+              b.title.trim() !== ""
+          )
+          .map((b, idx) => ({
+            carId: newCar.id,
+            icon: String(b.icon),
+            title: String(b.title).trim(),
+            description: b.description ? String(b.description).trim() : "",
+            order: typeof b.order === "number" ? b.order : idx,
+          }));
+
+        if (normalized.length) {
+          await tx.carFeature.createMany({ data: normalized });
+        }
+      }
+
+      // Ambil kembali car lengkap jika ingin dipakai di response
+      return tx.car.findUnique({ where: { id: newCar.id } });
     });
 
     return NextResponse.json(
       {
         success: true,
         message: "Car created successfully",
-        data: carToApi(car),
+        data: carToApi(created),
       },
       { status: 201 }
     );

@@ -130,7 +130,6 @@ export default function EditCarPage() {
     capacity: "",
     transmission: "Manual",
     fuelType: "Bensin",
-    year: "",
     startingPrice: "",
     available: true,
     licensePlate: "",
@@ -178,7 +177,6 @@ export default function EditCarPage() {
           capacity: String(car.capacity ?? ""),
           transmission: car.transmission || "Manual",
           fuelType: car.fuelType || "Bensin",
-          year: specs.year ? String(specs.year) : "",
           startingPrice:
             car.startingPrice != null ? String(car.startingPrice) : "",
           available: !!car.available,
@@ -258,7 +256,6 @@ export default function EditCarPage() {
       // Merge custom specifications while preserving unknown keys
       const nextSpecs = {
         ...originalSpecsRef.current,
-        year: formData.year ? parseInt(formData.year) : undefined,
         details:
           specDetails && specDetails.length
             ? specDetails.map((d) => ({ label: d.label, value: d.value }))
@@ -482,18 +479,6 @@ export default function EditCarPage() {
                         <SelectItem value="Listrik">Listrik</SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="year">Tahun Kendaraan</Label>
-                    <Input
-                      id="year"
-                      type="number"
-                      value={formData.year}
-                      onChange={(e) =>
-                        handleInputChange("year", e.target.value)
-                      }
-                      className={cn(baseFieldClasses)}
-                    />
                   </div>
                 </div>
               </CardContent>

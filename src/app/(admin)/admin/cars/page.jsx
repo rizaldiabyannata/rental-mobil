@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
 import {
   Table,
   TableBody,
@@ -383,7 +384,6 @@ export default function CarsPage() {
                     <TableHead>Transmisi</TableHead>
                     <TableHead>Harga Mulai</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Fitur</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -467,24 +467,6 @@ export default function CarsPage() {
                           >
                             {car.available ? "Tersedia" : "Tidak Tersedia"}
                           </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex max-w-[200px] flex-wrap gap-1">
-                            {(car.features || []).slice(0, 2).map((feature) => (
-                              <Badge
-                                key={feature}
-                                variant="secondary"
-                                className="text-xs"
-                              >
-                                {feature}
-                              </Badge>
-                            ))}
-                            {(car.features || []).length > 2 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{(car.features || []).length - 2}
-                              </Badge>
-                            )}
-                          </div>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">

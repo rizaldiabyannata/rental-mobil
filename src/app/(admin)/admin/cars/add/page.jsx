@@ -1,20 +1,11 @@
 "use client";
-import { AppSidebar } from "@/components/AppSidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -32,8 +24,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
   Car,
   Save,
@@ -63,240 +61,168 @@ import {
   Wrench,
   Sparkles,
   Armchair,
+  Music,
+  Camera,
+  Navigation,
+  Battery,
+  Bluetooth,
+  Smartphone,
+  Wind,
+  Sun,
+  Lock,
+  MapPin,
+  Radio,
+  Thermometer,
+  Settings,
+  Award,
+  CheckCircle,
+  Heart,
+  Coffee,
+  Briefcase,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/toast";
 
 export default function AddCarPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [name, setName] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [description, setDescription] = useState("");
-  const [transmission, setTransmission] = useState("");
-  const [fuelType, setFuelType] = useState("");
-  const [year, setYear] = useState("");
-  const [startingPrice, setStartingPrice] = useState("");
-  const [available, setAvailable] = useState(true);
-  const [licensePlate, setLicensePlate] = useState("");
-  const [color, setColor] = useState("");
-  const [engineCapacity, setEngineCapacity] = useState("");
-  const [mileage, setMileage] = useState("");
-  const [features, setFeatures] = useState([]);
-  const [newFeature, setNewFeature] = useState("");
-
-  // Feature Cards (title + description + optional icon label)
-  const [featureCards, setFeatureCards] = useState([]);
-  const [newFeatureCard, setNewFeatureCard] = useState({
+  const [success, setSuccess] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    capacity: "",
+    transmission: "Manual",
+    fuelType: "Bensin",
+    startingPrice: "",
+    available: true,
+    licensePlate: "",
+    color: "",
+    engineCapacity: "",
+    mileage: "",
+    engine: "",
+    luggageCapacity: "",
+    entertainment: "",
+  });
+  // Flexible Specification Details: array of { label, value }
+  const [specDetails, setSpecDetails] = useState([]);
+  const [specDraft, setSpecDraft] = useState({ label: "", value: "" });
+  // Structured feature blocks: { icon, title, description, order }
+  const [featureBlocks, setFeatureBlocks] = useState([]);
+  const [fbDraft, setFbDraft] = useState({
     icon: "",
     title: "",
     description: "",
   });
-
-  // Images manager
-  const [images, setImages] = useState([]); // Array<File>
-  const [imagePreviews, setImagePreviews] = useState([]); // Array<objectURL>
-  const [imageAlts, setImageAlts] = useState([]);
-  const [coverIndex, setCoverIndex] = useState(null);
-
-  // Tariff builder (categories with items)
-  const [tariffCategories, setTariffCategories] = useState([]); // [{id, title, items:[{name, price, description, order}]}]
-  const [newCategoryTitle, setNewCategoryTitle] = useState("");
-  const [newTariffItem, setNewTariffItem] = useState({
-    name: "",
-    price: "",
-    description: "",
-  });
-  const [activeCategoryIndex, setActiveCategoryIndex] = useState(null);
-
-  // Lucide icon registry and options for Feature Unggulan icon
-  const iconRegistry = {
-    Star,
-    Car,
-    Shield,
-    Fuel,
-    Snowflake,
-    Luggage,
-    Clock,
-    Volume2,
-    Wifi,
-    Zap,
-    Compass,
-    Cog,
-    Users,
-    BadgeCheck,
-    Gauge,
-    Wrench,
-    Sparkles,
-    Armchair,
-  };
+  // Icon options for features
   const iconOptions = [
-    { name: "Star", Icon: Star },
-    { name: "Car", Icon: Car },
-    { name: "Shield", Icon: Shield },
-    { name: "Fuel", Icon: Fuel },
-    { name: "Snowflake", Icon: Snowflake },
-    { name: "Luggage", Icon: Luggage },
-    { name: "Clock", Icon: Clock },
-    { name: "Volume2", Icon: Volume2 },
-    { name: "Wifi", Icon: Wifi },
-    { name: "Zap", Icon: Zap },
-    { name: "Compass", Icon: Compass },
-    { name: "Cog", Icon: Cog },
-    { name: "Users", Icon: Users },
-    { name: "BadgeCheck", Icon: BadgeCheck },
-    { name: "Gauge", Icon: Gauge },
-    { name: "Wrench", Icon: Wrench },
-    { name: "Sparkles", Icon: Sparkles },
-    { name: "Armchair", Icon: Armchair },
+    { name: "Shield", icon: Shield, label: "Keamanan" },
+    { name: "Music", icon: Music, label: "Musik/Audio" },
+    { name: "Snowflake", icon: Snowflake, label: "AC" },
+    { name: "Wifi", icon: Wifi, label: "WiFi" },
+    { name: "Camera", icon: Camera, label: "Kamera" },
+    { name: "Navigation", icon: Navigation, label: "GPS/Navigasi" },
+    { name: "Battery", icon: Battery, label: "Charger" },
+    { name: "Bluetooth", icon: Bluetooth, label: "Bluetooth" },
+    { name: "Smartphone", icon: Smartphone, label: "USB/Phone" },
+    { name: "Zap", icon: Zap, label: "Power" },
+    { name: "Wind", icon: Wind, label: "Ventilasi" },
+    { name: "Sun", icon: Sun, label: "Sunroof" },
+    { name: "Fuel", icon: Fuel, label: "Bahan Bakar" },
+    { name: "Users", icon: Users, label: "Kapasitas" },
+    { name: "Lock", icon: Lock, label: "Central Lock" },
+    { name: "MapPin", icon: MapPin, label: "Tracking" },
+    { name: "Radio", icon: Radio, label: "Radio" },
+    { name: "Volume2", icon: Volume2, label: "Speaker" },
+    { name: "Thermometer", icon: Thermometer, label: "Climate" },
+    { name: "Settings", icon: Settings, label: "Otomatis" },
+    { name: "Star", icon: Star, label: "Premium" },
+    { name: "Award", icon: Award, label: "Berkualitas" },
+    { name: "CheckCircle", icon: CheckCircle, label: "Terjamin" },
+    { name: "Heart", icon: Heart, label: "Nyaman" },
+    { name: "Coffee", icon: Coffee, label: "Refreshment" },
+    { name: "Briefcase", icon: Briefcase, label: "Bisnis" },
   ];
 
-  const addFeature = () => {
-    if (newFeature.trim() && !features.includes(newFeature.trim())) {
-      setFeatures([...features, newFeature.trim()]);
-      setNewFeature("");
-    }
+  const addSpecDetail = () => {
+    if (!specDraft.label.trim() || !specDraft.value.trim()) return;
+    setSpecDetails((prev) => [
+      ...prev,
+      { label: specDraft.label.trim(), value: specDraft.value.trim() },
+    ]);
+    setSpecDraft({ label: "", value: "" });
   };
-
-  const removeFeature = (featureToRemove) => {
-    setFeatures(features.filter((feature) => feature !== featureToRemove));
+  const removeSpecDetail = (idx) => {
+    setSpecDetails((prev) => prev.filter((_, i) => i !== idx));
   };
-
-  const addFeatureCard = () => {
-    const { icon, title, description } = newFeatureCard;
-    if (!title.trim() || !description.trim()) return;
-    setFeatureCards([
-      ...featureCards,
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+  const addFeatureBlock = () => {
+    if (!fbDraft.icon || !fbDraft.title || !fbDraft.description) return;
+    setFeatureBlocks((prev) => [
+      ...prev,
       {
-        icon: icon.trim(),
-        title: title.trim(),
-        description: description.trim(),
+        icon: fbDraft.icon,
+        title: fbDraft.title,
+        description: fbDraft.description,
+        order: prev.length,
       },
     ]);
-    setNewFeatureCard({ icon: "", title: "", description: "" });
+    setFbDraft({ icon: "", title: "", description: "" });
+  };
+  const removeFeatureBlock = (idx) => {
+    setFeatureBlocks((prev) =>
+      prev.filter((_, i) => i !== idx).map((f, i) => ({ ...f, order: i }))
+    );
   };
 
-  const removeFeatureCard = (idx) => {
-    setFeatureCards(featureCards.filter((_, i) => i !== idx));
-  };
+  // Note: Image upload and Tariff builder removed to align with Edit page
 
-  const onImagesSelected = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-    const next = [...images, ...files];
-    setImages(next);
-    setImageAlts((prev) => [...prev, ...files.map(() => "")]);
-    const previews = files.map((f) => URL.createObjectURL(f));
-    setImagePreviews((prev) => [...prev, ...previews]);
-    if (coverIndex === null && next.length > 0) setCoverIndex(0);
-  };
-
-  const removeLocalImageAt = (idx) => {
-    const nextImages = images.filter((_, i) => i !== idx);
-    const nextPreviews = imagePreviews.filter((_, i) => i !== idx);
-    const nextAlts = imageAlts.filter((_, i) => i !== idx);
-    setImages(nextImages);
-    setImagePreviews(nextPreviews);
-    setImageAlts(nextAlts);
-    if (coverIndex === idx) setCoverIndex(nextImages.length ? 0 : null);
-    if (coverIndex > idx) setCoverIndex((c) => (c !== null ? c - 1 : c));
-  };
-
-  const moveImage = (idx, dir) => {
-    const target = idx + dir;
-    if (target < 0 || target >= images.length) return;
-    const swap = (arr) => {
-      const copy = [...arr];
-      [copy[idx], copy[target]] = [copy[target], copy[idx]];
-      return copy;
-    };
-    setImages((arr) => swap(arr));
-    setImagePreviews((arr) => swap(arr));
-    setImageAlts((arr) => swap(arr));
-    if (coverIndex === idx) setCoverIndex(target);
-    else if (coverIndex === target) setCoverIndex(idx);
-  };
-
-  const addCategory = () => {
-    if (!newCategoryTitle.trim()) return;
-    setTariffCategories([
-      ...tariffCategories,
-      { id: Date.now().toString(), title: newCategoryTitle.trim(), items: [] },
-    ]);
-    setNewCategoryTitle("");
-    setActiveCategoryIndex(tariffCategories.length);
-  };
-
-  const removeCategoryAt = (idx) => {
-    setTariffCategories(tariffCategories.filter((_, i) => i !== idx));
-    if (activeCategoryIndex === idx) setActiveCategoryIndex(null);
-  };
-
-  const addTariffItemToActive = () => {
-    if (activeCategoryIndex === null) return;
-    const { name, price, description } = newTariffItem;
-    if (!name.trim() || !price) return;
-    const list = [...tariffCategories];
-    const items = list[activeCategoryIndex].items;
-    items.push({
-      name: name.trim(),
-      price: parseInt(price, 10),
-      description: description.trim(),
-      order: items.length,
-    });
-    setTariffCategories(list);
-    setNewTariffItem({ name: "", price: "", description: "" });
-  };
-
-  const removeTariffItem = (catIdx, itemIdx) => {
-    const list = [...tariffCategories];
-    list[catIdx].items = list[catIdx].items.filter((_, i) => i !== itemIdx);
-    setTariffCategories(list);
-  };
-
-  async function handleSubmit(e) {
+  const { push: toast } = useToast();
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
-    // Basic validations
-    if (!name.trim()) {
+    setSuccess("");
+    if (!formData.name.trim()) {
       setError("Nama mobil wajib diisi.");
+      setLoading(false);
       return;
     }
-    const priceNum = parseInt(startingPrice, 10);
-    if (!priceNum || priceNum <= 0) {
+    if (!formData.startingPrice || parseInt(formData.startingPrice, 10) <= 0) {
       setError("Harga mulai harus lebih dari 0.");
+      setLoading(false);
       return;
     }
-    const capacityNum = capacity ? parseInt(capacity, 10) : undefined;
-
-    const specifications = {};
-    if (year) specifications.year = parseInt(year, 10) || year;
-    if (licensePlate) specifications.licensePlate = licensePlate.trim();
-    if (color) specifications.color = color.trim();
-    if (engineCapacity)
-      specifications.engineCapacity =
-        parseInt(engineCapacity, 10) || engineCapacity;
-    if (mileage) specifications.mileage = parseInt(mileage, 10) || mileage;
-    if (featureCards && featureCards.length)
-      specifications.featureCards = featureCards;
-
-    const payload = {
-      name: name.trim(),
-      description: description.trim() || null,
-      startingPrice: priceNum,
-      capacity: capacityNum,
-      transmission: transmission || undefined,
-      fuelType: fuelType || undefined,
-      available,
-      features,
-      specifications: Object.keys(specifications).length
-        ? specifications
-        : null,
-    };
-
+    if (featureBlocks.length % 2 !== 0) {
+      setError("Jumlah fitur unggulan harus genap.");
+      setLoading(false);
+      return;
+    }
     try {
-      setLoading(true);
+      // Build specifications object and move featureBlocks into featureCards
+      const specifications = {};
+      if (specDetails.length) specifications.details = specDetails;
+      if (featureBlocks.length) specifications.featureCards = featureBlocks;
+
+      const payload = {
+        ...formData,
+        capacity: formData.capacity
+          ? parseInt(formData.capacity, 10)
+          : undefined,
+        startingPrice: parseInt(formData.startingPrice, 10),
+        specifications: Object.keys(specifications).length
+          ? specifications
+          : null,
+        // Intentionally omit `features` because API expects array of strings.
+      };
+      // Ensure we don't send `features` key at all
+      delete payload.features;
       const res = await fetch("/api/cars", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -309,128 +235,15 @@ export default function AddCarPage() {
         setLoading(false);
         return;
       }
-
-      const carId = data.data.id;
-
-      // 1) Upload images if any
-      if (images.length) {
-        try {
-          const form = new FormData();
-          form.append("carId", carId);
-          // Add cover file if selected
-          if (coverIndex !== null && images[coverIndex]) {
-            form.append("cover", images[coverIndex]);
-          }
-          // Add images & alt texts
-          images.forEach((file, i) => {
-            form.append("images", file);
-            const alt = imageAlts[i] || "";
-            form.append(`alt_${i}`, alt);
-          });
-
-          const upRes = await fetch("/api/cars/images/upload", {
-            method: "POST",
-            body: form,
-            credentials: "include",
-          });
-          // Try reorder to match current UI order
-          const upJson = await upRes.json().catch(() => null);
-          if (upRes.ok && upJson?.data?.newImages?.length) {
-            const created = upJson.data.newImages; // [{id, ...}] in same order as appended
-            const orders = created.map((img, idx) => ({
-              id: img.id,
-              order: idx,
-            }));
-            await fetch("/api/cars/images/reorder", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify({ carId, orders }),
-            });
-          }
-          // If non-200, ignore to avoid blocking creation; user can manage images later
-        } catch (e) {
-          // Silent fail for images
-          console.warn("Failed to upload images:", e);
-        }
-      }
-
-      // 2) Create tariffs (TariffCategory + TariffItem per-car) if any
-      try {
-        if (tariffCategories.length) {
-          // Load existing categories once
-          const catRes = await fetch("/api/tariffs/categories", {
-            method: "GET",
-            credentials: "include",
-          });
-          const catJson = await catRes.json().catch(() => ({ data: [] }));
-          const existing = Array.isArray(catJson?.data) ? catJson.data : [];
-          const byName = new Map(
-            existing.map((c) => [c.name?.trim()?.toLowerCase(), c])
-          );
-
-          // Ensure all categories exist (create missing)
-          for (const cat of tariffCategories) {
-            const key = (cat.title || "").trim().toLowerCase();
-            if (!key) continue;
-            if (!byName.has(key)) {
-              const createRes = await fetch("/api/tariffs/categories", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({
-                  name: cat.title,
-                  description: "",
-                  order: 0,
-                }),
-              });
-              const createJson = await createRes.json().catch(() => ({}));
-              if (createRes.ok && createJson?.data) {
-                byName.set(key, createJson.data);
-              }
-            }
-          }
-
-          // Create items under their categories for this car
-          const requests = [];
-          for (const cat of tariffCategories) {
-            const key = (cat.title || "").trim().toLowerCase();
-            const catObj = byName.get(key);
-            if (!catObj?.id) continue;
-            (cat.items || []).forEach((it, idx) => {
-              const body = {
-                categoryId: catObj.id,
-                carId,
-                name: it.name,
-                price: Number(it.price) || 0,
-                serviceType: null,
-                packageType: null,
-                description: it.description || null,
-                order: typeof it.order === "number" ? it.order : idx,
-              };
-              requests.push(
-                fetch("/api/tariffs/items", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  credentials: "include",
-                  body: JSON.stringify(body),
-                })
-              );
-            });
-          }
-          if (requests.length) await Promise.allSettled(requests);
-        }
-      } catch (e) {
-        console.warn("Failed to create tariffs:", e);
-      }
-
+      setSuccess("Mobil berhasil ditambahkan.");
+      toast({ title: "Berhasil", description: "Mobil berhasil ditambahkan." });
       router.replace("/admin/cars");
     } catch (err) {
       setError("Kesalahan jaringan. Coba lagi.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <SidebarProvider>
@@ -496,32 +309,34 @@ export default function AddCarPage() {
             {/* Basic Information */}
             <Card>
               <CardHeader>
-                <CardTitle>Informasi Dasar Jenis Armada</CardTitle>
+                <CardTitle>Informasi Dasar</CardTitle>
                 <CardDescription>
-                  Informasi umum tentang jenis armada (model/tipe)
+                  Informasi umum tentang kendaraan
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Nama Jenis Armada *</Label>
+                    <Label htmlFor="name">Nama Mobil *</Label>
                     <Input
                       id="name"
-                      placeholder="Contoh: MPV - Toyota Avanza"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      disabled={loading}
+                      value={formData.name}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="capacity">Kapasitas Penumpang *</Label>
-                    <Select value={capacity} onValueChange={setCapacity}>
-                      <SelectTrigger
-                        className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                        disabled={loading}
-                      >
-                        <SelectValue placeholder="Pilih kapasitas" />
+                    <Select
+                      value={formData.capacity}
+                      onValueChange={(value) =>
+                        handleInputChange("capacity", value)
+                      }
+                    >
+                      <SelectTrigger className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60 h-11">
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="2">2 Orang</SelectItem>
@@ -539,11 +354,11 @@ export default function AddCarPage() {
                   <Label htmlFor="description">Deskripsi *</Label>
                   <Textarea
                     id="description"
-                    placeholder="Deskripsi detail tentang jenis armada..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="min-h-[100px] border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                    disabled={loading}
+                    value={formData.description}
+                    onChange={(e) =>
+                      handleInputChange("description", e.target.value)
+                    }
+                    className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60 min-h-[120px]"
                   />
                 </div>
 
@@ -551,14 +366,13 @@ export default function AddCarPage() {
                   <div className="space-y-2">
                     <Label htmlFor="transmission">Transmisi *</Label>
                     <Select
-                      value={transmission}
-                      onValueChange={setTransmission}
+                      value={formData.transmission}
+                      onValueChange={(value) =>
+                        handleInputChange("transmission", value)
+                      }
                     >
-                      <SelectTrigger
-                        className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                        disabled={loading}
-                      >
-                        <SelectValue placeholder="Pilih transmisi" />
+                      <SelectTrigger className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60 h-11">
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Manual">Manual</SelectItem>
@@ -569,12 +383,14 @@ export default function AddCarPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="fuelType">Bahan Bakar *</Label>
-                    <Select value={fuelType} onValueChange={setFuelType}>
-                      <SelectTrigger
-                        className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                        disabled={loading}
-                      >
-                        <SelectValue placeholder="Pilih bahan bakar" />
+                    <Select
+                      value={formData.fuelType}
+                      onValueChange={(value) =>
+                        handleInputChange("fuelType", value)
+                      }
+                    >
+                      <SelectTrigger className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60 h-11">
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Bensin">Bensin</SelectItem>
@@ -584,232 +400,279 @@ export default function AddCarPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="year">Tahun Rilis (opsional)</Label>
-                    <Input
-                      id="year"
-                      type="number"
-                      placeholder="2024"
-                      value={year}
-                      onChange={(e) => setYear(e.target.value)}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      disabled={loading}
-                    />
-                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Features */}
+            {/* Spesifikasi Lengkap (fleksibel) */}
             <Card>
               <CardHeader>
-                <CardTitle>Fitur & Fasilitas (Tags)</CardTitle>
+                <CardTitle>Spesifikasi Lengkap</CardTitle>
                 <CardDescription>
-                  Tambahkan fitur yang tersedia pada kendaraan
+                  Tambah detail spesifikasi secara bebas (label & nilai)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Input
-                    value={newFeature}
-                    onChange={(e) => setNewFeature(e.target.value)}
-                    placeholder="Tambah fitur (AC, Audio, etc.)"
-                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                    onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addFeature())
+                    placeholder="Label (contoh: Mesin)"
+                    value={specDraft.label}
+                    onChange={(e) =>
+                      setSpecDraft({ ...specDraft, label: e.target.value })
                     }
-                    disabled={loading}
+                    className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
                   />
-                  <Button
-                    type="button"
-                    onClick={addFeature}
-                    className="bg-emerald-600 hover:bg-emerald-700"
-                    disabled={loading}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nilai (contoh: 2.4L Diesel / 2.0L Bensin)"
+                      value={specDraft.value}
+                      onChange={(e) =>
+                        setSpecDraft({ ...specDraft, value: e.target.value })
+                      }
+                      className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
+                    />
+                    <Button
+                      type="button"
+                      onClick={addSpecDetail}
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-
-                {features.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {features.map((feature, index) => (
-                      <Badge key={index} variant="secondary" className="gap-1">
-                        {feature}
-                        <button
+                {specDetails.length > 0 && (
+                  <div className="mt-2 space-y-2">
+                    {specDetails.map((d, idx) => (
+                      <div key={idx} className="flex items-start gap-2">
+                        <Input
+                          value={d.label}
+                          onChange={(e) =>
+                            setSpecDetails((prev) =>
+                              prev.map((p, i) =>
+                                i === idx ? { ...p, label: e.target.value } : p
+                              )
+                            )
+                          }
+                          className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
+                        />
+                        <Input
+                          value={d.value}
+                          onChange={(e) =>
+                            setSpecDetails((prev) =>
+                              prev.map((p, i) =>
+                                i === idx ? { ...p, value: e.target.value } : p
+                              )
+                            )
+                          }
+                          className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
+                        />
+                        <Button
                           type="button"
-                          onClick={() => removeFeature(feature)}
-                          className="hover:text-red-600"
+                          variant="ghost"
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => removeSpecDetail(idx)}
                         >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
                     ))}
                   </div>
                 )}
               </CardContent>
             </Card>
-
-            {/* Feature Cards (Detailed) */}
+            {/* Structured Feature Blocks */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-emerald-600" />
-                  Fitur Unggulan
-                </CardTitle>
+                <CardTitle>Fitur Unggulan</CardTitle>
                 <CardDescription>
-                  Judul + deskripsi dan ikon opsional seperti pada screenshot
+                  Kelola fitur (icon, judul, deskripsi). Jumlah fitur harus
+                  genap.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fc-icon">Ikon (lucide-react)</Label>
-                    <Input
-                      id="fc-icon"
-                      value={newFeatureCard.icon}
-                      onChange={(e) =>
-                        setNewFeatureCard({
-                          ...newFeatureCard,
-                          icon: e.target.value,
-                        })
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">
+                      Fitur Unggulan (Icon, Judul, Deskripsi)
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Jumlah fitur harus genap.
+                    </p>
+                  </div>
+                  <div className="text-sm">
+                    <span
+                      className={
+                        featureBlocks.length % 2 === 0
+                          ? "text-emerald-600"
+                          : "text-red-600"
                       }
-                      placeholder="mis. Shield"
-                      disabled={loading}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                    />
-                    <div className="mt-2">
-                      <div className="text-xs text-muted-foreground mb-2">
-                        Pilih ikon cepat:
-                      </div>
-                      <div className="grid grid-cols-8 gap-2 sm:grid-cols-10">
-                        {iconOptions.map(({ name, Icon }) => (
+                    >
+                      {featureBlocks.length} item
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label>Pilih Icon</Label>
+                    <div className="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2 p-3 border rounded-md bg-gray-50">
+                      {iconOptions.map((option) => {
+                        const IconComponent = option.icon;
+                        return (
                           <button
-                            key={name}
+                            key={option.name}
                             type="button"
-                            className={`h-8 w-8 rounded-md border flex items-center justify-center hover:bg-muted ${
-                              newFeatureCard.icon === name
-                                ? "border-emerald-500 ring-2 ring-emerald-500/50"
-                                : "border-input"
-                            }`}
                             onClick={() =>
-                              setNewFeatureCard({
-                                ...newFeatureCard,
-                                icon: name,
-                              })
+                              setFbDraft({ ...fbDraft, icon: option.name })
                             }
-                            disabled={loading}
-                            aria-label={`Pilih ikon ${name}`}
-                            title={name}
+                            className={
+                              fbDraft.icon === option.name
+                                ? "flex flex-col items-center justify-center p-2 rounded-md border-2 transition-colors hover:bg-white border-emerald-500 bg-emerald-50 text-emerald-600"
+                                : "flex flex-col items-center justify-center p-2 rounded-md border-2 transition-colors hover:bg-white border-gray-200 hover:border-gray-300"
+                            }
+                            title={option.label}
                           >
-                            <Icon className="h-4 w-4" />
+                            <IconComponent className="h-4 w-4 mb-1" />
+                            <span className="text-xs truncate w-full text-center">
+                              {option.label}
+                            </span>
                           </button>
-                        ))}
-                        <button
-                          type="button"
-                          className="col-span-2 h-8 px-2 rounded-md border text-xs hover:bg-muted"
-                          onClick={() =>
-                            setNewFeatureCard({ ...newFeatureCard, icon: "" })
-                          }
-                          disabled={loading}
-                        >
-                          Bersihkan
-                        </button>
-                      </div>
+                        );
+                      })}
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="fc-title">Judul</Label>
-                    <Input
-                      id="fc-title"
-                      value={newFeatureCard.title}
-                      onChange={(e) =>
-                        setNewFeatureCard({
-                          ...newFeatureCard,
-                          title: e.target.value,
-                        })
-                      }
-                      placeholder="Kabin Super Luas"
-                      disabled={loading}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="featureTitle">Judul Fitur</Label>
+                      <Input
+                        id="featureTitle"
+                        placeholder="Judul fitur"
+                        value={fbDraft.title}
+                        onChange={(e) =>
+                          setFbDraft({ ...fbDraft, title: e.target.value })
+                        }
+                        className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="featureDescription">Deskripsi</Label>
+                      <Input
+                        id="featureDescription"
+                        placeholder="Deskripsi singkat"
+                        value={fbDraft.description}
+                        onChange={(e) =>
+                          setFbDraft({
+                            ...fbDraft,
+                            description: e.target.value,
+                          })
+                        }
+                        className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="fc-desc">Deskripsi</Label>
-                    <Input
-                      id="fc-desc"
-                      value={newFeatureCard.description}
-                      onChange={(e) =>
-                        setNewFeatureCard({
-                          ...newFeatureCard,
-                          description: e.target.value,
-                        })
-                      }
-                      placeholder="Kapasitas hingga 7 penumpang..."
-                      disabled={loading}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Button
-                    type="button"
-                    className="bg-emerald-600 hover:bg-emerald-700"
-                    onClick={addFeatureCard}
-                    disabled={
-                      loading ||
-                      !newFeatureCard.title ||
-                      !newFeatureCard.description
-                    }
-                  >
-                    <Plus className="h-4 w-4 mr-1" /> Tambah Fitur Unggulan
-                  </Button>
-                </div>
-                {featureCards.length > 0 && (
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {featureCards.map((fc, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-xl border p-4 bg-white shadow-sm"
-                      >
-                        <div className="flex items-start gap-2">
-                          <div className="h-8 w-8 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                            {(() => {
-                              const Ico = iconRegistry[fc.icon];
-                              return Ico ? (
-                                <Ico className="h-4 w-4" />
-                              ) : (
-                                <Star className="h-4 w-4" />
+                  {/* Preview */}
+                  {fbDraft.icon && fbDraft.title && (
+                    <div className="p-3 border rounded-md bg-white">
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Preview:
+                      </p>
+                      <div className="flex items-start gap-3">
+                        <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                          {(() => {
+                            const selectedIcon = iconOptions.find(
+                              (opt) => opt.name === fbDraft.icon
+                            );
+                            if (selectedIcon) {
+                              const IconComponent = selectedIcon.icon;
+                              return (
+                                <IconComponent className="h-5 w-5 text-emerald-600" />
                               );
-                            })()}
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-semibold">{fc.title}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {fc.description}
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeFeatureCard(idx)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                            }
+                            return (
+                              <span className="text-emerald-600 text-sm font-semibold">
+                                {fbDraft.icon.charAt(0).toUpperCase()}
+                              </span>
+                            );
+                          })()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm text-foreground">
+                            {fbDraft.title}
+                          </h4>
+                          {fbDraft.description && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {fbDraft.description}
+                            </p>
+                          )}
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  )}
+                </div>
+                <div className="mt-2">
+                  <Button
+                    type="button"
+                    onClick={addFeatureBlock}
+                    disabled={
+                      !fbDraft.icon || !fbDraft.title || !fbDraft.description
+                    }
+                  >
+                    Tambah Fitur Unggulan
+                  </Button>
+                </div>
+                {featureBlocks.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    {featureBlocks.map((fb, idx) => {
+                      const selectedIcon = iconOptions.find(
+                        (opt) => opt.name === fb.icon
+                      );
+                      const IconComponent = selectedIcon?.icon;
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-3 p-3 border rounded-md bg-white"
+                        >
+                          <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                            {IconComponent ? (
+                              <IconComponent className="h-5 w-5 text-emerald-600" />
+                            ) : (
+                              <span className="text-emerald-600 text-sm font-semibold">
+                                {fb.icon.charAt(0).toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-sm text-foreground">
+                              {fb.title}
+                            </h4>
+                            {fb.description && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {fb.description}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            className="text-red-600 hover:text-red-700"
+                            onClick={() => removeFeatureBlock(idx)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Pricing */}
+            {/* Feature Cards (Detailed) removed to match Edit page */}
+
             <Card>
               <CardHeader>
-                <CardTitle>Harga & Ketersediaan Jenis</CardTitle>
+                <CardTitle>Harga & Ketersediaan</CardTitle>
                 <CardDescription>
-                  Atur harga mulai untuk jenis ini dan status ketersediaan
-                  disewakan
+                  Atur harga sewa dan status ketersediaan
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -824,321 +687,32 @@ export default function AddCarPage() {
                     <Input
                       id="startingPrice"
                       type="number"
-                      placeholder="300000"
-                      value={startingPrice}
-                      onChange={(e) => setStartingPrice(e.target.value)}
-                      className="pl-8 border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      disabled={loading}
+                      value={formData.startingPrice}
+                      onChange={(e) =>
+                        handleInputChange("startingPrice", e.target.value)
+                      }
+                      className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60 pl-8"
                     />
                   </div>
                 </div>
-
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="available"
-                    checked={available}
-                    onCheckedChange={setAvailable}
-                    disabled={loading}
+                    checked={formData.available}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("available", checked)
+                    }
                   />
                   <Label htmlFor="available">Tersedia untuk disewa</Label>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Images Manager */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ImageIcon className="h-5 w-5 text-emerald-600" />
-                  Gambar Kendaraan
-                </CardTitle>
-                <CardDescription>
-                  Upload beberapa gambar dan pilih salah satu sebagai cover
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={onImagesSelected}
-                    disabled={loading}
-                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                  />
-                </div>
-                {images.length > 0 && (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {images.map((file, idx) => (
-                      <div key={idx} className="rounded-xl border p-2">
-                        <img
-                          src={imagePreviews[idx]}
-                          alt="preview"
-                          className="w-full h-28 object-cover rounded-md"
-                        />
-                        <div className="flex items-center justify-between mt-2">
-                          <label className="flex items-center gap-1 text-xs">
-                            <input
-                              type="radio"
-                              name="cover"
-                              checked={coverIndex === idx}
-                              onChange={() => setCoverIndex(idx)}
-                              disabled={loading}
-                            />
-                            Cover
-                          </label>
-                          <div className="flex gap-1">
-                            <button
-                              type="button"
-                              onClick={() => moveImage(idx, -1)}
-                              title="Up"
-                              className="p-1 rounded hover:bg-muted"
-                            >
-                              <ChevronUp className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => moveImage(idx, 1)}
-                              title="Down"
-                              className="p-1 rounded hover:bg-muted"
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => removeLocalImageAt(idx)}
-                              title="Hapus"
-                              className="p-1 text-red-600 rounded hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-                        <Input
-                          className="mt-2 border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                          placeholder="Alt text"
-                          value={imageAlts[idx] || ""}
-                          onChange={(e) => {
-                            const next = [...imageAlts];
-                            next[idx] = e.target.value;
-                            setImageAlts(next);
-                          }}
-                          disabled={loading}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Flexible Tariffs Builder (Categories) */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5 text-emerald-600" />
-                  Tarif Sewa Fleksibel
-                </CardTitle>
-                <CardDescription>
-                  Buat kategori seperti “Sewa Per 12 Jam”, “Antar Jemput
-                  Bandara”, lalu tambah item dengan harga.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Nama kategori (contoh: Sewa Per 12 Jam)"
-                    value={newCategoryTitle}
-                    onChange={(e) => setNewCategoryTitle(e.target.value)}
-                    disabled={loading}
-                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                  />
-                  <Button
-                    type="button"
-                    onClick={addCategory}
-                    className="bg-emerald-600 hover:bg-emerald-700"
-                    disabled={loading || !newCategoryTitle.trim()}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {tariffCategories.length > 0 && (
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap gap-2">
-                      {tariffCategories.map((cat, idx) => (
-                        <button
-                          key={cat.id}
-                          type="button"
-                          className={`px-3 py-1 rounded-full border ${
-                            activeCategoryIndex === idx
-                              ? "bg-emerald-600 text-white border-emerald-600"
-                              : "bg-white hover:bg-muted"
-                          }`}
-                          onClick={() => setActiveCategoryIndex(idx)}
-                        >
-                          {cat.title}
-                        </button>
-                      ))}
-                    </div>
-
-                    {activeCategoryIndex !== null && (
-                      <div className="rounded-xl border p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="font-semibold">
-                            {tariffCategories[activeCategoryIndex].title}
-                          </div>
-                          <button
-                            type="button"
-                            className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
-                            onClick={() =>
-                              removeCategoryAt(activeCategoryIndex)
-                            }
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            Hapus Kategori
-                          </button>
-                        </div>
-                        <div className="grid md:grid-cols-3 gap-3">
-                          <Input
-                            placeholder="Nama item (contoh: Dengan Driver)"
-                            value={newTariffItem.name}
-                            onChange={(e) =>
-                              setNewTariffItem({
-                                ...newTariffItem,
-                                name: e.target.value,
-                              })
-                            }
-                            disabled={loading}
-                            className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                          />
-                          <Input
-                            type="number"
-                            placeholder="Harga (contoh: 650000)"
-                            value={newTariffItem.price}
-                            onChange={(e) =>
-                              setNewTariffItem({
-                                ...newTariffItem,
-                                price: e.target.value,
-                              })
-                            }
-                            disabled={loading}
-                            className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                          />
-                          <Input
-                            placeholder="Deskripsi (opsional)"
-                            value={newTariffItem.description}
-                            onChange={(e) =>
-                              setNewTariffItem({
-                                ...newTariffItem,
-                                description: e.target.value,
-                              })
-                            }
-                            disabled={loading}
-                            className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                          />
-                        </div>
-                        <div>
-                          <Button
-                            type="button"
-                            className="bg-emerald-600 hover:bg-emerald-700"
-                            onClick={addTariffItemToActive}
-                            disabled={
-                              loading ||
-                              !newTariffItem.name ||
-                              !newTariffItem.price
-                            }
-                          >
-                            <Plus className="h-4 w-4 mr-1" />
-                            Tambah Item
-                          </Button>
-                        </div>
-                        <div className="space-y-2">
-                          {tariffCategories[activeCategoryIndex].items
-                            .length === 0 && (
-                            <div className="text-sm text-muted-foreground">
-                              Belum ada item. Tambahkan di atas.
-                            </div>
-                          )}
-                          {tariffCategories[activeCategoryIndex].items.map(
-                            (it, i) => (
-                              <div
-                                key={i}
-                                className="flex items-center justify-between rounded-md border p-2"
-                              >
-                                <div>
-                                  <div className="font-medium">{it.name}</div>
-                                  <div className="text-sm text-muted-foreground">
-                                    Rp{" "}
-                                    {Number(it.price).toLocaleString("id-ID")}{" "}
-                                    {it.description
-                                      ? `• ${it.description}`
-                                      : ""}
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      removeTariffItem(activeCategoryIndex, i)
-                                    }
-                                    className="text-red-600 hover:text-red-700 p-1 rounded"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Vehicle Details (opsional untuk jenis, tanpa nomor polisi/km) */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Detail Spesifikasi (Opsional)</CardTitle>
-                <CardDescription>
-                  Informasi teknis umum untuk jenis ini
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="color">Warna</Label>
-                    <Input
-                      id="color"
-                      placeholder="Putih"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      disabled={loading}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="engineCapacity">Kapasitas Mesin (CC)</Label>
-                    <Input
-                      id="engineCapacity"
-                      type="number"
-                      placeholder="1500"
-                      value={engineCapacity}
-                      onChange={(e) => setEngineCapacity(e.target.value)}
-                      className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                      disabled={loading}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Action Buttons */}
+            {featureBlocks.length % 2 !== 0 && (
+              <div className="text-sm text-red-600 text-right">
+                Jumlah fitur unggulan harus genap agar dapat disimpan.
+              </div>
+            )}
             <div className="flex gap-4 justify-end">
               <Button
                 type="button"
@@ -1150,7 +724,7 @@ export default function AddCarPage() {
               <Button
                 type="submit"
                 className="bg-emerald-600 hover:bg-emerald-700 gap-2"
-                disabled={loading}
+                disabled={loading || featureBlocks.length % 2 !== 0}
               >
                 <Save className="h-4 w-4" />
                 {loading ? "Menyimpan..." : "Simpan Mobil"}

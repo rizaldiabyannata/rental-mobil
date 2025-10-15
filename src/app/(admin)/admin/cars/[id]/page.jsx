@@ -356,7 +356,7 @@ export default function CarDetailPage() {
                 <CardTitle>Informasi Dasar</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                   <div className="flex items-center gap-3">
                     <Users className="h-5 w-5 text-emerald-600" />
                     <div>
@@ -380,13 +380,6 @@ export default function CarDetailPage() {
                         Bahan Bakar
                       </p>
                       <p className="font-semibold">{car.fuelType || "-"}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Tahun</p>
-                      <p className="font-semibold">{specifications.year}</p>
                     </div>
                   </div>
                 </div>

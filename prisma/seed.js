@@ -40,73 +40,32 @@ async function main() {
     await prisma.car.createMany({
       data: [
         {
-          name: "Toyota Avanza",
-          description: "MPV nyaman untuk keluarga, irit dan luas.",
-          startingPrice: 350000,
+          name: "INNOVA REBORN",
+          description: "Toyota Innova Reborn, MPV nyaman dan bertenaga.",
+          startingPrice: 650000,
           capacity: 7,
           transmission: "Automatic",
-          fuelType: "Bensin",
-          available: true,
-          features: ["AC", "Audio", "USB Charger"],
-          specifications: { coverImage: "/vercel.svg", color: "Silver" },
-        },
-        {
-          name: "Honda Brio",
-          description: "City car kompak dan lincah untuk dalam kota.",
-          startingPrice: 300000,
-          capacity: 5,
-          transmission: "Manual",
           fuelType: "Bensin",
           available: true,
           features: ["AC", "Audio"],
-          specifications: { coverImage: "/next.svg", color: "Yellow" },
+          specifications: { coverImage: "/vercel.svg", color: "Silver" },
         },
         {
-          name: "Suzuki Ertiga",
-          description: "MPV dengan kabin lega dan nyaman.",
-          startingPrice: 400000,
-          capacity: 7,
+          name: "TOYOTA HIACE",
+          description: "Toyota Hiace, kapasitas besar untuk rombongan.",
+          startingPrice: 1200000,
+          capacity: 14,
           transmission: "Automatic",
           fuelType: "Bensin",
           available: true,
-          features: ["AC", "Audio", "Bluetooth"],
-          specifications: { coverImage: "/globe.svg", color: "White" },
+          features: ["AC", "Audio"],
+          specifications: { coverImage: "/next.svg", color: "White" },
         },
       ],
     });
   }
 
-  // Ensure required armada exist based on provided tariff data
-  async function ensureCarByName(name, defaults = {}) {
-    let car = await prisma.car.findFirst({ where: { name } });
-    if (!car) {
-      car = await prisma.car.create({
-        data: {
-          name,
-          description: defaults.description || null,
-          startingPrice: defaults.startingPrice ?? 0,
-          capacity: defaults.capacity ?? 7,
-          transmission: defaults.transmission || "Automatic",
-          fuelType: defaults.fuelType || "Bensin",
-          available: true,
-          features: defaults.features || ["AC", "Audio"],
-          specifications: defaults.specifications || {},
-        },
-      });
-    }
-    return car;
-  }
-
-  const innova = await ensureCarByName("INNOVA REBORN", {
-    description: "Toyota Innova Reborn, MPV nyaman dan bertenaga.",
-    startingPrice: 650000,
-    capacity: 7,
-  });
-  const hiace = await ensureCarByName("TOYOTA HIACE", {
-    description: "Toyota Hiace, kapasitas besar untuk rombongan.",
-    startingPrice: 1200000,
-    capacity: 14,
-  });
+  // Armada hanya Innova Reborn dan Toyota HiAce, sudah dibuat di atas
 
   // Re-query cars for ids (includes the newly ensured cars)
   const cars = await prisma.car.findMany({ orderBy: { createdAt: "asc" } });
@@ -141,39 +100,7 @@ async function main() {
     // createMany for images
     await prisma.carImage.createMany({ data: imagesData });
   }
-
-  // 4) Car Tariffs
-  const tariffCount = await prisma.carTariff.count();
-  if (tariffCount === 0 && cars.length > 0) {
-    for (const car of cars) {
-      await prisma.carTariff.createMany({
-        data: [
-          {
-            carId: car.id,
-            name: "12 Jam",
-            price: 250000,
-            description: "Termasuk sopir, belum termasuk BBM",
-          },
-          {
-            carId: car.id,
-            name: "24 Jam",
-            price: 450000,
-            description: "Termasuk sopir, belum termasuk BBM",
-          },
-          {
-            carId: car.id,
-            name: "Antar-Jemput",
-            price: 150000,
-            description: "Dalam kota",
-          },
-        ],
-      });
-    }
-  }
-
-  // 5) Tour Packages (removed)
-
-  // 6) FAQ
+  
   const faqCount = await prisma.fAQ.count();
   if (faqCount === 0) {
     await prisma.fAQ.createMany({
