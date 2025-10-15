@@ -60,7 +60,7 @@ const Header = () => {
 
   return (
     <header className="bg-white shadow-md sticky w-full top-0 left-0 z-40">
-      <div className="container mx-auto px-4 lg:px-32 py-4 flex items-center justify-between">
+      <div className="container mx-auto px-4 lg:px-8 xl:px-32 py-4 flex items-center justify-between">
         <Image
           src="/logo.png"
           alt="Reborn Lombok Trans Logo"
