@@ -10,7 +10,7 @@ import { Icon } from "@iconify-icon/react";
 const MobileMenu = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5 md:pl-24 md:pr-10 md:pt-5">
       <Button
         size="icon"
         variant="ghost"

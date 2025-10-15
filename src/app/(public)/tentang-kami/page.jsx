@@ -8,7 +8,17 @@ export default function TentangKami() {
   return (
     <>
       <main>
-        <HeroSection imageOnRight={false} imageSrc="/HeroSewa.png" />
+        <HeroSection
+          imageOnRight={false}
+          imageSrc="/Hero-3-1.png"
+          title={
+            <>
+              <span className="text-black">Mengenal Kami </span>
+              <span className="text-emerald-700">Lebih Dekat</span>
+            </>
+          }
+          subtitle="Pelajari lebih lanjut tentang sejarah, visi, dan nilai-nilai yang membentuk kami."
+        />
         <TentangSection />
         <VisiMisiSection />
         <GallerySection />

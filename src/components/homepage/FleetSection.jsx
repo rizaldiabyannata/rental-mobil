@@ -5,7 +5,7 @@ const cars = [
   {
     name: "Innova Reborn",
     description: "Kenyamanan premium untuk keluarga dan bisnis.",
-    image: "/car-1.jpg",
+    image: "/InnovaReborn.png",
     price: "Rp 650.000",
     specs: [
       { icon: "Seat", label: "7 Seat" },
@@ -16,7 +16,7 @@ const cars = [
   {
     name: "Toyota Hi-Ace",
     description: "Solusi perjalanan untuk grup besar dengan nyaman.",
-    image: "/car-2.jpg",
+    image: "/hiace-1.png",
     price: "Rp 1.200.000",
     specs: [
       { icon: "Seat", label: "15 Seat" },
@@ -28,7 +28,7 @@ const cars = [
 
 const FleetSection = () => {
   return (
-    <section className="w-full md:pt-10 py-16">
+    <section id="armada" className="w-full md:pt-10 py-16">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
           <SectionHeading

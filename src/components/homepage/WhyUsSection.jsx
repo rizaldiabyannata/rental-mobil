@@ -54,10 +54,10 @@ const WhyUsSection = () => {
                   <div className="flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                     <Icon className="size-8" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-xl md:text-lg lg:text-xl font-bold text-gray-900">
                     {feature.title}
                   </h3>
-                  <p className="text-base text-gray-600">
+                  <p className="text-base md:text-sm lg:text-base text-gray-600">
                     {feature.description}
                   </p>
                 </CardContent>

@@ -1,30 +1,45 @@
 import Image from "next/image";
 import SectionHeading from "@/components/SectionHeading";
+import {
+  Car,
+  Handshake,
+  ShieldCheck,
+  Users,
+  KeyRound,
+  Globe2,
+  Settings2,
+} from "lucide-react";
 
 const misiItems = [
   {
     title: "Menyajikan Armada Terbaik",
     description: "Menjamin setiap kendaraan dalam kondisi prima",
+    Icon: Car,
   },
   {
     title: "Memberikan Kemudahan Maksimal",
     description: "Menawarkan paket all-in-one bebas repot",
+    Icon: Settings2,
   },
   {
     title: "Memprioritaskan Pelayanan Prima",
     description: "Menempatkan keamanan & kepuasan anda",
+    Icon: ShieldCheck,
   },
   {
     title: "Berkontribusi Untuk Pariwisata Indonesia",
     description: "Menyediakan akses transportasi yang andal",
+    Icon: Globe2,
   },
   {
     title: "Menghadirkan Akses yang Mudah",
     description: "Sistem reservasi yang cepat dan fleksibel",
+    Icon: KeyRound,
   },
   {
     title: "Membangun Kemitraan",
     description: "Aktif menjalani kerjasama demi pariwisata Lombok",
+    Icon: Handshake,
   },
 ];
 
@@ -81,26 +96,28 @@ const VisiMisiSection = () => {
 
           {/* Kartu Misi */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {misiItems.map((item, index) => (
-              <div
-                key={index}
-                className="bg-[#F8F8F8] rounded-[10px] shadow-xl p-4 flex flex-col items-center text-center gap-4 md:p-6"
-              >
-                <Image
-                  src="/car.png"
-                  alt="Visi Kami"
-                  width={60}
-                  height={60}
-                  className="size-[50px] md:size-[60px]"
-                />
-                <h3 className="font-sans font-semibold text-center mb-[8px] text-black text-sm md:text-[18px] lg:text-[20px]">
-                  {item.title}
-                </h3>
-                <p className="text-[#051C35] text-[11px] md:text-[13px] lg:text-[14px]">
-                  {item.description}
-                </p>
-              </div>
-            ))}
+            {misiItems.map((item, index) => {
+              const Icon = item.Icon;
+              return (
+                <div
+                  key={index}
+                  className="bg-[#F8F8F8] rounded-[10px] shadow-xl p-4 flex flex-col items-center text-center gap-4 md:p-6"
+                >
+                  <span className="inline-flex items-center justify-center rounded-full bg-emerald-100 shadow-md p-3">
+                    <Icon
+                      className="h-8 w-8 text-emerald-600"
+                      aria-label={item.title}
+                    />
+                  </span>
+                  <h3 className="font-sans font-semibold text-center mb-[8px] text-black text-sm md:text-[18px] lg:text-[20px]">
+                    {item.title}
+                  </h3>
+                  <p className="text-[#051C35] text-[11px] md:text-[13px] lg:text-[14px]">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

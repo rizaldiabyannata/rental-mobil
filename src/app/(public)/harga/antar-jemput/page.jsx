@@ -50,7 +50,7 @@ const AntarJemputPage = () => {
   return (
     <>
       <main className="container mx-auto px-4 py-12 md:py-16">
-        <HeroSection imageOnRight={false} imageSrc="/HeroSewa.png" />
+        <HeroSection imageOnRight={false} imageSrc="/Hero-1.png" />
         <div className="space-y-8">
           <FilterControls
             filters={filters}

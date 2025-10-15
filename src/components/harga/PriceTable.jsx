@@ -27,44 +27,52 @@ const PriceTable = ({ title, data }) => {
             armada prima.
           </CardDescription>
         </CardHeader>
-
         <CardContent className="p-0">
-          <Table className="min-w-[600px] text-sm">
-            <TableHeader className="bg-emerald-50 text-emerald-900">
-              <TableRow className="border-b border-emerald-100">
-                <TableHead className="px-6 py-4">Jenis Layanan</TableHead>
-                <TableHead className="px-6 py-4">Jenis Paket</TableHead>
-                <TableHead className="px-6 py-4">Jenis Armada</TableHead>
-                <TableHead className="px-6 py-4 text-right">Harga</TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {data.map((item, index) => (
-                <TableRow
-                  key={index}
-                  className="border-b border-emerald-50 bg-white transition-colors hover:bg-emerald-50/60"
-                >
-                  <TableCell className="px-6 py-5 text-gray-700">
-                    <span className="block text-base font-semibold text-emerald-800">
-                      {item.layanan}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-6 py-5 text-gray-700">
-                    {item.paket || "-"}
-                  </TableCell>
-                  <TableCell className="px-6 py-5">
-                    <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                      {item.armada}
-                    </span>
-                  </TableCell>
-                  <TableCell className="px-6 py-5 text-right text-lg font-bold text-emerald-700">
-                    {item.harga}
-                  </TableCell>
+          <div className="w-full overflow-x-auto">
+            <Table className="min-w-[480px] text-xs sm:text-sm">
+              <TableHeader className="bg-emerald-50 text-emerald-900 sticky top-0 z-10">
+                <TableRow className="border-b border-emerald-100">
+                  <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                    Jenis Layanan
+                  </TableHead>
+                  <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                    Jenis Paket
+                  </TableHead>
+                  <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                    Jenis Armada
+                  </TableHead>
+                  <TableHead className="px-3 py-2 sm:px-6 sm:py-4 text-right whitespace-nowrap">
+                    Harga
+                  </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((item, index) => (
+                  <TableRow
+                    key={index}
+                    className="border-b border-emerald-50 bg-white transition-colors hover:bg-emerald-50/60"
+                  >
+                    <TableCell className="px-3 py-3 sm:px-6 sm:py-5 text-gray-700">
+                      <span className="block text-sm sm:text-base font-semibold text-emerald-800">
+                        {item.layanan}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-3 py-3 sm:px-6 sm:py-5 text-gray-700">
+                      {item.paket || "-"}
+                    </TableCell>
+                    <TableCell className="px-3 py-3 sm:px-6 sm:py-5">
+                      <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-1 sm:px-3 sm:py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                        {item.armada}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-3 py-3 sm:px-6 sm:py-5 text-right text-base sm:text-lg font-bold text-emerald-700">
+                      {item.harga}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

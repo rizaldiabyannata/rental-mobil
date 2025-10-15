@@ -15,7 +15,7 @@ const HeroSection = ({
   imageAlt = "Hero Image",
   imageOnRight = false,
   primaryLabel = "Lihat Armada",
-  primaryHref = "#armada",
+  primaryHref = "/#armada",
   waProps = {
     waUrlBase: "https://wa.me/6287741861681",
     label: "Hubungi Kami",
@@ -57,8 +57,8 @@ const HeroSection = ({
 
           {/* Image column - circular white card */}
           <div className={`flex justify-center ${imageJustify} ${imageOrder}`}>
-            <div className="relative rounded-full bg-white shadow-lg p-2">
-              <div className="relative overflow-hidden rounded-full w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
+            <div className="relative bg-white p-2">
+              <div className="relative overflow-hidden w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
                 <Image
                   src={imageSrc}
                   alt={imageAlt}

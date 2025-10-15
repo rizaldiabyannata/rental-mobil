@@ -12,7 +12,7 @@ const iconMap = {
 
 const CarCard = ({ car }) => {
   return (
-    <Card className="flex flex-col overflow-hidden rounded-2xl shadow-lg transition-transform hover:scale-105">
+    <Card className="flex flex-col overflow-hidden rounded-2xl shadow-lg transition-transform hover:scale-105 pt-0">
       <div className="relative h-56 w-full">
         <Image src={car.image} alt={car.name} fill className="object-cover" />
       </div>

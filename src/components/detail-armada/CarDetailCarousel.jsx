@@ -17,17 +17,17 @@ const CarDetailCarousel = ({ images = [] }) => {
   const sampleImages = [
     {
       id: 1,
-      src: "/placeholder-car-1.jpg",
+      src: "/InnovaReborn-2.png",
       alt: "Toyota Kijang Innova Reborn - View 1",
     },
     {
       id: 2,
-      src: "/placeholder-car-2.jpg",
+      src: "/InnovaReborn.png",
       alt: "Toyota Kijang Innova Reborn - View 2",
     },
     {
       id: 3,
-      src: "/placeholder-car-3.jpg",
+      src: "/InteriorReborn.png",
       alt: "Toyota Kijang Innova Reborn - View 3",
     },
   ];

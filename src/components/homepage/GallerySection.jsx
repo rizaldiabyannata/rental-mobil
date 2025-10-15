@@ -7,7 +7,7 @@ const images = [
   { src: "/tour.png", alt: "Paket Wisata Tour" },
   { src: "/armada.png", alt: "Armada Innova Reborn" },
   { src: "/pembayaran.png", alt: "Proses Mudah" },
-  { src: "/login-image.png", alt: "Harga Kompetitif" },
+  { src: "/Hiace-2.png", alt: "Toyota HiAce" },
 ];
 
 const GallerySection = () => {

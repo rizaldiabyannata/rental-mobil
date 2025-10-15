@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const FeatureBlock = ({ imageSrc, title, description, imageLeft = false }) => {
   const imageOrder = imageLeft ? "md:order-first" : "md:order-last";
@@ -26,16 +27,16 @@ const FeatureBlock = ({ imageSrc, title, description, imageLeft = false }) => {
 
 const TentangSection = () => {
   return (
-    <section className="bg-white py-16 md:py-24">
-      <div className="container mx-auto space-y-16 px-4">
+    <section className={cn("w-full py-8 md:py-12")}>
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
         <FeatureBlock
-          imageSrc="/gallery-1.jpg"
+          imageSrc="/Hiace-1.png"
           title="Tentang Reborn Lombok Trans"
           description="Reborn Lombok Trans adalah solusi rental mobil Anda di Mataram untuk seluruh wilayah Lombok. Kami menawarkan paket praktis sudah termasuk mobil, sopir berpengalaman, dan bensin, sehingga perjalanan Anda nyaman tanpa biaya tersembunyi."
           imageLeft={true}
         />
         <FeatureBlock
-          imageSrc="/gallery-4.jpg"
+          imageSrc="/InnovaReborn-2.png"
           title="Armada Terbaik & Terawat"
           description="Dengan armada terbaru tahun 2025 yang bersih dan terawat, kami siap melayani kebutuhan wisata, perjalanan bisnis, hingga antar-jemput bandara. Keamanan, kenyamanan, dan kepuasan Anda adalah prioritas kami."
           imageLeft={false}
