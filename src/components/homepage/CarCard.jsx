@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -15,12 +14,7 @@ const CarCard = ({ car }) => {
   return (
     <Card className="flex flex-col overflow-hidden rounded-2xl shadow-lg transition-transform hover:scale-105">
       <div className="relative h-56 w-full">
-        <Image
-          src={car.image}
-          alt={car.name}
-          fill
-          className="object-cover"
-        />
+        <Image src={car.image} alt={car.name} fill className="object-cover" />
       </div>
       <CardContent className="flex flex-1 flex-col p-6">
         <div className="flex-1">
@@ -43,12 +37,12 @@ const CarCard = ({ car }) => {
             {car.price}{" "}
             <span className="text-sm font-normal text-gray-600">/hari</span>
           </p>
-          <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="mt-4 flex justify-end gap-2">
             <Link href={`/detail-armada?name=${car.name}`}>
-              <Button className="w-full">Booking</Button>
-            </Link>
-            <Link href={`/detail-armada?name=${car.name}`}>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full md:w-44 bg-emerald-700 text-white hover:bg-emerald-800"
+              >
                 Detail
               </Button>
             </Link>

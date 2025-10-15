@@ -5,79 +5,156 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { SlidersHorizontal, RotateCcw } from "lucide-react";
 
 const FilterControls = ({ filters, onFilterChange, options }) => {
+  const activeFilters = [
+    filters.armada && { label: "Armada", value: filters.armada },
+    filters.paket && { label: "Paket", value: filters.paket },
+    filters.harga && { label: "Harga", value: filters.harga },
+  ].filter(Boolean);
+
+  const handleReset = () => {
+    Object.keys(filters || {}).forEach((key) => onFilterChange(key, ""));
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 p-4 bg-emerald-50 rounded-lg shadow-md">
-      {/* Filter Jenis Kendaraan */}
-      <div className="md:flex flex-col items-center gap-2">
-        <label className="text-sm font-medium text-gray-700">
-          Jenis Kendaraan
-        </label>
-        <Select
-          value={filters.armada}
-          onValueChange={(value) =>
-            onFilterChange("armada", value === "all" ? "" : value)
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Semua Kendaraan" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Semua Kendaraan</SelectItem>
-            {options.armada.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <Card className="mb-8 border border-emerald-100 shadow-md">
+      <CardHeader className="pb-4">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-emerald-700">
+              <span className="rounded-full bg-emerald-100 p-2 text-emerald-600">
+                <SlidersHorizontal className="h-4 w-4" />
+              </span>
+              Sesuaikan Harga
+            </CardTitle>
+            <CardDescription className="mt-2">
+              Filter tarif sesuai armada, paket, dan rentang harga yang Anda
+              inginkan.
+            </CardDescription>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2 text-emerald-700 hover:bg-emerald-100"
+            onClick={handleReset}
+          >
+            <RotateCcw className="h-4 w-4" /> Reset
+          </Button>
+        </div>
 
-      {/* Filter Jenis Paket */}
-      <div className="md:flex flex-col items-center gap-2">
-        <label className="text-sm font-medium text-gray-700">Jenis Paket</label>
-        <Select
-          value={filters.paket}
-          onValueChange={(value) =>
-            onFilterChange("paket", value === "all" ? "" : value)
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Semua Paket" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Semua Paket</SelectItem>
-            {options.paket.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
+        {activeFilters.length > 0 ? (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {activeFilters.map(({ label, value }) => (
+              <span
+                key={`${label}-${value}`}
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700"
+              >
+                <span className="text-emerald-500">{label}:</span>
+                {value}
+              </span>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
+          </div>
+        ) : null}
+      </CardHeader>
 
-      {/* Filter Range Harga (Contoh Sederhana) */}
-      <div className="md:flex flex-col items-center gap-2">
-        <label className="text-sm font-medium text-gray-700">Range Harga</label>
-        <Select
-          value={filters.harga}
-          onValueChange={(value) =>
-            onFilterChange("harga", value === "all" ? "" : value)
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Semua Harga" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Semua Harga</SelectItem>
-            <SelectItem value="<500k">Di bawah Rp.500.000</SelectItem>
-            <SelectItem value="500k-1m">Rp.500.000 - Rp.1.000.000</SelectItem>
-            <SelectItem value=">1m">Di atas Rp.1.000.000</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+      <CardContent className="pt-0">
+        <div className="flex flex-col gap-6 md:grid md:grid-cols-3">
+          {/* Filter Jenis Kendaraan */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <div className="rounded-md bg-white p-2 shadow-sm">
+                <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+              </div>
+              Jenis Kendaraan
+            </div>
+            <Select
+              value={filters.armada}
+              onValueChange={(value) =>
+                onFilterChange("armada", value === "all" ? "" : value)
+              }
+            >
+              <SelectTrigger className="w-full border-emerald-200 focus:border-emerald-400 focus:ring-emerald-300">
+                <SelectValue placeholder="Semua Kendaraan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kendaraan</SelectItem>
+                {options.armada.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filter Jenis Paket */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <div className="rounded-md bg-white p-2 shadow-sm">
+                <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+              </div>
+              Jenis Paket
+            </div>
+            <Select
+              value={filters.paket}
+              onValueChange={(value) =>
+                onFilterChange("paket", value === "all" ? "" : value)
+              }
+            >
+              <SelectTrigger className="w-full border-emerald-200 focus:border-emerald-400 focus:ring-emerald-300">
+                <SelectValue placeholder="Semua Paket" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Paket</SelectItem>
+                {options.paket.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filter Range Harga */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <div className="rounded-md bg-white p-2 shadow-sm">
+                <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+              </div>
+              Range Harga
+            </div>
+            <Select
+              value={filters.harga}
+              onValueChange={(value) =>
+                onFilterChange("harga", value === "all" ? "" : value)
+              }
+            >
+              <SelectTrigger className="w-full border-emerald-200 focus:border-emerald-400 focus:ring-emerald-300">
+                <SelectValue placeholder="Semua Harga" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Harga</SelectItem>
+                <SelectItem value="<500k">Di bawah Rp.500.000</SelectItem>
+                <SelectItem value="500k-1m">
+                  Rp.500.000 - Rp.1.000.000
+                </SelectItem>
+                <SelectItem value=">1m">Di atas Rp.1.000.000</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

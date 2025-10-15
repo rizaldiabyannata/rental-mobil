@@ -1,4 +1,5 @@
 import { Card, CardTitle } from "@/components/ui/card";
+import SectionHeading from "@/components/SectionHeading";
 
 const services = [
   {
@@ -29,17 +30,23 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section className="bg-white py-16 md:py-24">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Jenis Layanan Kami
-          </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            Kami menawarkan berbagai layanan untuk memenuhi setiap kebutuhan
-            perjalanan Anda.
-          </p>
-        </div>
+    <section className="w-full md:pt-10 py-16">
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
+        <SectionHeading
+          title={"Jenis Layanan Kami"}
+          align="center"
+          size="md"
+          underline
+          underlineColor="bg-amber-500"
+          underlineWidth="lg"
+          underlineOffset="md"
+          titleClassName="text-emerald-700"
+          underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+          className="mb-6 md:mb-10"
+          description={
+            "Kami menawarkan berbagai layanan untuk memenuhi setiap kebutuhan perjalanan Anda."
+          }
+        />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (

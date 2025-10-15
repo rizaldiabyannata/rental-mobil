@@ -2,6 +2,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import SectionHeading from "@/components/SectionHeading";
 
 const tourPackages = [
   {
@@ -33,8 +34,23 @@ const tourPackages = [
 const PaketTourSection = () => {
   return (
     <section className="py-16 md:py-24 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 text-center lg:text-left">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          title={"Layanan Unggulan Kami"}
+          align="center"
+          size="md"
+          underline
+          underlineColor="bg-amber-500"
+          underlineWidth="lg"
+          underlineOffset="md"
+          titleClassName="text-emerald-700"
+          underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+          className="mb-6 md:mb-10"
+          description={
+            "Kami menyediakan beberapa layanan utama untuk menemani perjalanan Anda di Lombok."
+          }
+        />
+        {/* <div className="mb-12 text-center lg:text-left">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Layanan Unggulan Kami
           </h2>
@@ -42,20 +58,20 @@ const PaketTourSection = () => {
             Kami menyediakan beberapa layanan utama untuk menemani perjalanan
             Anda di Lombok.
           </p>
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {tourPackages.map((pkg, index) => (
             <Card
               key={index}
-              className="flex flex-col overflow-hidden rounded-lg shadow-lg"
+              className="flex flex-col overflow-hidden rounded-lg shadow-lg pt-0"
             >
               <div className="relative h-56 w-full">
                 <Image
                   src={pkg.image}
                   alt={pkg.title}
                   fill
-                  className={`object-cover ${pkg.imagePosition}`}
+                  className={`object-cover ${pkg.imagePosition} `}
                 />
               </div>
               <CardContent className="flex flex-1 flex-col p-6">

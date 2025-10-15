@@ -1,4 +1,5 @@
 import CarCard from "./CarCard";
+import SectionHeading from "@/components/SectionHeading";
 
 const cars = [
   {
@@ -23,33 +24,31 @@ const cars = [
       { icon: "Type", label: "Van" },
     ],
   },
-  {
-    name: "Toyota Avanza",
-    description: "Pilihan ekonomis dan handal untuk perjalanan.",
-    image: "/car-3.jpg",
-    price: "Rp 500.000",
-    specs: [
-      { icon: "Seat", label: "7 Seat" },
-      { icon: "Fuel", label: "Bensin" },
-      { icon: "Type", label: "MPV" },
-    ],
-  },
 ];
 
 const FleetSection = () => {
   return (
-    <section id="armada" className="bg-gray-50 py-16 md:py-24">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Armada Pilihan Kami
-          </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda.
-          </p>
+    <section className="w-full md:pt-10 py-16">
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+          <SectionHeading
+            title={"Armada Pilihan Kami"}
+            align="center"
+            size="md"
+            underline
+            underlineColor="bg-amber-500"
+            underlineWidth="lg"
+            underlineOffset="md"
+            titleClassName="text-emerald-700"
+            underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+            className="mb-6 md:mb-10"
+            description={
+              "Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda."
+            }
+          />
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {cars.map((car, index) => (
             <CarCard key={index} car={car} />
           ))}

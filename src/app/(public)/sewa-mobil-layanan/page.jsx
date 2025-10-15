@@ -1,14 +1,21 @@
-import HeroMobil from "@/components/sewa-mobil-layanan/HeroMobil";
+import HeroSection from "@/components/homepage/HeroSection";
 import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
-import Pertanyaan from "@/components/sewa-mobil-layanan/Pertanyaan";
+import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 export default function SewaMobilLayanan() {
   return (
     <main>
-      <HeroMobil />
+      <HeroSection imageOnRight={false} imageSrc="/HeroSewa.png" />
       <PaketTourSection />
       <ServicesSection />
-      <Pertanyaan />
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8 pb-12">
+        <WhatsAppCtaSection
+          waUrlBase="https://wa.me/6287741861681"
+          imageSrc="/imageforctasection.png"
+          imageAlt={`Gallery`}
+          className="shadow-md rounded-2xl"
+        />
+      </div>
     </main>
   );
 }

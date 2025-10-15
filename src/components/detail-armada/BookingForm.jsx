@@ -4,17 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/**
- * BookingForm (mobile-first)
- * - Fields: Nama, Nomor WhatsApp, Tanggal (date), Titik Jemput, Catatan
- * - On submit: open wa.me/<number> with encoded message
- *
- * Props:
- * - carName?: string (included in message)
- * - waUrlBase: string (e.g. "https://wa.me/129129120")
- * - buildMessage?: (data) => string (custom template builder)
- * - className?: string
- */
 export default function BookingForm({
   carName,
   waUrlBase,

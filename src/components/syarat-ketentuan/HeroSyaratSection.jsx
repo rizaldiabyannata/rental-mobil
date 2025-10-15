@@ -40,7 +40,7 @@ const HeroSyaratSection = () => {
         className="hidden lg:flex lg:min-h-[538px] xl:min-h-[738px] items-center w-full bg-no-repeat bg-cover bg-center"
         style={{ backgroundImage: "url('/layanan-BG.png')" }}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-12">
             <div className="w-1/2 flex flex-col items-start gap-6">
               <h1 className="font-sans lg:text-4xl xl:text-5xl font-bold text-black">

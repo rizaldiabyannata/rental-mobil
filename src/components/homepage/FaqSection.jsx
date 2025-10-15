@@ -5,6 +5,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import SectionHeading from "../SectionHeading";
+
 const faqData = [
   {
     question: "Apa saja syarat untuk menyewa mobil?",
@@ -36,16 +38,20 @@ const faqData = [
 const FaqSection = () => {
   return (
     <section className="bg-white py-[25px] md:py-[50px]">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mx-auto mb-12">
-          <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-emerald-700">
-            Pertanyaan yang Sering Diajukan
-          </h2>
-          <div className="w-[147px] md:w-[268px] h-[1px] bg-[#FF9700] mt-2 mx-auto" />
-          <p className="text-gray-600 mt-6 text-base md:text-lg lg:text-xl">
-            Temukan jawaban atas pertanyaan umum di sini.
-          </p>
-        </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <SectionHeading
+          title={"Pertanyaan yang Sering Diajukan"}
+          align="center"
+          size="md"
+          underline
+          underlineColor="bg-amber-500"
+          underlineWidth="lg"
+          underlineOffset="md"
+          titleClassName="text-emerald-700"
+          underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+          className="mb-6 md:mb-10"
+          description={"Temukan jawaban atas pertanyaan umum di sini."}
+        />
 
         <Accordion type="single" collapsible className="w-full space-y-4 pb-12">
           {faqData.map((faq, index) => (
