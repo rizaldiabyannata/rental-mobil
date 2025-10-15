@@ -9,17 +9,39 @@ import {
   Snowflake,
   Package,
   Music2,
+  Lock,
+  Thermometer,
+  Settings,
 } from "lucide-react";
 import SectionHeading from "../SectionHeading";
 import { cn } from "@/lib/utils";
 
+// Icon registry (keys in lowercase). Add aliases to improve matching.
 const ICONS = {
   users: Users,
+  user: Users,
+  people: Users,
+
   shield: ShieldCheck,
+  shieldcheck: ShieldCheck,
+
   gauge: Gauge,
+  speedometer: Gauge,
+
   ac: Snowflake,
+  snowflake: Snowflake,
+
   bagasi: Package,
+  package: Package,
+
   hiburan: Music2,
+  music: Music2,
+  music2: Music2,
+
+  lock: Lock,
+  thermometer: Thermometer,
+  settings: Settings,
+  cog: Settings,
 };
 
 const FeatureCard = ({
@@ -107,14 +129,12 @@ const KeyFeatureSection = ({
 
         <div
           className={cn(
-            "grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-3",
-            featuresLen === 3
-              ? "sm:grid-cols-2 md:grid-cols-3 md:gap-5"
-              : "sm:grid-cols-2"
+            "grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-4"
           )}
         >
           {features.map((feat, idx) => {
-            const Icon = feat.icon ? ICONS[feat.icon] || Users : Users;
+            const iconKey = (feat.icon || "").toString().trim().toLowerCase();
+            const Icon = ICONS[iconKey] || Users;
             const key = feat.key || `${feat.title}-${idx}`;
             return (
               <FeatureCard

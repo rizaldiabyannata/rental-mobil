@@ -41,6 +41,12 @@ export async function GET(request) {
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
+        include: {
+          images: {
+            orderBy: { order: "asc" },
+            take: 1, // ambil hanya 1 image pertama untuk performa
+          },
+        },
       }),
       prisma.car.count({ where }),
     ]);
@@ -49,6 +55,7 @@ export async function GET(request) {
       success: true,
       data: cars.map((c) => ({
         id: c.id,
+        slug: c.slug || null,
         name: c.name,
         description: c.description,
         startingPrice: c.startingPrice,
@@ -58,6 +65,15 @@ export async function GET(request) {
         available: c.available,
         features: c.features,
         coverImage: c.specifications?.coverImage || null,
+        gallery:
+          c.images && c.images.length > 0
+            ? c.images.map((img) => ({
+                id: img.id,
+                url: img.imageUrl,
+                alt: img.alt,
+                order: img.order,
+              }))
+            : [],
       })),
       pagination: {
         page,

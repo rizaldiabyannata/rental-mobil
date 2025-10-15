@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -65,18 +66,24 @@ const CarDetailCarousel = ({ images = [] }) => {
             {carImages.map((image, index) => (
               <CarouselItem key={image.id || index}>
                 <div className="h-[250px] md:h-[320px] lg:h-[420px]">
-                  <Card className="h-full border-neutral-200 rounded-[10px]">
-                    <CardContent className="flex items-center justify-center h-full p-4 bg-white">
-                      {/* Placeholder for now - will show slide number */}
-                      <span className="text-[30px] font-semibold text-neutral-950 leading-none tracking-[-0.3px]">
-                        {index + 1}
-                      </span>
-                      {/* TODO: Replace with actual image when images are provided */}
-                      {/* <img 
-                        src={image.src} 
-                        alt={image.alt}
-                        className="w-full h-full object-cover rounded-lg"
-                      /> */}
+                  <Card className="h-full border-neutral-200 rounded-[10px] py-0">
+                    <CardContent className="h-full p-0 bg-white">
+                      <div className="relative w-full h-full">
+                        {image?.src ? (
+                          <Image
+                            src={image.src}
+                            alt={image.alt || `Gambar ${index + 1}`}
+                            fill
+                            className="object-cover rounded-[10px]"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                            priority={index === 0}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full text-neutral-500">
+                            Tidak ada gambar
+                          </div>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 </div>

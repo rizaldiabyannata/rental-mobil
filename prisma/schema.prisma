@@ -15,6 +15,7 @@ datasource db {
 // 🚗 Manajemen Armada (Mobil)
 model Car {
     id             String   @id @default(uuid())
+    slug           String?  @unique // SEO-friendly unique slug
     name           String   @default("Unnamed") // Nama mobil
     description    String? // Deskripsi
     startingPrice  Int      @default(0) // Harga mulai (dalam rupiah)

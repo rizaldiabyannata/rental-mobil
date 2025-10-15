@@ -38,7 +38,13 @@ const CarCard = ({ car }) => {
             <span className="text-sm font-normal text-gray-600">/hari</span>
           </p>
           <div className="mt-4 flex justify-end gap-2">
-            <Link href={`/detail-armada?name=${car.name}`}>
+            <Link
+              href={
+                car.slug
+                  ? `/armada/${car.slug}`
+                  : `/detail-armada?name=${car.name}`
+              }
+            >
               <Button
                 variant="outline"
                 className="w-full md:w-44 bg-emerald-700 text-white hover:bg-emerald-800"

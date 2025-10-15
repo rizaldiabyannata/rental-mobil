@@ -6,6 +6,7 @@ function carToApi(car) {
   if (!car) return car;
   return {
     id: car.id,
+    slug: car.slug || null,
     name: car.name,
     description: car.description,
     startingPrice: car.startingPrice,

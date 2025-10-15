@@ -7,7 +7,7 @@ import {
 
 import SectionHeading from "../SectionHeading";
 
-const faqData = [
+const defaultFaq = [
   {
     question: "Apa saja syarat untuk menyewa mobil?",
     answer:
@@ -35,7 +35,11 @@ const faqData = [
   },
 ];
 
-const FaqSection = () => {
+const FaqSection = ({ faqs }) => {
+  const faqData =
+    Array.isArray(faqs) && faqs.length
+      ? faqs.map((f) => ({ question: f.question, answer: f.answer }))
+      : defaultFaq;
   return (
     <section className="bg-white py-[25px] md:py-[50px]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">

@@ -41,6 +41,7 @@ async function main() {
       data: [
         {
           name: "INNOVA REBORN",
+          slug: "innova-reborn",
           description: "Toyota Innova Reborn, MPV nyaman dan bertenaga.",
           startingPrice: 650000,
           capacity: 7,
@@ -52,6 +53,7 @@ async function main() {
         },
         {
           name: "TOYOTA HIACE",
+          slug: "toyota-hiace",
           description: "Toyota Hiace, kapasitas besar untuk rombongan.",
           startingPrice: 1200000,
           capacity: 14,
@@ -69,6 +71,42 @@ async function main() {
 
   // Re-query cars for ids (includes the newly ensured cars)
   const cars = await prisma.car.findMany({ orderBy: { createdAt: "asc" } });
+
+  // 2b) Backfill slugs for existing cars without slug
+  function slugify(input) {
+    const base = String(input || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+    return base || "car";
+  }
+
+  const existing = await prisma.car.findMany({
+    select: { id: true, name: true, slug: true },
+  });
+  const taken = new Set(existing.map((c) => c.slug).filter(Boolean));
+  const toAssign = [];
+  for (const c of existing) {
+    if (!c.slug) {
+      const base = slugify(c.name);
+      let candidate = base;
+      let i = 1;
+      while (taken.has(candidate)) {
+        candidate = `${base}-${i++}`;
+      }
+      taken.add(candidate);
+      toAssign.push({ id: c.id, slug: candidate });
+    }
+  }
+  if (toAssign.length) {
+    await prisma.$transaction(
+      toAssign.map((u) =>
+        prisma.car.update({ where: { id: u.id }, data: { slug: u.slug } })
+      )
+    );
+  }
 
   // 3) Car Images
   const imageCount = await prisma.carImage.count();
@@ -100,25 +138,40 @@ async function main() {
     // createMany for images
     await prisma.carImage.createMany({ data: imagesData });
   }
-  
+
   const faqCount = await prisma.fAQ.count();
   if (faqCount === 0) {
     await prisma.fAQ.createMany({
       data: [
         {
-          question: "Bagaimana cara memesan?",
-          answer: "Hubungi kami via WhatsApp atau form kontak.",
+          question: "Apa saja syarat untuk menyewa mobil?",
+          answer:
+            "Untuk menyewa mobil, Anda hanya perlu menyiapkan KTP/Paspor dan SIM A yang masih berlaku. Untuk beberapa paket, mungkin diperlukan jaminan tambahan yang akan kami informasikan lebih lanjut.",
           order: 1,
         },
         {
-          question: "Apakah harga sudah termasuk sopir?",
-          answer: "Tergantung paket, detail tertera di tarif.",
+          question: "Apakah harga sewa sudah termasuk bensin dan supir?",
+          answer:
+            "Ya, sebagian besar paket kami adalah 'All-in-one' yang sudah termasuk mobil, supir profesional, dan BBM. Namun, kami juga menyediakan paket sewa mobil lepas kunci (tanpa supir) sesuai permintaan.",
           order: 2,
         },
         {
-          question: "Metode pembayaran apa saja?",
-          answer: "Transfer bank dan tunai.",
+          question: "Bagaimana jika terjadi kerusakan atau ban bocor di jalan?",
+          answer:
+            "Jangan khawatir. Tim kami siaga 24/7. Segera hubungi nomor darurat yang kami berikan, dan kami akan mengirimkan bantuan atau mobil pengganti secepatnya.",
           order: 3,
+        },
+        {
+          question: "Apakah mobil bisa dibawa keluar kota Lombok?",
+          answer:
+            "Bisa, namun wajib dengan konfirmasi terlebih dahulu kepada kami saat proses pemesanan untuk penyesuaian syarat dan ketentuan perjalanan luar pulau.",
+          order: 4,
+        },
+        {
+          question: "Bagaimana sistem pembayarannya?",
+          answer:
+            "Kami memerlukan uang muka (DP) minimal 30% saat pemesanan untuk mengunci jadwal. Sisa pembayaran bisa dilunasi saat serah terima mobil di lokasi penjemputan.",
+          order: 5,
         },
       ],
     });
@@ -130,24 +183,43 @@ async function main() {
     await prisma.termsAndConditions.createMany({
       data: [
         {
-          category: "Umum",
-          title: "KTP Wajib",
-          content: "Penyewa wajib menunjukkan KTP saat penjemputan.",
+          category: "Syarat dan Ketentuan",
+          title: "Ketentuan Umum",
+          content:
+            "Penyewa wajib menunjukkan identitas diri yang valid (KTP/Paspor, SIM A). Kendaraan hanya boleh dikemudikan oleh penyewa atau supir yang terdaftar. Penggunaan kendaraan untuk aktivitas ilegal dilarang keras.",
           order: 1,
           isActive: true,
         },
         {
-          category: "Sewa Mobil",
-          title: "BBM",
-          content: "BBM ditanggung penyewa kecuali paket all-in.",
+          category: "Syarat dan Ketentuan",
+          title: "Pemesanan & Pembayaran",
+          content:
+            "Pemesanan dianggap sah setelah pembayaran uang muka (DP) sebesar 30%. Pelunasan dilakukan saat serah terima kendaraan. Pembatalan H-3 akan dikenakan potongan 50% dari DP, pembatalan H-1 atau kurang akan membuat DP hangus.",
           order: 2,
           isActive: true,
         },
         {
-          category: "Pembayaran",
-          title: "DP",
-          content: "DP minimal 30% untuk konfirmasi pemesanan.",
+          category: "Syarat dan Ketentuan",
+          title: "Penggunaan Kendaraan",
+          content:
+            "Harga sewa tidak termasuk BBM (kecuali paket All-in-one). Kendaraan harus dikembalikan dengan level BBM yang sama seperti saat diterima. Penggunaan kendaraan di luar wilayah Lombok harus dengan persetujuan terlebih dahulu.",
           order: 3,
+          isActive: true,
+        },
+        {
+          category: "Syarat dan Ketentuan",
+          title: "Biaya Overtime",
+          content:
+            "Kelebihan waktu penggunaan akan dikenakan biaya overtime sebesar 10% dari harga sewa per jam. Keterlambatan lebih dari 6 jam akan dihitung sebagai biaya sewa satu hari penuh.",
+          order: 4,
+          isActive: true,
+        },
+        {
+          category: "Syarat dan Ketentuan",
+          title: "Kerusakan & Asuransi",
+          content:
+            "Penyewa bertanggung jawab penuh atas segala kerusakan, kehilangan, atau kecelakaan yang disebabkan oleh kelalaian. Kendaraan kami dilindungi asuransi All Risk, namun klaim tunduk pada syarat dan ketentuan dari pihak asuransi.",
+          order: 5,
           isActive: true,
         },
       ],

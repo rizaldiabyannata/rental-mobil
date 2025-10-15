@@ -11,7 +11,7 @@ const HeroSection = ({
     </>
   ),
   subtitle = "Jelajahi keindahan Lombok dengan nyaman bersama Reborn Lombok Trans. Armada terawat, supir profesional, dan harga terbaik.",
-  imageSrc = "/ImageHero.png",
+  imageSrc = "/Hero-1.png",
   imageAlt = "Hero Image",
   imageOnRight = false,
   primaryLabel = "Lihat Armada",

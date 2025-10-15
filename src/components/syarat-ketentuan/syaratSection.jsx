@@ -41,8 +41,18 @@ const termsData = [
   },
 ];
 
-const SyaratSection = () => {
-  const [selectedTerm, setSelectedTerm] = useState(termsData[0]);
+const SyaratSection = ({ terms }) => {
+  const items =
+    Array.isArray(terms) && terms.length
+      ? terms
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          .map((t, idx) => ({
+            id: t.id || idx + 1,
+            title: t.title,
+            content: t.content,
+          }))
+      : termsData;
+  const [selectedTerm, setSelectedTerm] = useState(items[0]);
 
   return (
     <section className="bg-white py-[25px] md:py-[50px] flex justify-center items-center">
@@ -59,7 +69,7 @@ const SyaratSection = () => {
         </div>
         <div className="lg:hidden">
           <Accordion type="single" collapsible className="w-full space-y-4">
-            {termsData.map((term) => (
+            {items.map((term) => (
               <AccordionItem
                 key={term.id}
                 value={`item-${term.id}`}
@@ -80,7 +90,7 @@ const SyaratSection = () => {
         <div className="hidden lg:flex w-full max-w-6xl mx-auto shadow-md rounded-lg">
           <div className="w-1/3 bg-[#F8F8F8] p-8 rounded-l-lg">
             <ul className="space-y-4">
-              {termsData.map((term) => (
+              {items.map((term) => (
                 <li key={term.id}>
                   <button
                     onClick={() => setSelectedTerm(term)}

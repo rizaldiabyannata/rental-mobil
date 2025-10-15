@@ -91,6 +91,7 @@ export default function AddCarPage() {
   const [success, setSuccess] = useState("");
   const [formData, setFormData] = useState({
     name: "",
+    slug: "",
     description: "",
     capacity: "",
     transmission: "Manual",
@@ -157,10 +158,19 @@ export default function AddCarPage() {
     setSpecDetails((prev) => prev.filter((_, i) => i !== idx));
   };
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => {
+      const next = { ...prev, [field]: value };
+      if (field === "name") {
+        const base = String(value || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+        next.slug = base;
+      }
+      return next;
+    });
   };
   const addFeatureBlock = () => {
     if (!fbDraft.icon || !fbDraft.title || !fbDraft.description) return;
@@ -348,6 +358,23 @@ export default function AddCarPage() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+
+                {/* Slug field for SEO-friendly URL */}
+                <div className="space-y-1">
+                  <Label htmlFor="slug">Slug (URL)</Label>
+                  <Input
+                    id="slug"
+                    value={formData.slug}
+                    onChange={(e) => handleInputChange("slug", e.target.value)}
+                    placeholder="otomatis dari nama, bisa disesuaikan"
+                    className="bg-white border border-emerald-100 shadow-sm hover:border-emerald-200 focus-visible:border-emerald-500 focus-visible:ring-emerald-200/60"
+                  />
+                  {formData.slug && (
+                    <p className="text-xs text-muted-foreground">
+                      URL: /armada/{formData.slug}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">

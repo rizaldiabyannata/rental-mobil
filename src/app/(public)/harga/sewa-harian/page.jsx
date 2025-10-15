@@ -1,95 +1,37 @@
-"use client";
-import { usePriceFilter } from "@/hooks/usePriceFilter";
-import FilterControls from "@/components/harga/FilterControls";
-import PriceTable from "@/components/harga/PriceTable";
-import HeroSection from "@/components/homepage/HeroSection";
+import SewaHarianPage from "@/components/harga/SewaHarianClient";
 
-const dataSewaHarian = [
-  {
-    layanan: "Tarif Sewa per 12 jam",
-    paket: "Dengan Driver",
-    armada: "INNOVA REBORN",
-    harga: "Rp.650.000",
-  },
-  {
-    layanan: "Tarif Sewa per 12 jam",
-    paket: "Dengan Driver + BBM (Normal)",
-    armada: "INNOVA REBORN",
-    harga: "Rp.800.000",
-  },
-  {
-    layanan: "Tarif Sewa per 12 jam",
-    paket: "Dengan Driver + BBM (Highseason)",
-    armada: "INNOVA REBORN",
-    harga: "Rp.1.200.000",
-  },
-  {
-    layanan: "Tarif Sewa per 12 jam",
-    paket: "Overtime per Jam",
-    armada: "INNOVA REBORN",
-    harga: "Rp.60.000",
-  },
-  {
-    layanan: "Tarif Sewa per 12 jam",
-    paket: "Penambahan biaya di Luar Rute (Mataram, Sengigi, Kute)",
-    armada: "INNOVA REBORN",
-    harga: "Rp.125.000",
-  },
-];
+async function fetchTariffData() {
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL || ""
+      }/api/public/tariffs?serviceType=Tarif sewa per 12 jam`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
 
-const filterOptions = {
-  armada: [...new Set(dataSewaHarian.map((item) => item.armada))],
-  paket: [...new Set(dataSewaHarian.map((item) => item.paket))],
-};
+    // Transform API data to match frontend format
+    const grouped = json?.data?.groupedByService || {};
+    const sewaHarianData = grouped["Tarif sewa per 12 jam"] || [];
+    console.log("Fetched sewa-harian data:", sewaHarianData);
+    return sewaHarianData.map((item) => ({
+      layanan: item.category || "Sewa Per 12 Jam",
+      paket: item.packageType || item.name,
+      armada: item.car?.name || "INNOVA REBORN",
+      harga: new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(item.price),
+    }));
+  } catch (e) {
+    console.error("Failed to fetch tariff data:", e);
+    return null;
+  }
+}
 
-const SewaHarianPage = () => {
-  const { filters, filteredData, handleFilterChange } =
-    usePriceFilter(dataSewaHarian);
-
-  const innovaFilteredData = filteredData.filter(
-    (item) => item.armada === "INNOVA REBORN"
-  );
-  const hiaceFilteredData = filteredData.filter(
-    (item) => item.armada === "TOYOTA HIACE"
-  );
-
-  return (
-    <>
-      <HeroSection imageOnRight={false} imageSrc="/HeroSewa.png" />
-
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="space-y-8">
-          <FilterControls
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            options={filterOptions}
-          />
-
-          <div className="space-y-12">
-            {innovaFilteredData.length > 0 && (
-              <PriceTable
-                title="Armada: Innova Reborn"
-                data={innovaFilteredData}
-              />
-            )}
-
-            {hiaceFilteredData.length > 0 && (
-              <PriceTable
-                title="Armada: Toyota Hiace"
-                data={hiaceFilteredData}
-              />
-            )}
-
-            {filteredData.length === 0 && (
-              <p className="text-center text-gray-500">
-                Tidak ada hasil yang cocok dengan filter Anda.
-              </p>
-            )}
-          </div>
-        </div>
-      </main>
-    </>
-  );
-};
-
-export default SewaHarianPage;
+export default async function SewaHarianWrapper() {
+  const data = await fetchTariffData();
+  return <SewaHarianPage data={data || undefined} />;
+}

@@ -1,88 +1,37 @@
-"use client";
-import { usePriceFilter } from "@/hooks/usePriceFilter";
-import FilterControls from "@/components/harga/FilterControls";
-import PriceTable from "@/components/harga/PriceTable";
-import HeroSection from "@/components/homepage/HeroSection";
+import AntarJemputPage from "@/components/harga/AntarJemputClient";
 
-const dataAntarJemput = [
-  {
-    layanan: "Tarif Antar Jemput Bandara",
-    paket: "Mataram",
-    armada: "INNOVA REBORN",
-    harga: "Rp.450.000",
-  },
-  {
-    layanan: "Tarif Antar Jemput Bandara",
-    paket: "Senggigi",
-    armada: "INNOVA REBORN",
-    harga: "Rp.550.000",
-  },
-  {
-    layanan: "Tarif Antar Jemput Bandara",
-    paket: "Bangsal",
-    armada: "INNOVA REBORN",
-    harga: "Rp.750.000",
-  },
-  {
-    layanan: "Tarif Antar Jemput Bandara",
-    paket: "Kute",
-    armada: "INNOVA REBORN",
-    harga: "Rp.500.000",
-  },
-];
+async function fetchTariffData() {
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL || ""
+      }/api/public/tariffs?serviceType=Tarif Antar Jemput Bandara`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
 
-const filterOptions = {
-  armada: [...new Set(dataAntarJemput.map((item) => item.armada))],
-  paket: [...new Set(dataAntarJemput.map((item) => item.paket))],
-};
+    // Transform API data to match frontend format
+    const grouped = json?.data?.groupedByService || {};
+    const antarJemputData = grouped["Tarif Antar Jemput Bandara"] || [];
+    console.log("Fetched antar-jemput data:", antarJemputData);
+    return antarJemputData.map((item) => ({
+      layanan: item.category || "Antar Jemput Bandara",
+      paket: item.packageType || item.name,
+      armada: item.car?.name || "INNOVA REBORN",
+      harga: new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(item.price),
+    }));
+  } catch (e) {
+    console.error("Failed to fetch tariff data:", e);
+    return null;
+  }
+}
 
-const AntarJemputPage = () => {
-  const { filters, filteredData, handleFilterChange } =
-    usePriceFilter(dataAntarJemput);
-
-  const innovaFilteredData = filteredData.filter(
-    (item) => item.armada === "INNOVA REBORN"
-  );
-  const hiaceFilteredData = filteredData.filter(
-    (item) => item.armada === "TOYOTA HIACE"
-  );
-
-  return (
-    <>
-      <main className="container mx-auto px-4 py-12 md:py-16">
-        <HeroSection imageOnRight={false} imageSrc="/Hero-1.png" />
-        <div className="space-y-8">
-          <FilterControls
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            options={filterOptions}
-          />
-
-          <div className="space-y-12">
-            {innovaFilteredData.length > 0 && (
-              <PriceTable
-                title="Armada: Innova Reborn"
-                data={innovaFilteredData}
-              />
-            )}
-
-            {hiaceFilteredData.length > 0 && (
-              <PriceTable
-                title="Armada: Toyota Hiace"
-                data={hiaceFilteredData}
-              />
-            )}
-
-            {filteredData.length === 0 && (
-              <p className="text-center text-gray-500">
-                Tidak ada hasil yang cocok dengan filter Anda.
-              </p>
-            )}
-          </div>
-        </div>
-      </main>
-    </>
-  );
-};
-
-export default AntarJemputPage;
+export default async function AntarJemputWrapper() {
+  const data = await fetchTariffData();
+  return <AntarJemputPage data={data || undefined} />;
+}

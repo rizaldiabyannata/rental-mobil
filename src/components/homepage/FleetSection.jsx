@@ -1,32 +1,64 @@
 import CarCard from "./CarCard";
 import SectionHeading from "@/components/SectionHeading";
 
-const cars = [
-  {
-    name: "Innova Reborn",
-    description: "Kenyamanan premium untuk keluarga dan bisnis.",
-    image: "/InnovaReborn.png",
-    price: "Rp 650.000",
-    specs: [
-      { icon: "Seat", label: "7 Seat" },
-      { icon: "Fuel", label: "Diesel" },
-      { icon: "Type", label: "MPV" },
-    ],
-  },
-  {
-    name: "Toyota Hi-Ace",
-    description: "Solusi perjalanan untuk grup besar dengan nyaman.",
-    image: "/hiace-1.png",
-    price: "Rp 1.200.000",
-    specs: [
-      { icon: "Seat", label: "15 Seat" },
-      { icon: "Fuel", label: "Diesel" },
-      { icon: "Type", label: "Van" },
-    ],
-  },
-];
+async function fetchCars() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/public/cars?limit=6`,
+      {
+        cache: "no-store", // atau 'force-cache' jika ingin caching
+      }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data || [];
+  } catch (error) {
+    console.error("Failed to fetch cars:", error);
+    return [];
+  }
+}
 
-const FleetSection = () => {
+const FleetSection = async () => {
+  const carsData = await fetchCars();
+
+  // Map API data ke format yang dibutuhkan CarCard
+  const cars = carsData.map((car) => {
+    // Ambil image: prioritas coverImage, fallback ke gallery order 0, fallback ke placeholder
+    let image = "/InnovaReborn.png"; // default placeholder
+    if (car.coverImage) {
+      image = car.coverImage;
+    } else if (Array.isArray(car.gallery) && car.gallery.length > 0) {
+      const firstImage =
+        car.gallery.find((img) => img.order === 0) || car.gallery[0];
+      if (firstImage?.url) {
+        const raw = firstImage.url;
+        image = /^https?:\/\//i.test(raw)
+          ? raw
+          : raw.startsWith("/")
+          ? raw
+          : `/${raw}`;
+      }
+    }
+
+    return {
+      slug: car.slug,
+      name: car.name,
+      description:
+        car.description || "Kendaraan berkualitas untuk perjalanan Anda.",
+      image,
+      price: new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(car.startingPrice || 0),
+      specs: [
+        { icon: "Seat", label: `${car.capacity || 0} Seat` },
+        { icon: "Fuel", label: car.fuelType || "Bensin" },
+        { icon: "Type", label: car.transmission || "Manual" },
+      ],
+    };
+  });
+
   return (
     <section id="armada" className="w-full md:pt-10 py-16">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
@@ -49,9 +81,15 @@ const FleetSection = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {cars.map((car, index) => (
-            <CarCard key={index} car={car} />
-          ))}
+          {cars.length > 0 ? (
+            cars.map((car, index) => (
+              <CarCard key={car.slug || index} car={car} />
+            ))
+          ) : (
+            <div className="col-span-2 text-center text-gray-600 py-8">
+              Belum ada armada tersedia.
+            </div>
+          )}
         </div>
       </div>
     </section>

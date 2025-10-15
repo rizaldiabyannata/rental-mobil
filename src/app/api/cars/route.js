@@ -9,6 +9,7 @@ function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
 
   const base = {
     id: car.id,
+    slug: car.slug || null,
     name: car.name,
     description: car.description,
     startingPrice: car.startingPrice,
@@ -217,7 +218,30 @@ async function createCar(request) {
       : [];
 
     // Buat dalam transaksi agar konsisten
+    // Helper to generate a unique slug if not provided
+    const baseSlug = (name || "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+    async function ensureUniqueSlug(tx, s) {
+      if (!s) return null;
+      let candidate = s;
+      let i = 1;
+      // Try until unique; safeguard with max tries
+      while (i < 1000) {
+        const exists = await tx.car.findFirst({ where: { slug: candidate } });
+        if (!exists) return candidate;
+        candidate = `${s}-${i++}`;
+      }
+      return `${s}-${Date.now()}`;
+    }
+
     const created = await prisma.$transaction(async (tx) => {
+      const finalSlug = await ensureUniqueSlug(tx, baseSlug);
       const newCar = await tx.car.create({
         data: {
           name,
@@ -229,6 +253,7 @@ async function createCar(request) {
           available,
           features: featuresStrings,
           specifications: specsNormalized,
+          slug: finalSlug,
         },
       });
 

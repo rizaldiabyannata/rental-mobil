@@ -31,7 +31,14 @@ export default function TariffDetailSection({
     },
   ],
   className,
+  gridCols,
 }) {
+  const cardsCount = Array.isArray(cards) ? cards.length : 0;
+  // Auto-detect grid layout: jika ganjil dan hanya 1 card, gunakan col-1; jika ganjil > 1, tetap 2 kolom tapi card terakhir span 2
+  const isOdd = cardsCount % 2 !== 0;
+  const autoGridCols =
+    gridCols || (cardsCount === 1 ? "lg:grid-cols-1" : "lg:grid-cols-2");
+
   return (
     <section className={cn("w-full py-8 md:py-12", className)}>
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
@@ -49,69 +56,78 @@ export default function TariffDetailSection({
           className="mb-6 md:mb-10"
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
-          {cards.map((card, idx) => (
-            <Card
-              key={card.key || idx}
-              className="rounded-2xl border border-neutral-300 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
-            >
-              <CardContent className="p-5 md:p-6">
-                {/* Card Title */}
-                {card.title ? (
-                  <h3 className="text-lg md:text-xl font-extrabold text-neutral-900">
-                    {card.title}
-                  </h3>
-                ) : null}
+        <div className={cn("grid grid-cols-1 gap-5 md:gap-6", autoGridCols)}>
+          {cards.map((card, idx) => {
+            // Jika ganjil dan ini card terakhir, span 2 kolom (centered)
+            const isLastOdd = isOdd && idx === cardsCount - 1 && cardsCount > 1;
+            return (
+              <Card
+                key={card.key || idx}
+                className={cn(
+                  "rounded-2xl border border-neutral-300 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]",
+                  isLastOdd && "lg:col-span-2 lg:max-w-2xl lg:mx-auto"
+                )}
+              >
+                <CardContent className="p-5 md:p-6">
+                  {/* Card Title */}
+                  {card.title ? (
+                    <h3 className="text-lg md:text-xl font-extrabold text-neutral-900">
+                      {card.title}
+                    </h3>
+                  ) : null}
 
-                {/* Top divider */}
-                {card.showTopDivider !== false ? (
-                  <div className={cn("h-px bg-neutral-300 mt-3 md:mt-4")}></div>
-                ) : null}
+                  {/* Top divider */}
+                  {card.showTopDivider !== false ? (
+                    <div
+                      className={cn("h-px bg-neutral-300 mt-3 md:mt-4")}
+                    ></div>
+                  ) : null}
 
-                {/* Content */}
-                <div className="mt-4 md:mt-5">
-                  {card.content ? (
-                    card.content
-                  ) : Array.isArray(card.items) && card.items.length ? (
-                    <div className="space-y-4">
-                      {card.items.map((it, i) => {
-                        if (typeof it === "string") {
+                  {/* Content */}
+                  <div className="mt-4 md:mt-5">
+                    {card.content ? (
+                      card.content
+                    ) : Array.isArray(card.items) && card.items.length ? (
+                      <div className="space-y-4">
+                        {card.items.map((it, i) => {
+                          if (typeof it === "string") {
+                            return (
+                              <div
+                                key={i}
+                                className="text-sm md:text-base text-neutral-800"
+                              >
+                                {it}
+                              </div>
+                            );
+                          }
                           return (
                             <div
                               key={i}
-                              className="text-sm md:text-base text-neutral-800"
+                              className="flex items-center justify-between gap-4"
                             >
-                              {it}
+                              <span className="text-sm md:text-base text-neutral-800">
+                                {it.label}
+                              </span>
+                              {it.price ? (
+                                <span className="text-sm md:text-base font-extrabold text-neutral-900">
+                                  {typeof it.price === "number"
+                                    ? formatIDR(it.price)
+                                    : /\d/.test(String(it.price)) &&
+                                      !String(it.price).trim().startsWith("Rp")
+                                    ? formatIDR(String(it.price))
+                                    : it.price}
+                                </span>
+                              ) : null}
                             </div>
                           );
-                        }
-                        return (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between gap-4"
-                          >
-                            <span className="text-sm md:text-base text-neutral-800">
-                              {it.label}
-                            </span>
-                            {it.price ? (
-                              <span className="text-sm md:text-base font-extrabold text-neutral-900">
-                                {typeof it.price === "number"
-                                  ? formatIDR(it.price)
-                                  : /\d/.test(String(it.price)) &&
-                                    !String(it.price).trim().startsWith("Rp")
-                                  ? formatIDR(String(it.price))
-                                  : it.price}
-                              </span>
-                            ) : null}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : null}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

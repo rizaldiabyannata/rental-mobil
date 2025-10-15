@@ -1,7 +1,7 @@
-import FaqSection from "@/components/homepage/FaqSection";
-import SyaratSection from "@/components/syarat-ketentuan/SyaratSection";
+import SyaratSectionWrapper from "@/components/syarat-ketentuan/SyaratSectionWrapper";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import HeroSection from "@/components/homepage/HeroSection";
+import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
 
 export default function SyaratKetentuan() {
   return (
@@ -18,8 +18,8 @@ export default function SyaratKetentuan() {
           }
           subtitle="Selamat datang di layanan rental mobil Reborn Lombok Trans. Dengan melanjutkan proses pemesanan, Anda menyatakan telah membaca, memahami, dan setuju untuk terikat pada semua syarat dan ketentuan yang tercantum di halaman ini. Mohon luangkan waktu untuk mempelajarinya dengan saksama."
         />
-        <SyaratSection />
-        <FaqSection />
+        <SyaratSectionWrapper />
+        <FaqSectionWrapper />
         <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8 pb-12">
           <WhatsAppCtaSection
             waUrlBase="https://wa.me/6287741861681"
