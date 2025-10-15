@@ -1,4 +1,5 @@
 import { Card, CardTitle } from "@/components/ui/card";
+import SectionHeading from "@/components/SectionHeading";
 
 const services = [
   {
@@ -29,25 +30,34 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section className="bg-white py-[25px] md:py-[50px]">
-      <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-emerald-700">
-            Jenis Layanan Kami
-          </h2>
-          <div className="w-[147px] md:w-[268px] h-[1px] bg-[#FF9700] mt-2 mx-auto" />
-        </div>
+    <section className="w-full md:pt-10 py-16">
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
+        <SectionHeading
+          title={"Jenis Layanan Kami"}
+          align="center"
+          size="md"
+          underline
+          underlineColor="bg-amber-500"
+          underlineWidth="lg"
+          underlineOffset="md"
+          titleClassName="text-emerald-700"
+          underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+          className="mb-6 md:mb-10"
+          description={
+            "Kami menawarkan berbagai layanan untuk memenuhi setiap kebutuhan perjalanan Anda."
+          }
+        />
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
             <Card
               key={index}
-              className="rounded-lg border border-gray-200 bg-white shadow-md p-4 md:p-6 flex flex-col items-start gap-2"
+              className="flex flex-col gap-2 rounded-lg p-6 shadow-sm"
             >
-              <CardTitle className="font-geist text-sm md:text-[16px] lg:text-xl font-semibold text-gray-900 leading-tight">
+              <CardTitle className="font-sans text-lg font-semibold text-gray-900">
                 {service.title}
               </CardTitle>
-              <p className="font-geist text-[10px] md:text-[12px] lg:text-sm font-normal text-gray-500 leading-normal">
+              <p className="font-sans text-sm text-gray-600">
                 {service.description}
               </p>
             </Card>

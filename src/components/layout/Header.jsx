@@ -5,11 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Icon } from "@iconify-icon/react";
 
 const MobileMenu = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5 md:pl-24 md:pr-10 md:pt-5">
       <Button
         size="icon"
         variant="ghost"
@@ -104,12 +105,13 @@ const Header = () => {
           rel="noopener noreferrer"
           className="hidden lg:flex items-center gap-2 text-sm"
         >
-          <Image
-            src="/ic_baseline-whatsapp.svg"
-            alt="WhatsApp Icon"
-            width={40}
-            height={40}
+          <Icon
+            icon="ic:baseline-whatsapp"
+            width="36"
+            height="36"
+            style={{ color: "#00a63e" }}
           />
+
           <div>
             <p className="font-medium">Butuh Rental?</p>
             <p className="font-bold text-green-600">+62-877-4186-1681</p>

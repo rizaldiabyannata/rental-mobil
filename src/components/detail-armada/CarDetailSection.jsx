@@ -8,7 +8,7 @@ import CarDetailInfo from "./CarDetailInfo";
 const CarDetailSection = ({ car }) => {
   return (
     <section className="w-full md:pt-10">
-      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-0 md:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8 lg:gap-10">
           {/* Left: Carousel visible on md+; hidden on mobile since CarDetailInfo renders its own mobile carousel */}
           <div className="hidden md:block">

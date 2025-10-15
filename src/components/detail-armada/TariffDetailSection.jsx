@@ -5,22 +5,6 @@ import SectionHeading from "@/components/SectionHeading";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatIDR } from "@/lib/utils";
 
-/**
- * TariffDetailSection (Mobile-first)
- * Menurut desain mobile: Judul pusat + underline oranye, dua kartu dengan border abu-abu,
- * tiap kartu memiliki garis pemisah tipis dekat bagian atas dan konten di bawahnya.
- *
- * Props:
- * - title?: string (default: 'Detail Tarif Lengkap')
- * - cards?: Array<{
- *     key?: string;
- *     title?: string;            // optional heading dalam kartu
- *     items?: Array<{ label: string; price?: string }>|string[];
- *     content?: React.ReactNode; // konten custom; jika ada, menimpa items
- *     showTopDivider?: boolean;  // garis tipis di bagian atas konten (default: true)
- *   }>
- * - className?: string
- */
 export default function TariffDetailSection({
   title = "Detail Tarif Lengkap",
   cards = [

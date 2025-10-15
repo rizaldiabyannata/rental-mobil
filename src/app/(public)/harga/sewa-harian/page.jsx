@@ -2,8 +2,9 @@
 import { usePriceFilter } from "@/hooks/usePriceFilter";
 import FilterControls from "@/components/harga/FilterControls";
 import PriceTable from "@/components/harga/PriceTable";
+import HeroSection from "@/components/homepage/HeroSection";
 
-const dataTour = [
+const dataSewaHarian = [
   {
     layanan: "Tarif Sewa per 12 jam",
     paket: "Dengan Driver",
@@ -37,13 +38,13 @@ const dataTour = [
 ];
 
 const filterOptions = {
-  armada: [...new Set(dataTour.map((item) => item.armada))],
-  paket: [...new Set(dataTour.map((item) => item.paket))],
+  armada: [...new Set(dataSewaHarian.map((item) => item.armada))],
+  paket: [...new Set(dataSewaHarian.map((item) => item.paket))],
 };
 
 const SewaHarianPage = () => {
   const { filters, filteredData, handleFilterChange } =
-    usePriceFilter(dataTour);
+    usePriceFilter(dataSewaHarian);
 
   const innovaFilteredData = filteredData.filter(
     (item) => item.armada === "INNOVA REBORN"
@@ -53,31 +54,41 @@ const SewaHarianPage = () => {
   );
 
   return (
-    <main className="container mx-auto py-16 px-4">
-      <h1 className="text-4xl font-bold text-center mb-12 text-emerald-700">
-        Daftar Harga Paket Tour
-        <div className="w-[147px] md:w-[268px] h-[1px] bg-[#FF9700] mt-2 mx-auto" />
-      </h1>
+    <>
+      <HeroSection imageOnRight={false} imageSrc="/HeroSewa.png" />
 
-      <FilterControls
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        options={filterOptions}
-      />
-      {innovaFilteredData.length > 0 && (
-        <PriceTable title="Armada: Innova Reborn" data={innovaFilteredData} />
-      )}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="space-y-8">
+          <FilterControls
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            options={filterOptions}
+          />
 
-      {hiaceFilteredData.length > 0 && (
-        <PriceTable title="Armada: Toyota Hiace" data={hiaceFilteredData} />
-      )}
+          <div className="space-y-12">
+            {innovaFilteredData.length > 0 && (
+              <PriceTable
+                title="Armada: Innova Reborn"
+                data={innovaFilteredData}
+              />
+            )}
 
-      {filteredData.length === 0 && (
-        <p className="text-center text-gray-500">
-          Tidak ada hasil yang cocok dengan filter Anda.
-        </p>
-      )}
-    </main>
+            {hiaceFilteredData.length > 0 && (
+              <PriceTable
+                title="Armada: Toyota Hiace"
+                data={hiaceFilteredData}
+              />
+            )}
+
+            {filteredData.length === 0 && (
+              <p className="text-center text-gray-500">
+                Tidak ada hasil yang cocok dengan filter Anda.
+              </p>
+            )}
+          </div>
+        </div>
+      </main>
+    </>
   );
 };
 

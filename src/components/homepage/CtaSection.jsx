@@ -5,7 +5,7 @@ import Link from "next/link";
 const CtaSection = () => {
   return (
     <section className="bg-white pt-[25px] md:pt-[50px]">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
           <div className="w-full lg:w-1/2 order-2 lg:order-1">
             <Image

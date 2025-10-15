@@ -60,66 +60,69 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Lupa Password</CardTitle>
-          <CardDescription>
+    <main className="container mx-auto flex min-h-[calc(100vh-180px)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Lupa Password Anda?
+          </h1>
+          <p className="mt-2 text-sm text-gray-600">
             Kami akan mengirimkan OTP ke email Anda
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {error && <div className="text-red-600 text-sm">{error}</div>}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Email</label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading || sent}
-              className={cn(
-                // Base visibility
-                "w-full h-11 rounded-xl bg-white border border-slate-300 shadow-sm px-4 placeholder:text-slate-400",
-                // Focus styles
-                "focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-0"
-              )}
-            />
-          </div>
-          {!sent ? (
-            <Button onClick={requestOtp} disabled={loading}>
-              Kirim OTP
-            </Button>
-          ) : (
+          </p>
+        </div>
+        <Card>
+          <CardContent className="space-y-6 p-6 sm:p-8">
+            {error && <div className="text-red-600 text-sm">{error}</div>}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Masukkan OTP</label>
+              <label className="text-sm font-medium">Email</label>
               <Input
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                maxLength={6}
-                disabled={loading}
-                className={cn(
-                  // Base visibility
-                  "w-full h-11 rounded-xl bg-white border border-slate-300 shadow-sm px-4 placeholder:text-slate-400",
-                  // Focus styles
-                  "focus:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-0"
-                )}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading || sent}
               />
-              <div className="flex gap-2">
-                <Button onClick={verifyOtp} disabled={loading}>
-                  Verifikasi
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={requestOtp}
-                  disabled={loading}
-                >
-                  Kirim Ulang
-                </Button>
-              </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            {!sent ? (
+              <Button
+                onClick={requestOtp}
+                disabled={loading}
+                className="w-full"
+              >
+                Kirim OTP
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Masukkan OTP</label>
+                  <Input
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    maxLength={6}
+                    disabled={loading}
+                  />
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    onClick={verifyOtp}
+                    disabled={loading}
+                    className="w-full"
+                  >
+                    Verifikasi
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={requestOtp}
+                    disabled={loading}
+                    className="w-full"
+                  >
+                    Kirim Ulang
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 }

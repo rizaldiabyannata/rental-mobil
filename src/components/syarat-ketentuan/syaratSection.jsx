@@ -46,7 +46,7 @@ const SyaratSection = () => {
 
   return (
     <section className="bg-white py-[25px] md:py-[50px] flex justify-center items-center">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/*TAMPILAN MOBILE & TABLET (< 1024px)*/}
         <div className="text-center mx-auto mb-12">
           <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-emerald-700">

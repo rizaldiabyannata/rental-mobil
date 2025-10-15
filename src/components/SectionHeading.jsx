@@ -75,7 +75,17 @@ export default function SectionHeading({
             titleClassName
           )}
         >
-          {title}
+          {typeof title === "string" ? (
+            // If the title string contains HTML tags (e.g. <span>), render as HTML.
+            // Otherwise render as plain text.
+            /<[^>]+>/.test(title) ? (
+              <span dangerouslySetInnerHTML={{ __html: title }} />
+            ) : (
+              title
+            )
+          ) : (
+            title
+          )}
         </As>
       ) : null}
 

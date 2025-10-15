@@ -1,66 +1,69 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import { Car, Medal, Wallet } from "lucide-react";
+import SectionHeading from "../SectionHeading";
+import { Card, CardContent } from "@/components/ui/card";
 
 const features = [
   {
-    image: "/armada.png",
-    title: "Kualitas Armada dan Pelayanan Profesional",
+    icon: Car,
+    title: "Armada Terawat & Berkualitas",
     description:
-      "Armada Innova Reborn terawat dengan baik dan sopir kami berpengalaman serta ramah.",
+      "Semua mobil kami dalam kondisi prima dan terawat secara rutin untuk menjamin keamanan dan kenyamanan Anda.",
   },
   {
-    image: "/sopir.png",
-    title: "Paket Harga Transparan dengan Nilai Tambah",
+    icon: Medal,
+    title: "Supir Profesional & Berpengalaman",
     description:
-      "Harga termasuk sopir & bensin serta bonus pemandu wisata yang bisa menjadi fotografer.",
+      "Supir kami tidak hanya ahli mengemudi, tetapi juga ramah dan siap menjadi pemandu wisata Anda.",
   },
   {
-    image: "/pembayaran.png",
-    title: "Kemudahan Proses dan Fokus pada Pelanggan",
+    icon: Wallet,
+    title: "Harga Terbaik & Transparan",
     description:
-      "Kami selalu memprioritaskan kemudahan dan kepuasan perjalanan Anda.",
+      "Kami menawarkan harga sewa yang kompetitif tanpa biaya tersembunyi, memberikan nilai terbaik untuk Anda.",
   },
 ];
 
 const WhyUsSection = () => {
   return (
-    <section className="bg-white py-[25px] lg:py-[50px]">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mb-12">
-          <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-slate-900">
-            Kenapa Harus <span className="text-emerald-700">Memilih Kami</span>
-          </h2>
-          <div className=" w-[213px] md:w-[268px] h-[1px] bg-[#FF9700] mt-1" />
-          <p className="font-geist text-gray-800 text-base md:text-lg lg:text-xl mt-6 max-w-3xl font-normal">
-            Kami menawarkan lebih dari sekadar sewa mobil. Kami memberikan
-            pengalaman perjalanan yang tak terlupakan.
-          </p>
+    <section className="w-full py-16">
+      <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
+        <div className="mb-12 text-center">
+          <SectionHeading
+            title={"Kenapa Memilih Reborn Lombok Trans?"}
+            align="center"
+            size="md"
+            underline
+            underlineColor="bg-amber-500"
+            underlineWidth="lg"
+            underlineOffset="md"
+            titleClassName="text-emerald-700"
+            underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+            className="mb-6 md:mb-10"
+            description={
+              "Kami berkomitmen memberikan lebih dari sekadar sewa mobil."
+            }
+          />
         </div>
 
-        {/* Grid untuk Kartu */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
-          {features.map((feature, index) => (
-            <Card
-              key={index}
-              className="overflow-hidden shadow-md hover:shadow-xl transition-shadow flex flex-col pb-4 -full max-w-[315px] mx-auto"
-            >
-              <Image
-                src={feature.image}
-                alt={feature.title}
-                width={315}
-                height={210}
-                className="w-full h-[210px] object-cover rounded-t-xl"
-              />
-              <CardContent className="flex-grow flex flex-col">
-                <CardTitle className="font-geist text-base md:text-[16px] lg:text-lg font-medium mb-2 text-black">
-                  {feature.title}
-                </CardTitle>
-                <p className="font-geist text-xs wd:text-ms font-normal text-[#3F3F3F] flex-grow">
-                  {feature.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <Card key={index} className="text-center">
+                <CardContent className="flex flex-col items-center gap-4">
+                  <div className="flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                    <Icon className="size-8" />
+                  </div>
+                  <h3 className="text-xl md:text-lg lg:text-xl font-bold text-gray-900">
+                    {feature.title}
+                  </h3>
+                  <p className="text-base md:text-sm lg:text-base text-gray-600">
+                    {feature.description}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -14,7 +14,7 @@ const perks = [
 ];
 
 export default function WhatsAppCtaSection({
-  carName,
+  carName = undefined,
   waUrlBase,
   imageSrc = "/imageforctasection.png",
   imageAlt = "Armada siap berangkat",
@@ -58,7 +58,11 @@ export default function WhatsAppCtaSection({
             </ul>
 
             <div className="mt-6">
-              <WhatsAppCta carName={carName} waUrlBase={waUrlBase} />
+              {/* pass carName only if provided */}
+              <WhatsAppCta
+                {...(carName ? { carName } : {})}
+                waUrlBase={waUrlBase}
+              />
             </div>
           </div>
 

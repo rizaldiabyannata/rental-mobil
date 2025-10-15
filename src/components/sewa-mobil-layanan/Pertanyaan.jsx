@@ -3,19 +3,23 @@ import Link from "next/link";
 
 const Pertanyaan = () => {
   return (
-    <section className="py-[15px] md:py-[25px]">
-      <div className="container mx-auto p-12 lg:p-[50-x] lg:bg-gray-50 lg:rounded-[25px] lg:shadow-lg lg:my-12 lg:w-auto lg:h-auto lg:mx-auto lg:py-12">
-        <h1 className="font-sans text-2xl md:text-4xl lg:text-5xl font-bold text-black text-center mb-6">
-          Ada Pertanyaan atau Ingin Melakukan <br />
-          Pemesanan? <br />
-          Silakan Hubungi Kami
-        </h1>
-        <div className="justify-center flex mt-6">
-          <Link href="https://wa.me/6287741861681">
-            <Button size="lg" className="mt-4 rounded-full">
-              Hubungi Kami
-            </Button>
-          </Link>
+    <section className="bg-white py-16 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl rounded-2xl bg-gray-50 p-8 text-center shadow-lg md:p-12">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Ada Pertanyaan atau Ingin Melakukan Pemesanan?
+          </h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Jangan ragu, silakan hubungi kami. Tim kami siap membantu Anda
+            merencanakan perjalanan terbaik di Lombok.
+          </p>
+          <div className="mt-8">
+            <Link href="https://wa.me/6287741861681">
+              <Button size="lg" className="rounded-full px-8 py-6 text-lg">
+                Hubungi Kami
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>
