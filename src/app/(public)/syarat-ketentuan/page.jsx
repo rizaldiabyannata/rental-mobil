@@ -3,6 +3,12 @@ import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import HeroSection from "@/components/homepage/HeroSection";
 import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
 
+export const metadata = {
+  title: "Syarat dan Ketentuan Sewa Mobil di Lombok",
+  description:
+    "Pahami syarat dan ketentuan yang berlaku untuk semua layanan sewa mobil kami di Lombok. Informasi penting mengenai pemesanan, pembayaran, dan penggunaan kendaraan.",
+};
+
 export default function SyaratKetentuan() {
   return (
     <>

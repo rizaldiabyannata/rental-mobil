@@ -1,5 +1,11 @@
 import AntarJemputPage from "@/components/harga/AntarJemputClient";
 
+export const metadata = {
+  title: "Harga Antar Jemput Bandara Lombok - Tarif Murah & Terjangkau",
+  description:
+    "Lihat daftar harga layanan antar jemput dari dan ke Bandara Internasional Lombok. Tarif flat, transparan, dan kompetitif untuk berbagai jenis armada.",
+};
+
 async function fetchTariffData() {
   try {
     const res = await fetch(

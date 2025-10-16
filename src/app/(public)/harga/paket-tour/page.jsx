@@ -1,5 +1,11 @@
 import PaketTourPage from "@/components/harga/PaketTourClient";
 
+export const metadata = {
+  title: "Harga Paket Tour Lombok - Wisata Murah & Berkesan",
+  description:
+    "Temukan berbagai pilihan paket tour di Lombok dengan harga terbaik. Jelajahi destinasi wisata populer dengan nyaman bersama kami. Termasuk mobil dan sopir.",
+};
+
 async function fetchTariffData() {
   try {
     const serviceType = encodeURIComponent("Paket Tour Mataram, Lombok");

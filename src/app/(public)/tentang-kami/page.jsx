@@ -4,6 +4,12 @@ import GallerySection from "@/components/tentang-kami/GallerySection";
 import HeroSection from "@/components/homepage/HeroSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 
+export const metadata = {
+  title: "Tentang Kami - Penyedia Rental Mobil Terpercaya di Lombok",
+  description:
+    "Kenali lebih dekat penyedia rental mobil Anda di Lombok. Kami berkomitmen memberikan layanan terbaik dengan armada berkualitas dan harga yang kompetitif.",
+};
+
 export default function TentangKami() {
   return (
     <>
