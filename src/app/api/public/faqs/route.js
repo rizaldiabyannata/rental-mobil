@@ -19,10 +19,8 @@ export async function GET(request) {
     const faqs = await prisma.fAQ.findMany({
       where,
       select: {
-        id: true,
         question: true,
         answer: true,
-        order: true,
       },
       orderBy: { order: "asc" },
     });

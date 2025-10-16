@@ -17,71 +17,49 @@ export async function GET(request) {
       where.OR = [{ carId }, { carId: null }];
     }
 
-    // Fetch categories dengan items
-    const categories = await prisma.tariffCategory.findMany({
-      orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-      include: {
-        items: {
-          where,
-          orderBy: [{ order: "asc" }, { name: "asc" }],
-          include: {
-            car: {
-              select: {
-                id: true,
-                name: true,
-                slug: true,
-              },
-            },
+    // Langsung query TariffItem dengan select yang efisien
+    const tariffItems = await prisma.tariffItem.findMany({
+      where,
+      orderBy: [{ order: "asc" }, { name: "asc" }],
+      select: {
+        name: true,
+        price: true,
+        serviceType: true,
+        packageType: true,
+        car: {
+          select: {
+            name: true,
+          },
+        },
+        category: {
+          select: {
+            name: true,
           },
         },
       },
     });
 
-    // Filter out categories dengan items kosong
-    const filteredCategories = categories
-      .filter((cat) => cat.items.length > 0)
-      .map((cat) => ({
-        id: cat.id,
-        name: cat.name,
-        description: cat.description,
-        order: cat.order,
-        items: cat.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          serviceType: item.serviceType,
-          packageType: item.packageType,
-          order: item.order,
-          car: item.car
-            ? {
-                id: item.car.id,
-                name: item.car.name,
-                slug: item.car.slug,
-              }
-            : null,
-        })),
-      }));
-
-    // Group data by serviceType untuk frontend
+    // Group data by serviceType untuk frontend, sama seperti sebelumnya
     const groupedByService = {};
-    filteredCategories.forEach((cat) => {
-      cat.items.forEach((item) => {
-        const service = item.serviceType || "Umum";
-        if (!groupedByService[service]) {
-          groupedByService[service] = [];
-        }
-        groupedByService[service].push({
-          ...item,
-          category: cat.name,
-          categoryId: cat.id,
-        });
+    tariffItems.forEach((item) => {
+      const service = item.serviceType || "Umum";
+      if (!groupedByService[service]) {
+        groupedByService[service] = [];
+      }
+      // Bentuk objek yang dibutuhkan frontend
+      groupedByService[service].push({
+        name: item.name,
+        price: item.price,
+        packageType: item.packageType,
+        car: item.car ? { name: item.car.name } : null,
+        category: item.category.name,
       });
     });
 
     return NextResponse.json({
       success: true,
+      // Hanya kirim data yang dibutuhkan klien
       data: {
-        categories: filteredCategories,
         groupedByService,
       },
     });

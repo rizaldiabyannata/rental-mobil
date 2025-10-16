@@ -41,40 +41,50 @@ export async function GET(request) {
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
-        include: {
+        select: {
+          slug: true,
+          name: true,
+          description: true,
+          startingPrice: true,
+          capacity: true,
+          transmission: true,
+          fuelType: true,
+          specifications: true, // Untuk coverImage
           images: {
+            select: {
+              imageUrl: true,
+              alt: true,
+              order: true,
+            },
             orderBy: { order: "asc" },
-            take: 1, // ambil hanya 1 image pertama untuk performa
+            take: 1, // Hanya ambil 1 gambar untuk fallback
           },
         },
       }),
       prisma.car.count({ where }),
     ]);
 
+    // Frontend (FleetSection) sudah memiliki logika untuk menangani fallback image.
+    // Cukup teruskan data yang sudah dioptimalkan.
+    const responseData = cars.map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      description: c.description,
+      startingPrice: c.startingPrice,
+      capacity: c.capacity,
+      transmission: c.transmission,
+      fuelType: c.fuelType,
+      coverImage: c.specifications?.coverImage || null, // Kirim coverImage jika ada
+      gallery: c.images.map((img) => ({ // Kirim gallery (hanya 1 gambar) untuk fallback
+        url: img.imageUrl,
+        alt: img.alt,
+        order: img.order,
+      })),
+    }));
+
     return NextResponse.json({
       success: true,
-      data: cars.map((c) => ({
-        id: c.id,
-        slug: c.slug || null,
-        name: c.name,
-        description: c.description,
-        startingPrice: c.startingPrice,
-        capacity: c.capacity,
-        transmission: c.transmission,
-        fuelType: c.fuelType,
-        available: c.available,
-        features: c.features,
-        coverImage: c.specifications?.coverImage || null,
-        gallery:
-          c.images && c.images.length > 0
-            ? c.images.map((img) => ({
-                id: img.id,
-                url: img.imageUrl,
-                alt: img.alt,
-                order: img.order,
-              }))
-            : [],
-      })),
+      data: responseData,
       pagination: {
         page,
         limit,
