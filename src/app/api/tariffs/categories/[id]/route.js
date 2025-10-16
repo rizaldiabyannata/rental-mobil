@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 async function getCategory(_req, props) {
@@ -65,5 +65,5 @@ async function deleteCategory(_req, props) {
 }
 
 export const GET = maybeWithAuth(getCategory);
-export const PUT = maybeWithAuth(updateCategory);
-export const DELETE = maybeWithAuth(deleteCategory);
+export const PUT = withAuth(updateCategory);
+export const DELETE = withAuth(deleteCategory);

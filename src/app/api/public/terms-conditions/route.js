@@ -24,43 +24,22 @@ export async function GET(request) {
       ];
     }
 
-    // Get semua kategori yang aktif
-    const categories = await prisma.termsAndConditions.findMany({
-      where: { isActive: true },
-      select: { category: true },
-      distinct: ["category"],
-      orderBy: { category: "asc" },
-    });
-
-    // Get terms berdasarkan filter
+    // Frontend hanya butuh flat list of terms, jadi kita sederhanakan query
     const terms = await prisma.termsAndConditions.findMany({
       where,
       select: {
         id: true,
-        category: true,
         title: true,
         content: true,
         order: true,
       },
-      orderBy: [{ category: "asc" }, { order: "asc" }],
+      orderBy: [{ order: "asc" }], // Urutkan berdasarkan order saja
     });
-
-    // Group terms by category
-    const groupedTerms = terms.reduce((acc, term) => {
-      if (!acc[term.category]) {
-        acc[term.category] = [];
-      }
-      acc[term.category].push(term);
-      return acc;
-    }, {});
 
     return NextResponse.json({
       success: true,
-      data: {
-        categories: categories.map((c) => c.category),
-        terms: groupedTerms,
-        allTerms: terms,
-      },
+      // Langsung kembalikan array of terms
+      data: terms,
     });
   } catch (error) {
     console.error("Get public Terms & Conditions error:", error);

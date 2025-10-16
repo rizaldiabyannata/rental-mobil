@@ -23,7 +23,6 @@ model Car {
     transmission   String   @default("Manual") // Transmisi (Manual/Automatic)
     fuelType       String   @default("Bensin") // Jenis bahan bakar
     available      Boolean  @default(true)
-    features       String[] @default([]) // Fitur unggulan (array)
     specifications Json? // Spesifikasi lengkap
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt

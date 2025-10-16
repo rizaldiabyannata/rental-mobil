@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { hashPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/prisma";
 
@@ -147,6 +147,6 @@ async function deleteUser(request, props) {
   }
 }
 
-export const GET = maybeWithAuth(getUserById);
-export const PUT = maybeWithAuth(updateUser);
-export const DELETE = maybeWithAuth(deleteUser);
+export const GET = withAuth(getUserById);
+export const PUT = withAuth(updateUser);
+export const DELETE = withAuth(deleteUser);

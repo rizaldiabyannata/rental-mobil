@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET - List semua Terms & Conditions dengan pagination dan filter
@@ -112,4 +112,4 @@ async function createTermsAndConditions(request) {
 }
 
 export const GET = maybeWithAuth(getTermsAndConditions);
-export const POST = maybeWithAuth(createTermsAndConditions);
+export const POST = withAuth(createTermsAndConditions);

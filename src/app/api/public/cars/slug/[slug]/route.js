@@ -9,13 +9,32 @@ export async function GET(request, props) {
 
     const car = await prisma.car.findFirst({
       where: { slug, available: true },
-      include: {
-        images: { orderBy: { order: "asc" } },
-        tariffItems: {
+      select: {
+        slug: true,
+        name: true,
+        description: true,
+        startingPrice: true,
+        capacity: true,
+        transmission: true,
+        fuelType: true,
+        specifications: true, // Needed for coverImage and details
+        images: {
+          select: { id: true, imageUrl: true, alt: true, order: true },
           orderBy: { order: "asc" },
-          include: { category: true },
         },
-        featureBlocks: { orderBy: { order: "asc" } },
+        tariffItems: {
+          select: {
+            name: true,
+            price: true,
+            order: true,
+            category: { select: { name: true } },
+          },
+          orderBy: { order: "asc" },
+        },
+        featureBlocks: {
+          select: { icon: true, title: true, description: true, order: true },
+          orderBy: { order: "asc" },
+        },
       },
     });
 
@@ -29,7 +48,6 @@ export async function GET(request, props) {
     return NextResponse.json({
       success: true,
       data: {
-        id: car.id,
         slug: car.slug,
         name: car.name,
         description: car.description,
@@ -37,39 +55,30 @@ export async function GET(request, props) {
         capacity: car.capacity,
         transmission: car.transmission,
         fuelType: car.fuelType,
-        features: car.features,
         coverImage: car.specifications?.coverImage || null,
         details: Array.isArray(car.specifications?.details)
           ? car.specifications.details
           : [],
-        featureCards: Array.isArray(car.specifications?.featureCards)
-          ? car.specifications.featureCards
-          : [],
-        featureBlocks: car.featureBlocks
-          ? car.featureBlocks.map((fb) => ({
-              icon: fb.icon,
-              title: fb.title,
-              description: fb.description,
-              order: fb.order,
-            }))
-          : [],
+        // The frontend uses `featureBlocks`, so we map that.
+        featureBlocks: car.featureBlocks.map((fb) => ({
+          icon: fb.icon,
+          title: fb.title,
+          description: fb.description,
+          order: fb.order,
+        })),
         gallery: car.images.map((i) => ({
-          id: i.id,
+          id: i.id, // id is needed for react keys
           url: i.imageUrl,
           alt: i.alt,
           order: i.order,
         })),
-        tariffs: car.tariffItems
-          ? car.tariffItems.map((t) => ({
-              id: t.id,
-              name: t.name,
-              price: t.price,
-              description: t.description,
-              category: t.category?.name || null,
-              order: typeof t.order === "number" ? t.order : 0,
-            }))
-          : [],
-        createdAt: car.createdAt,
+        // The frontend uses `tariffs`, so we map `tariffItems` to that.
+        tariffs: car.tariffItems.map((t) => ({
+          name: t.name,
+          price: t.price,
+          category: t.category?.name || null,
+          order: t.order,
+        })),
       },
     });
   } catch (error) {

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { removeTokenCookie } from "@/lib/auth/jwt";
+import { withAuth } from "@/lib/auth/middleware";
 
-export async function POST() {
+async function logoutHandler() {
   try {
     // Remove token dari cookie
     await removeTokenCookie();
@@ -18,3 +19,5 @@ export async function POST() {
     );
   }
 }
+
+export const POST = withAuth(logoutHandler);

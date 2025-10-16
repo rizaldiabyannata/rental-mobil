@@ -565,8 +565,7 @@ export default function EditCarPage() {
               <CardHeader>
                 <CardTitle>Fitur Unggulan</CardTitle>
                 <CardDescription>
-                  Kelola fitur (icon, judul, deskripsi). Jumlah fitur harus
-                  genap.
+                  Kelola fitur (icon, judul, deskripsi) yang akan ditampilkan.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -576,17 +575,11 @@ export default function EditCarPage() {
                       Fitur Unggulan (Icon, Judul, Deskripsi)
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      Jumlah fitur harus genap.
+                      Kelola fitur-fitur utama mobil.
                     </p>
                   </div>
                   <div className="text-sm">
-                    <span
-                      className={cn(
-                        featureBlocks.length % 2 === 0
-                          ? "text-emerald-600"
-                          : "text-red-600"
-                      )}
-                    >
+                    <span className="text-muted-foreground">
                       {featureBlocks.length} item
                     </span>
                   </div>
@@ -873,11 +866,6 @@ export default function EditCarPage() {
             {/* Vehicle Details removed per request */}
 
             {/* Action Buttons */}
-            {featureBlocks.length % 2 !== 0 && (
-              <div className="text-sm text-red-600 text-right">
-                Jumlah fitur unggulan harus genap agar dapat disimpan.
-              </div>
-            )}
             <div className="flex gap-4 justify-end">
               <Button
                 type="button"
@@ -889,7 +877,7 @@ export default function EditCarPage() {
               <Button
                 type="submit"
                 className="bg-emerald-600 hover:bg-emerald-700 gap-2"
-                disabled={saving || featureBlocks.length % 2 !== 0}
+                disabled={saving}
               >
                 <Save className="h-4 w-4" />
                 {saving ? "Menyimpan..." : "Simpan Perubahan"}

@@ -1,4 +1,4 @@
-import SyaratSection from "./SyaratSection";
+import SyaratSection from "./TermSection";
 
 async function fetchTerms() {
   try {
@@ -12,10 +12,9 @@ async function fetchTerms() {
     );
     if (!res.ok) return null;
     const json = await res.json();
-    // prefer grouped terms under the category
-    const grouped = json?.data?.terms || {};
-    const list = grouped["Syarat dan Ketentuan"] || json?.data?.allTerms || [];
-    return list.map((t) => ({
+    // API sekarang mengembalikan array datar langsung di `data`
+    const termsList = json?.data || [];
+    return termsList.map((t) => ({
       id: t.id,
       title: t.title,
       content: t.content,

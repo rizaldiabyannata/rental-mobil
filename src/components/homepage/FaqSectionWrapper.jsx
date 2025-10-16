@@ -8,7 +8,6 @@ async function fetchFaqs() {
     );
     if (!res.ok) return null;
     const json = await res.json();
-    console.log("Fetched FAQs:", json);
     return json?.data || null;
   } catch (e) {
     console.error("Failed to fetch FAQs:", e);
