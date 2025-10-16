@@ -1,12 +1,5 @@
-
 import HeroSection from "@/components/homepage/HeroSection";
 import WhyUsSection from "@/components/homepage/WhyUsSection";
-
-export const metadata = {
-  title: "Rental Mobil Lombok - Sewa Lepas Kunci & Dengan Sopir Murah",
-  description:
-    "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!",
-};
 import ServicesSection from "@/components/homepage/ServicesSection";
 import FleetSection from "@/components/homepage/FleetSection";
 import GallerySection from "@/components/homepage/GallerySection";
@@ -14,6 +7,12 @@ import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
 import PartnersSection from "@/components/homepage/PartnersSection";
+
+export const metadata = {
+  title: "Reborn Lombok Trans - Rental Mobil Terpercaya di Lombok",
+  description:
+    "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!",
+};
 
 export default function Home() {
   return (

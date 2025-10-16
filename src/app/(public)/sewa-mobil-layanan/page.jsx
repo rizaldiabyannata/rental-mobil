@@ -1,13 +1,14 @@
 import HeroSection from "@/components/homepage/HeroSection";
 import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
+import ServicesSection from "@/components/homepage/ServicesSection";
+import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 
 export const metadata = {
   title: "Layanan Sewa Mobil & Tour di Lombok - Paket Lengkap",
   description:
     "Jelajahi semua layanan kami, mulai dari sewa mobil harian, antar jemput bandara, hingga paket wisata eksklusif di Lombok. Solusi transportasi lengkap untuk liburan Anda.",
 };
-import ServicesSection from "@/components/homepage/ServicesSection";
-import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
+
 export default function SewaMobilLayanan() {
   return (
     <main>
