@@ -82,13 +82,7 @@ export default async function ArmadaDetailPage({ params }) {
   };
 
   // Key features map: gunakan featureBlocks sebagai daftar, jatuhkan ke 3 item jika ingin tampilan rapih
-  const featureSource =
-    Array.isArray(car.featureBlocks) && car.featureBlocks.length
-      ? car.featureBlocks
-      : Array.isArray(car.featureCards)
-      ? car.featureCards
-      : [];
-  const keyFeatures = featureSource
+  const keyFeatures = (car.featureBlocks || [])
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((f, idx) => ({
       key: `${f.title}-${idx}`,

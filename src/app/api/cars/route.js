@@ -17,7 +17,6 @@ function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
     transmission: car.transmission,
     fuelType: car.fuelType,
     available: car.available,
-    features: Array.isArray(car.features) ? car.features : [],
     specifications: car.specifications || null,
     createdAt: car.createdAt,
     updatedAt: car.updatedAt,
@@ -59,6 +58,10 @@ function carToApi(car, { includeImages = true, includeTariffs = true } = {}) {
   }
   if (Array.isArray(car.specifications?.featureCards)) {
     base.featureCards = car.specifications.featureCards;
+  }
+
+  if (car.featureBlocks) {
+    base.featureBlocks = car.featureBlocks;
   }
 
   return base;
@@ -149,7 +152,6 @@ async function createCar(request) {
       transmission,
       fuelType,
       available = true,
-      features,
       specifications,
     } = body;
 
@@ -186,35 +188,9 @@ async function createCar(request) {
       );
     }
 
-    // Normalisasi features: terima array string ATAU array objek fitur unggulan
-    let featuresStrings = [];
-    if (features == null) {
-      featuresStrings = [];
-    } else if (
-      Array.isArray(features) &&
-      features.every((f) => typeof f === "string")
-    ) {
-      featuresStrings = features;
-    } else if (
-      Array.isArray(features) &&
-      features.every((f) => f && typeof f === "object" && !Array.isArray(f))
-    ) {
-      // Pindahkan ke specifications.featureCards
-      specsNormalized = specsNormalized || {};
-      specsNormalized.featureCards = features;
-      featuresStrings = [];
-    } else {
-      return NextResponse.json(
-        { error: "features must be an array of strings or array of objects" },
-        { status: 400 }
-      );
-    }
-
-    // Kumpulkan featureBlocks dari body atau dari specifications.featureCards
+    // Kumpulkan featureBlocks dari body
     const incomingFeatureBlocks = Array.isArray(body.featureBlocks)
       ? body.featureBlocks
-      : Array.isArray(specsNormalized?.featureCards)
-      ? specsNormalized.featureCards
       : [];
 
     // Buat dalam transaksi agar konsisten
@@ -251,7 +227,6 @@ async function createCar(request) {
           transmission,
           fuelType,
           available,
-          features: featuresStrings,
           specifications: specsNormalized,
           slug: finalSlug,
         },
@@ -285,7 +260,10 @@ async function createCar(request) {
       }
 
       // Ambil kembali car lengkap jika ingin dipakai di response
-      return tx.car.findUnique({ where: { id: newCar.id } });
+      return tx.car.findUnique({
+        where: { id: newCar.id },
+        include: { featureBlocks: true },
+      });
     });
 
     return NextResponse.json(

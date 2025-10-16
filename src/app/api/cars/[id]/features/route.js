@@ -41,12 +41,6 @@ async function replaceFeatures(request, props) {
         { status: 400 }
       );
     }
-    if (items.length % 2 !== 0) {
-      return NextResponse.json(
-        { error: "Jumlah fitur harus genap." },
-        { status: 400 }
-      );
-    }
 
     // Basic validation
     for (const it of items) {
