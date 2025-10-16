@@ -390,7 +390,7 @@ export default function TariffsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-600 hover:text-white hover:bg-red-600"
                           onClick={() => requestDelete(c)}
                         >
                           <Trash2 className="h-4 w-4" />

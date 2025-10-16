@@ -67,13 +67,7 @@ async function getTermsAndConditions(request) {
 // POST - Create Terms & Conditions baru (hanya admin)
 async function createTermsAndConditions(request) {
   try {
-    const {
-      category,
-      title,
-      content,
-      order = 0,
-      isActive = true,
-    } = await request.json();
+    const { category, title, content, isActive = true } = await request.json();
 
     // Validasi input
     if (!category || !title || !content) {
@@ -83,13 +77,20 @@ async function createTermsAndConditions(request) {
       );
     }
 
-    // Create Terms & Conditions
+    // Cari order maksimum
+    const maxOrder = await prisma.termsAndConditions.aggregate({
+      _max: { order: true },
+    });
+    const nextOrder =
+      typeof maxOrder._max.order === "number" ? maxOrder._max.order + 1 : 1;
+
+    // Create Terms & Conditions dengan order otomatis
     const terms = await prisma.termsAndConditions.create({
       data: {
         category,
         title,
         content,
-        order: parseInt(order),
+        order: nextOrder,
         isActive,
       },
     });

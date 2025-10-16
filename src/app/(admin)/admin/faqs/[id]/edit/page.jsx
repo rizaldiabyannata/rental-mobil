@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 export default function EditFAQPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [form, setForm] = useState({ question: "", answer: "", order: "0" });
+  const [form, setForm] = useState({ question: "", answer: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -41,7 +41,6 @@ export default function EditFAQPage() {
         setForm({
           question: json.data?.question || "",
           answer: json.data?.answer || "",
-          order: String(json.data?.order ?? 0),
         });
       } catch (e) {
         alert(e.message || "Tidak dapat memuat data");
@@ -62,7 +61,7 @@ export default function EditFAQPage() {
       const res = await fetch(`/api/faqs/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, order: parseInt(form.order || "0") }),
+        body: JSON.stringify(form),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Gagal memperbarui FAQ");
@@ -133,17 +132,6 @@ export default function EditFAQPage() {
                     }
                     required
                     className="min-h-[120px] border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Urutan</Label>
-                  <Input
-                    type="number"
-                    value={form.order}
-                    onChange={(e) =>
-                      setForm({ ...form, order: e.target.value })
-                    }
-                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                   />
                 </div>
                 <div className="flex justify-end gap-2">

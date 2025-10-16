@@ -53,7 +53,7 @@ async function getFAQs(request) {
 // POST - Create FAQ baru (hanya admin)
 async function createFAQ(request) {
   try {
-    const { question, answer, order = 0 } = await request.json();
+    const { question, answer, order } = await request.json();
 
     // Validasi input
     if (!question || !answer) {
@@ -63,12 +63,23 @@ async function createFAQ(request) {
       );
     }
 
+    // Ambil order tertinggi jika order tidak dikirim
+    let nextOrder = 0;
+    if (order === undefined || order === null || order === "") {
+      const maxOrder = await prisma.fAQ.aggregate({
+        _max: { order: true },
+      });
+      nextOrder = (maxOrder._max.order ?? -1) + 1;
+    } else {
+      nextOrder = parseInt(order);
+    }
+
     // Create FAQ
     const faq = await prisma.fAQ.create({
       data: {
         question,
         answer,
-        order: parseInt(order),
+        order: nextOrder,
       },
     });
 
