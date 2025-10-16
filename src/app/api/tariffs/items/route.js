@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // GET items by categoryId (optional carId)
@@ -66,4 +66,4 @@ async function createItem(request) {
 }
 
 export const GET = maybeWithAuth(listItems);
-export const POST = maybeWithAuth(createItem);
+export const POST = withAuth(createItem);

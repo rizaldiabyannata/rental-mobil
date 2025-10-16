@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { hashPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/prisma";
 
@@ -122,5 +122,5 @@ async function createUser(request) {
   }
 }
 
-export const GET = maybeWithAuth(getUsers);
-export const POST = maybeWithAuth(createUser);
+export const GET = withAuth(getUsers);
+export const POST = withAuth(createUser);

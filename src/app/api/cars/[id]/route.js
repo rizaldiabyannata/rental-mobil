@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 function carToApi(car) {
@@ -307,5 +307,5 @@ async function deleteCar(request, props) {
 }
 
 export const GET = maybeWithAuth(getCarById);
-export const PUT = maybeWithAuth(updateCar);
-export const DELETE = maybeWithAuth(deleteCar);
+export const PUT = withAuth(updateCar);
+export const DELETE = withAuth(deleteCar);

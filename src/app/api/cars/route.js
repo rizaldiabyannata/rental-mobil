@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 // Mapping layer between legacy API field names and Prisma schema fields
@@ -306,4 +306,4 @@ async function createCar(request) {
 }
 
 export const GET = maybeWithAuth(getCars);
-export const POST = maybeWithAuth(createCar);
+export const POST = withAuth(createCar);

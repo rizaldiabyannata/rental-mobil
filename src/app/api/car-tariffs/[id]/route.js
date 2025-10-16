@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { maybeWithAuth } from "@/lib/auth/middleware";
+import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 
 async function getTariff(_req, props) {
@@ -75,5 +75,5 @@ async function deleteTariff(_req, props) {
 }
 
 export const GET = maybeWithAuth(getTariff);
-export const PUT = maybeWithAuth(updateTariff);
-export const DELETE = maybeWithAuth(deleteTariff);
+export const PUT = withAuth(updateTariff);
+export const DELETE = withAuth(deleteTariff);
