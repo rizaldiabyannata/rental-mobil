@@ -1,3 +1,5 @@
+"use client";
+
 import SectionHeading from "@/components/SectionHeading";
 import {
   Marquee,
@@ -5,18 +7,25 @@ import {
   MarqueeItem,
   MarqueeFade,
 } from "@/components/ui/shadcn-io/marquee";
+import { useEffect, useState } from "react";
 
-// Dummy logo list, replace with real logo URLs
-const LOGOS = [
-  "/Hero-1.png",
-  "/Hero-2.png",
-  "/Hero-3.png",
-  "/Hero-1.png",
-  "/Hero-2.png",
-  "/Hero-3.png",
-];
+export default function PartnersSection() {
+  const [logos, setLogos] = useState([]);
 
-export default function PartnersSection({ logos = LOGOS }) {
+  useEffect(() => {
+    async function fetchPartners() {
+      try {
+        const res = await fetch("/api/public/partners");
+        if (!res.ok) return;
+        const json = await res.json();
+        setLogos(json?.data || []);
+      } catch (err) {
+        setLogos([]);
+      }
+    }
+    fetchPartners();
+  }, []);
+
   return (
     <section className="w-full py-8 md:py-12">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
@@ -37,16 +46,18 @@ export default function PartnersSection({ logos = LOGOS }) {
           <Marquee className="w-full">
             <MarqueeFade side="left" />
             <MarqueeContent speed={40} pauseOnHover={true}>
-              {logos.concat(logos).map((logo, idx) => (
-                <MarqueeItem key={idx}>
-                  <img
-                    src={logo}
-                    alt={`Logo Mitra ${(idx % logos.length) + 1}`}
-                    className="h-12 md:h-16 lg:h-20 w-auto object-contain drop-shadow-md"
-                    draggable={false}
-                  />
-                </MarqueeItem>
-              ))}
+              {logos.length > 0
+                ? logos.concat(logos).map((partner, idx) => (
+                    <MarqueeItem key={partner.id + "-" + idx}>
+                      <img
+                        src={partner.logoUrl}
+                        alt={partner.name}
+                        className="h-12 md:h-16 lg:h-20 w-auto object-contain drop-shadow-md"
+                        draggable={false}
+                      />
+                    </MarqueeItem>
+                  ))
+                : null}
             </MarqueeContent>
             <MarqueeFade side="right" />
           </Marquee>
