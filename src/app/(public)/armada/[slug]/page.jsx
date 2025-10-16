@@ -21,26 +21,78 @@ async function fetchCarBySlug(slug) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
+  const { slug } = params;
   const car = await fetchCarBySlug(slug);
+
   if (!car) {
-    return { title: "Armada tidak ditemukan" };
+    return {
+      title: "Armada Tidak Ditemukan",
+      description: "Mobil yang Anda cari tidak tersedia atau tidak ada.",
+    };
   }
-  const title = `${car.name} – Sewa Mobil Lombok`;
+
+  const siteName = "Reborn Trans Lombok";
+  const title = `Sewa Mobil ${car.name} di Lombok - ${siteName}`;
   const description =
     car.description ||
-    `Sewa ${car.name} dengan harga mulai ${car.startingPrice}`;
-  const images = car.coverImage ? [{ url: car.coverImage }] : [];
+    `Sewa mobil ${car.name} di Lombok dengan harga terjangkau. Kapasitas ${car.capacity} penumpang, transmisi ${car.transmission}. Pesan sekarang!`;
+  const images = car.coverImage
+    ? [car.coverImage]
+    : car.gallery?.map((g) => g.url).filter(Boolean) || [];
+  const siteUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://www.rentalmobil.com";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: car.name,
+    description: description,
+    image: images,
+    brand: {
+      "@type": "Brand",
+      name: car.name.split(" ")[0], // Simple brand extraction
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${siteUrl}/armada/${slug}`,
+      priceCurrency: "IDR",
+      price: car.startingPrice,
+      availability: "https://schema.org/InStock",
+      seller: {
+        "@type": "Organization",
+        name: siteName,
+      },
+    },
+    vehicleEngine: {
+      "@type": "EngineSpecification",
+      fuelType: car.fuelType,
+    },
+    vehicleTransmission: car.transmission,
+    seatingCapacity: car.capacity.toString(),
+  };
+
   return {
+    metadataBase: new URL(siteUrl),
     title,
     description,
-    alternates: { canonical: `/armada/${slug}` },
+    alternates: {
+      canonical: `/armada/${slug}`,
+    },
     openGraph: {
       title,
       description,
       images,
-      type: "article",
+      type: "website", // 'article' is more for blog posts
+      url: `/armada/${slug}`,
+      siteName,
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images,
+    },
+    "script[type='application/ld+json']": JSON.stringify(jsonLd),
   };
 }
 

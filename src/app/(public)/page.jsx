@@ -1,6 +1,12 @@
 
 import HeroSection from "@/components/homepage/HeroSection";
 import WhyUsSection from "@/components/homepage/WhyUsSection";
+
+export const metadata = {
+  title: "Rental Mobil Lombok - Sewa Lepas Kunci & Dengan Sopir Murah",
+  description:
+    "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!",
+};
 import ServicesSection from "@/components/homepage/ServicesSection";
 import FleetSection from "@/components/homepage/FleetSection";
 import GallerySection from "@/components/homepage/GallerySection";
