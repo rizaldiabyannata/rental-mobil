@@ -523,28 +523,15 @@ export default function CarDetailPage() {
                     })}
                   </div>
                 ) : (
-                  /* Fallback to legacy features array if no featureBlocks */
-                  <div>
-                    <div className="text-center py-8 text-muted-foreground">
-                      <Star className="h-12 w-12 mx-auto mb-2" />
-                      <p className="font-medium">
-                        Belum ada fitur unggulan yang ditambahkan
-                      </p>
-                      <p className="text-xs mt-1">
-                        Tambahkan fitur dengan icon dan deskripsi di halaman
-                        edit kendaraan
-                      </p>
-                      {(car.features || []).length > 0 && (
-                        <div className="mt-4">
-                          <p className="text-xs text-amber-600 mb-2">
-                            ⚠️ Fitur lama ditemukan: {car.features.join(", ")}
-                          </p>
-                          <p className="text-xs text-amber-600">
-                            Silakan tambahkan ulang sebagai fitur unggulan baru
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Star className="h-12 w-12 mx-auto mb-2" />
+                    <p className="font-medium">
+                      Belum ada fitur unggulan yang ditambahkan
+                    </p>
+                    <p className="text-xs mt-1">
+                      Tambahkan fitur dengan icon dan deskripsi di halaman edit
+                      kendaraan
+                    </p>
                   </div>
                 )}
               </CardContent>

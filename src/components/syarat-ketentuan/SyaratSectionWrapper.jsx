@@ -1,4 +1,4 @@
-import SyaratSection from "./SyaratSection";
+import SyaratSection from "./TermSection";
 
 async function fetchTerms() {
   try {

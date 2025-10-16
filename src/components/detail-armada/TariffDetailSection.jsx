@@ -56,22 +56,42 @@ export default function TariffDetailSection({
           className="mb-6 md:mb-10"
         />
 
-        <div className={cn("grid grid-cols-1 gap-5 md:gap-6", autoGridCols)}>
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-5 md:gap-6",
+            gridCols
+              ? gridCols
+              : cardsCount === 1
+              ? "lg:grid-cols-1"
+              : cardsCount === 3
+              ? "lg:grid-cols-2"
+              : cardsCount % 2 === 0
+              ? "lg:grid-cols-2"
+              : "lg:grid-cols-2"
+          )}
+        >
           {cards.map((card, idx) => {
+            // Jika 3 card dan card terakhir, span 2 kolom (full width bawah)
+            const isLastThree = cardsCount === 3 && idx === 2;
             // Jika ganjil dan ini card terakhir, span 2 kolom (centered)
-            const isLastOdd = isOdd && idx === cardsCount - 1 && cardsCount > 1;
+            const isLastOdd =
+              cardsCount % 2 !== 0 &&
+              idx === cardsCount - 1 &&
+              cardsCount > 1 &&
+              !isLastThree;
             return (
               <Card
                 key={card.key || idx}
                 className={cn(
                   "rounded-2xl border border-neutral-300 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]",
+                  isLastThree && "lg:col-span-2 lg:max-w-full",
                   isLastOdd && "lg:col-span-2 lg:max-w-2xl lg:mx-auto"
                 )}
               >
                 <CardContent className="p-5 md:p-6">
                   {/* Card Title */}
                   {card.title ? (
-                    <h3 className="text-lg md:text-xl font-extrabold text-neutral-900">
+                    <h3 className="text-lg md:text-xl font-extrabold text-emerald-700">
                       {card.title}
                     </h3>
                   ) : null}

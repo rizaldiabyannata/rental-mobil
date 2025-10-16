@@ -48,7 +48,6 @@ async function main() {
           transmission: "Automatic",
           fuelType: "Bensin",
           available: true,
-          features: ["AC", "Audio"],
           specifications: { coverImage: "/vercel.svg", color: "Silver" },
         },
         {
@@ -60,7 +59,6 @@ async function main() {
           transmission: "Automatic",
           fuelType: "Bensin",
           available: true,
-          features: ["AC", "Audio"],
           specifications: { coverImage: "/next.svg", color: "White" },
         },
       ],
@@ -106,6 +104,31 @@ async function main() {
         prisma.car.update({ where: { id: u.id }, data: { slug: u.slug } })
       )
     );
+  }
+
+  // 2c) Car Features
+  const featureCount = await prisma.carFeature.count();
+  if (featureCount === 0 && cars.length > 0) {
+    const featuresData = [];
+    for (const car of cars) {
+      featuresData.push(
+        {
+          carId: car.id,
+          icon: "ac-unit", // Material Icons name
+          title: "Full AC",
+          description: "Kabin sejuk dengan pendingin udara di setiap baris.",
+          order: 1,
+        },
+        {
+          carId: car.id,
+          icon: "music-note", // Material Icons name
+          title: "Audio System",
+          description: "Nikmati perjalanan dengan sistem audio berkualitas.",
+          order: 2,
+        }
+      );
+    }
+    await prisma.carFeature.createMany({ data: featuresData });
   }
 
   // 3) Car Images

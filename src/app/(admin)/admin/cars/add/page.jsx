@@ -209,16 +209,10 @@ export default function AddCarPage() {
       setLoading(false);
       return;
     }
-    if (featureBlocks.length % 2 !== 0) {
-      setError("Jumlah fitur unggulan harus genap.");
-      setLoading(false);
-      return;
-    }
     try {
-      // Build specifications object and move featureBlocks into featureCards
+      // Build specifications object
       const specifications = {};
       if (specDetails.length) specifications.details = specDetails;
-      if (featureBlocks.length) specifications.featureCards = featureBlocks;
 
       const payload = {
         ...formData,
@@ -229,10 +223,8 @@ export default function AddCarPage() {
         specifications: Object.keys(specifications).length
           ? specifications
           : null,
-        // Intentionally omit `features` because API expects array of strings.
+        featureBlocks: featureBlocks, // Send featureBlocks at the top level
       };
-      // Ensure we don't send `features` key at all
-      delete payload.features;
       const res = await fetch("/api/cars", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -512,8 +504,7 @@ export default function AddCarPage() {
               <CardHeader>
                 <CardTitle>Fitur Unggulan</CardTitle>
                 <CardDescription>
-                  Kelola fitur (icon, judul, deskripsi). Jumlah fitur harus
-                  genap.
+                  Kelola fitur (icon, judul, deskripsi) yang akan ditampilkan.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -523,17 +514,11 @@ export default function AddCarPage() {
                       Fitur Unggulan (Icon, Judul, Deskripsi)
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      Jumlah fitur harus genap.
+                      Tambahkan fitur-fitur utama mobil.
                     </p>
                   </div>
                   <div className="text-sm">
-                    <span
-                      className={
-                        featureBlocks.length % 2 === 0
-                          ? "text-emerald-600"
-                          : "text-red-600"
-                      }
-                    >
+                    <span className="text-muted-foreground">
                       {featureBlocks.length} item
                     </span>
                   </div>
@@ -735,11 +720,6 @@ export default function AddCarPage() {
               </CardContent>
             </Card>
 
-            {featureBlocks.length % 2 !== 0 && (
-              <div className="text-sm text-red-600 text-right">
-                Jumlah fitur unggulan harus genap agar dapat disimpan.
-              </div>
-            )}
             <div className="flex gap-4 justify-end">
               <Button
                 type="button"
@@ -751,7 +731,7 @@ export default function AddCarPage() {
               <Button
                 type="submit"
                 className="bg-emerald-600 hover:bg-emerald-700 gap-2"
-                disabled={loading || featureBlocks.length % 2 !== 0}
+                disabled={loading}
               >
                 <Save className="h-4 w-4" />
                 {loading ? "Menyimpan..." : "Simpan Mobil"}

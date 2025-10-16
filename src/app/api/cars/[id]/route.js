@@ -14,7 +14,6 @@ function carToApi(car) {
     transmission: car.transmission,
     fuelType: car.fuelType,
     available: car.available,
-    features: Array.isArray(car.features) ? car.features : [],
     specifications: car.specifications || null,
     createdAt: car.createdAt,
     updatedAt: car.updatedAt,
@@ -47,6 +46,7 @@ function carToApi(car) {
     featureCards: Array.isArray(car.specifications?.featureCards)
       ? car.specifications.featureCards
       : [],
+    featureBlocks: car.featureBlocks || [],
   };
 }
 
@@ -85,21 +85,6 @@ async function getCarById(request, props) {
         }))
       : [];
 
-    // Fallback: jika belum ada record di CarFeature, gunakan specifications.featureCards untuk tampil
-    if (
-      (!api.featureBlocks || api.featureBlocks.length === 0) &&
-      Array.isArray(car.specifications?.featureCards) &&
-      car.specifications.featureCards.length > 0
-    ) {
-      api.featureBlocks = car.specifications.featureCards
-        .filter((b) => b && b.icon && b.title)
-        .map((b, idx) => ({
-          icon: String(b.icon),
-          title: String(b.title),
-          description: b.description ? String(b.description) : "",
-          order: typeof b.order === "number" ? b.order : idx,
-        }));
-    }
     return NextResponse.json({ success: true, data: api });
   } catch (error) {
     console.error("Get car by ID error:", error);
@@ -124,7 +109,6 @@ async function updateCar(request, props) {
       transmission,
       fuelType,
       available,
-      features,
       specifications,
       featureBlocks, // array of {id?, icon, title, description, order?}
     } = body;
@@ -139,7 +123,6 @@ async function updateCar(request, props) {
     if (transmission !== undefined) updateData.transmission = transmission;
     if (fuelType !== undefined) updateData.fuelType = fuelType;
     if (available !== undefined) updateData.available = available;
-    if (features !== undefined) updateData.features = features;
     if (specifications !== undefined)
       updateData.specifications = specifications;
 
