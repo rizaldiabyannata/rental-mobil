@@ -26,7 +26,6 @@ export async function GET(request, props) {
           select: {
             name: true,
             price: true,
-            description: true,
             order: true,
             category: { select: { name: true } },
           },
@@ -77,7 +76,6 @@ export async function GET(request, props) {
         tariffs: car.tariffItems.map((t) => ({
           name: t.name,
           price: t.price,
-          description: t.description,
           category: t.category?.name || null,
           order: t.order,
         })),
