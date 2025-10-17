@@ -25,9 +25,6 @@ async function getCarBySlug(slug) {
           select: { title: true, description: true, icon: true, order: true },
           orderBy: { order: "asc" },
         },
-        details: {
-          select: { label: true, value: true },
-        },
         tariffs: {
           select: {
             name: true,
