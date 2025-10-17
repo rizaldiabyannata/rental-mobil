@@ -4,24 +4,66 @@ import SpecsSection from "@/components/detail-armada/SpecsSection";
 import TariffDetailSection from "@/components/detail-armada/TariffDetailSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 
-async function fetchCarBySlug(slug) {
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_BASE_URL || ""
-    }/api/public/cars/slug/${encodeURIComponent(slug)}`,
-    {
-      // disable caching to always get fresh availability/prices
-      cache: "no-store",
-    }
-  );
-  if (!res.ok) return null;
-  const json = await res.json().catch(() => ({}));
-  return json?.data || null;
+import { prisma } from "@/lib/prisma";
+
+async function getCarBySlug(slug) {
+  try {
+    const car = await prisma.car.findUnique({
+      where: { slug, available: true },
+      select: {
+        name: true,
+        description: true,
+        startingPrice: true,
+        capacity: true,
+        transmission: true,
+        fuelType: true,
+        specifications: true, // For coverImage
+        images: {
+          select: { id: true, imageUrl: true, alt: true, order: true },
+          orderBy: { order: "asc" },
+        },
+        featureBlocks: {
+          select: { title: true, description: true, icon: true, order: true },
+          orderBy: { order: "asc" },
+        },
+        details: {
+          select: { label: true, value: true },
+        },
+        tariffs: {
+          select: {
+            name: true,
+            description: true,
+            price: true,
+            category: true,
+            order: true,
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    if (!car) return null;
+
+    // Map a few fields to match the old structure for compatibility
+    return {
+      ...car,
+      coverImage: car.specifications?.coverImage || null,
+      gallery: car.images.map((img) => ({
+        id: img.id,
+        url: img.imageUrl,
+        alt: img.alt,
+        order: img.order,
+      })),
+    };
+  } catch (error) {
+    console.error(`Failed to fetch car by slug ${slug}:`, error);
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const car = await fetchCarBySlug(slug);
+  const car = await getCarBySlug(slug);
 
   if (!car) {
     return {
@@ -97,7 +139,7 @@ export async function generateMetadata({ params }) {
 
 export default async function ArmadaDetailPage({ params }) {
   const { slug } = await params;
-  const car = await fetchCarBySlug(slug);
+  const car = await getCarBySlug(slug);
 
   if (!car) {
     return (

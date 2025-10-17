@@ -6,38 +6,46 @@ export const metadata = {
     "Daftar harga sewa mobil harian (12 jam atau 24 jam) di Lombok. Tersedia opsi lepas kunci atau dengan sopir. Armada lengkap, harga bersaing.",
 };
 
-async function fetchTariffData() {
-  try {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || ""
-      }/api/public/tariffs?serviceType=Tarif sewa per 12 jam`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
+import { prisma } from "@/lib/prisma";
 
-    // Transform API data to match frontend format
-    const grouped = json?.data?.groupedByService || {};
-    const sewaHarianData = grouped["Tarif sewa per 12 jam"] || [];
-    console.log("Fetched sewa-harian data:", sewaHarianData);
-    return sewaHarianData.map((item) => ({
+async function getTariffData() {
+  try {
+    const tariffs = await prisma.tariff.findMany({
+      where: {
+        serviceType: {
+          name: {
+            equals: "Tarif sewa per 12 jam",
+            mode: "insensitive",
+          },
+        },
+      },
+      include: {
+        car: {
+          select: { name: true },
+        },
+      },
+      orderBy: {
+        order: "asc",
+      },
+    });
+
+    return tariffs.map((item) => ({
       layanan: item.category || "Sewa Per 12 Jam",
-      paket: item.packageType || item.name,
-      armada: item.car?.name || "INNOVA REBORN",
+      paket: item.name, // packageType tidak ada di model, name lebih sesuai
+      armada: item.car?.name || "Armada Pilihan",
       harga: new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
         minimumFractionDigits: 0,
       }).format(item.price),
     }));
-  } catch (e) {
-    console.error("Failed to fetch tariff data:", e);
+  } catch (error) {
+    console.error("Failed to fetch tariff data directly:", error);
     return null;
   }
 }
 
 export default async function SewaHarianWrapper() {
-  const data = await fetchTariffData();
+  const data = await getTariffData();
   return <SewaHarianPage data={data || undefined} />;
 }
