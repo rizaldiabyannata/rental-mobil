@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
-  const slug = params?.slug;
+  const slug = await params?.slug;
   const tourPackage = await prisma.tourPackage.findUnique({
     where: { slug },
     select: { name: true, description: true },
