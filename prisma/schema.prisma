@@ -10,6 +10,8 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// Musim tarif dihapus (tidak digunakan)
+
 // 🚗 Manajemen Armada (Mobil)
 model Car {
     id             String   @id @default(uuid())
@@ -58,6 +60,8 @@ model CarFeature {
     @@index([carId])
     @@index([order])
 }
+
+// 🎯 Manajemen Paket Tour (dihapus)
 
 // ❓ Manajemen FAQ
 model FAQ {
