@@ -3,16 +3,12 @@ import { prisma } from "@/lib/prisma";
 
 async function getTerms() {
   try {
-    const terms = await prisma.term.findMany({
-      where: {
-        category: {
-          equals: "Syarat dan Ketentuan",
-          mode: "insensitive",
-        },
-      },
+    const terms = await prisma.termsAndConditions.findMany({
+      where: { isActive: true },
       orderBy: { order: "asc" },
       select: {
         id: true,
+        category: true,
         title: true,
         content: true,
         order: true,
