@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/shared/PageHero";
 import TourGallery from "@/components/tours/TourGallery";
@@ -9,58 +9,62 @@ import {
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { Badge } from "@/components/ui/badge";
 
-const prisma = new PrismaClient();
+export const dynamic = "force-dynamic";
 
 // Generate static pages for better performance
 export async function generateStaticParams() {
-  const packages = await prisma.tourPackage.findMany({
-    select: { slug: true },
-  });
-  return packages.map((pkg) => ({
-    slug: pkg.slug,
-  }));
+  try {
+    const packages = await prisma.tourPackage.findMany({
+      select: { slug: true },
+    });
+    return packages.map((pkg) => ({ slug: pkg.slug }));
+  } catch (e) {
+    console.error("generateStaticParams tourPackage failed:", e?.message || e);
+    // During build or when DB is not ready, return no params to avoid build failure
+    return [];
+  }
 }
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
-  const slug = await params?.slug;
-  const tourPackage = await prisma.tourPackage.findUnique({
-    where: { slug },
-    select: { name: true, description: true },
-  });
-
-  if (!tourPackage) {
+  try {
+    const slug = params?.slug;
+    const tourPackage = await prisma.tourPackage.findUnique({
+      where: { slug },
+      select: { name: true, description: true },
+    });
+    if (!tourPackage) return { title: "Paket Tidak Ditemukan" };
     return {
-      title: "Paket Tidak Ditemukan",
+      title: `${tourPackage.name} | Paket Wisata Lombok`,
+      description: (tourPackage.description || "").substring(0, 160),
     };
+  } catch (e) {
+    console.error("generateMetadata tourPackage failed:", e?.message || e);
+    return { title: "Paket Wisata" };
   }
-
-  return {
-    title: `${tourPackage.name} | Paket Wisata Lombok`,
-    description: tourPackage.description.substring(0, 160),
-  };
 }
 
 async function getTourPackage(slug) {
-  const tourPackage = await prisma.tourPackage.findUnique({
-    where: { slug },
-    include: {
-      hotelTiers: {
-        orderBy: { order: "asc" },
-        include: {
-          priceTiers: {
-            orderBy: { price: "asc" },
+  try {
+    const tourPackage = await prisma.tourPackage.findUnique({
+      where: { slug },
+      include: {
+        hotelTiers: {
+          orderBy: { order: "asc" },
+          include: {
+            priceTiers: {
+              orderBy: { price: "asc" },
+            },
           },
         },
       },
-    },
-  });
-
-  if (!tourPackage) {
+    });
+    if (!tourPackage) notFound();
+    return tourPackage;
+  } catch (e) {
+    console.error("getTourPackage failed:", e?.message || e);
     notFound();
   }
-
-  return tourPackage;
 }
 
 export default async function TourDetailPage({ params }) {

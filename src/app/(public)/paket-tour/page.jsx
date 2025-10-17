@@ -1,37 +1,34 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/SectionHeading";
 import TourCard from "@/components/tours/TourCard";
 import PageHero from "@/components/shared/PageHero";
 
-const prisma = new PrismaClient();
-
 async function getTourPackages() {
-  const tourPackages = await prisma.tourPackage.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      name: true,
-      slug: true,
-      description: true,
-      duration: true,
-      inclusions: true,
-      galleryImages: true,
-      hotelTiers: {
-        select: {
-          priceTiers: {
-            select: {
-              price: true,
-            },
-            orderBy: {
-              price: "asc",
+  let tourPackages = [];
+  try {
+    tourPackages = await prisma.tourPackage.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        name: true,
+        slug: true,
+        description: true,
+        duration: true,
+        inclusions: true,
+        galleryImages: true,
+        hotelTiers: {
+          select: {
+            priceTiers: {
+              select: { price: true },
+              orderBy: { price: "asc" },
             },
           },
-        },
-        orderBy: {
-          order: "asc",
+          orderBy: { order: "asc" },
         },
       },
-    },
-  });
+    });
+  } catch (e) {
+    console.error("getTourPackages failed:", e?.message || e);
+  }
 
   // Process to find the minimum price and format for the TourCard component
   return tourPackages.map((pkg) => {

@@ -1,0 +1,15 @@
+# Nixpacks configuration for production
+# Pin Node.js 20 and ensure Prisma is available
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "openssl"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+# Nixpacks will expose $PORT; Next.js listens on it via our start script
+cmd = "npm run start"

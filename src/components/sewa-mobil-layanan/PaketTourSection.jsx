@@ -21,14 +21,6 @@ const tourPackages = [
     href: "/harga/antar-jemput",
     imagePosition: "object-bottom",
   },
-  {
-    title: "Paket Wisata Tour",
-    description:
-      "Jelajahi destinasi terbaik di Lombok dengan paket tour lengkap kami, dari pantai hingga pegunungan.",
-    image: "/tour.png",
-    href: "/harga/paket-tour",
-    imagePosition: "object-center",
-  },
 ];
 
 const PaketTourSection = () => {
@@ -50,17 +42,8 @@ const PaketTourSection = () => {
             "Kami menyediakan beberapa layanan utama untuk menemani perjalanan Anda di Lombok."
           }
         />
-        {/* <div className="mb-12 text-center lg:text-left">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Layanan Unggulan Kami
-          </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            Kami menyediakan beberapa layanan utama untuk menemani perjalanan
-            Anda di Lombok.
-          </p>
-        </div> */}
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {tourPackages.map((pkg, index) => (
             <Card
               key={index}
