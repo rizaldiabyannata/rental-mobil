@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import TourFeatureIcons from "./TourFeatureIcons";
 
 const MINIO_PUBLIC_URL =
   process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
@@ -14,6 +15,7 @@ export default function TourCard({ tour }) {
     durationDays = 0,
     durationHours = 0,
     minPrice = null,
+    features = [], // e.g. ["car", "beach", "group"]
   } = tour || {};
 
   const durationText = durationDays
@@ -48,6 +50,7 @@ export default function TourCard({ tour }) {
         </div>
         <CardContent className="p-4">
           <h3 className="text-lg font-semibold text-emerald-800">{title}</h3>
+          <TourFeatureIcons features={features} />
           {shortDescription ? (
             <p className="mt-1 text-sm text-neutral-600 line-clamp-2">
               {shortDescription}

@@ -2,6 +2,7 @@ import SectionHeading from "@/components/SectionHeading";
 import TourCard from "@/components/tours/TourCard";
 import HeroSection from "@/components/homepage/HeroSection";
 
+// Placeholder data with features
 async function getTours() {
   return [
     {
@@ -11,6 +12,7 @@ async function getTours() {
       coverImage: "/Hero-1.png",
       durationDays: 1,
       minPrice: 450000,
+      features: ["city", "car", "group"],
     },
     {
       slug: "gili-island-daytrip",
@@ -19,6 +21,7 @@ async function getTours() {
       coverImage: "/Hero-2.png",
       durationDays: 1,
       minPrice: 750000,
+      features: ["beach", "car", "group"],
     },
   ];
 }
