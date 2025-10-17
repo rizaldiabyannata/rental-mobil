@@ -390,7 +390,12 @@ async function main() {
   const imageCount = await prisma.carImage.count();
   if (imageCount === 0 && cars.length > 0) {
     const imagesData = [];
-    const placeholders = ["/vercel.svg", "/next.svg", "/window.svg"]; // existing public assets
+    // Use existing images from public to avoid 404s in prod
+    const placeholders = [
+      "/InnovaReborn.png",
+      "/InnovaReborn-2.png",
+      "/Hero-1.png",
+    ]; // existing public assets
     cars.forEach((car) => {
       imagesData.push(
         {

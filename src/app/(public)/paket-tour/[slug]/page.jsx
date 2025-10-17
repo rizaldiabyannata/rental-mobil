@@ -138,9 +138,9 @@ export default async function TourDetailPage({ params }) {
                   {tour.duration}
                 </Badge>
                 {minPrice !== null && (
-                  <div className="mt-4 rounded-lg bg-emerald-50 border border-emerald-100 p-4">
+                  <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
                     <p className="text-sm text-neutral-700">Mulai dari</p>
-                    <p className="text-2xl font-extrabold text-emerald-700">
+                    <p className="text-2xl font-extrabold text-primary">
                       {new Intl.NumberFormat("id-ID", {
                         style: "currency",
                         currency: "IDR",

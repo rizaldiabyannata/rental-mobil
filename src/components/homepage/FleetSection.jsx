@@ -56,11 +56,18 @@ const FleetSection = async () => {
   // Local uploads mapping
   function getImageUrl(src) {
     if (!src) return "/InnovaReborn.png";
-    if (/^https?:\/\//i.test(src)) return src;
-    // Normalize to /uploads/... if it's a relative path
-    if (!src.startsWith("/")) src = `/${src}`;
-    if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
-    return src;
+    if (typeof src !== "string") return "/InnovaReborn.png";
+    if (/^https?:\/\//i.test(src)) return src; // external URL
+    let out = src.trim();
+    // Remove accidental leading 'public/' prefix
+    if (out.toLowerCase().startsWith("public/")) {
+      out = out.slice(6);
+    }
+    // Ensure leading slash only; do NOT force '/uploads'
+    if (!out.startsWith("/")) out = `/${out}`;
+    // Collapse duplicate slashes
+    out = out.replace(/\/{2,}/g, "/");
+    return out;
   }
 
   // Map API data ke format yang dibutuhkan CarCard

@@ -29,10 +29,15 @@ export default function TourCard({ tour }) {
   // Helper to map to local uploads URL
   function getImageUrl(src) {
     if (!src) return "/imageforctasection.png";
+    if (typeof src !== "string") return "/imageforctasection.png";
     if (/^https?:\/\//i.test(src)) return src;
-    if (!src.startsWith("/")) src = `/${src}`;
-    if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
-    return src;
+    let out = src.trim();
+    if (out.toLowerCase().startsWith("public/")) {
+      out = out.slice(6);
+    }
+    if (!out.startsWith("/")) out = `/${out}`;
+    out = out.replace(/\/{2,}/g, "/");
+    return out;
   }
 
   // Includes section mapping
@@ -52,7 +57,7 @@ export default function TourCard({ tour }) {
   };
 
   return (
-    <Card className="overflow-hidden border border-emerald-100 shadow-md pt-0">
+    <Card className="overflow-hidden border border-primary/20 shadow-md pt-0">
       <div className="aspect-[16/9] relative bg-neutral-100">
         <Link href={`/paket-tour/${slug}`} className="block" aria-label={title}>
           <Image
@@ -64,14 +69,14 @@ export default function TourCard({ tour }) {
           />
         </Link>
         {durationText ? (
-          <div className="absolute right-2 top-2 z-10 rounded bg-emerald-700 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow">
+          <div className="absolute right-2 top-2 z-10 rounded bg-primary px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow">
             {durationText}
           </div>
         ) : null}
       </div>
       <CardContent className="p-4">
         <Link href={`/paket-tour/${slug}`} className="block">
-          <h3 className="text-base md:text-lg font-extrabold uppercase text-emerald-800">
+          <h3 className="text-base md:text-lg font-extrabold uppercase text-primary">
             {title}
           </h3>
         </Link>
@@ -93,7 +98,7 @@ export default function TourCard({ tour }) {
                     key={key + idx}
                     className="flex items-center gap-2 text-[13px] text-neutral-700"
                   >
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary border border-primary/20">
                       <Icon className="w-3.5 h-3.5" />
                     </span>
                     <span className="tracking-wide">{label}</span>
@@ -110,7 +115,7 @@ export default function TourCard({ tour }) {
         <div className="mt-4 flex items-center justify-between">
           {minPrice !== null ? (
             <div className="text-sm">
-              <span className="font-bold text-emerald-700">
+              <span className="font-bold text-primary">
                 {new Intl.NumberFormat("id-ID", {
                   style: "currency",
                   currency: "IDR",
@@ -125,7 +130,7 @@ export default function TourCard({ tour }) {
           <Button
             asChild
             variant="outline"
-            className="border-emerald-600 text-emerald-700 hover:bg-emerald-50"
+            className="border-primary text-primary hover:bg-primary/10"
           >
             <Link href={`/paket-tour/${slug}`}>Lihat Detail</Link>
           </Button>

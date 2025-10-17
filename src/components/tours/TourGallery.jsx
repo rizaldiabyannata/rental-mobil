@@ -34,8 +34,8 @@ export default function TourGallery({
             <button
               key={index}
               onClick={() => setMainImage(image)}
-              className={`aspect-square relative overflow-hidden rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 ${
-                mainImage === image ? "ring-2 ring-emerald-500" : ""
+              className={`aspect-square relative overflow-hidden rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
+                mainImage === image ? "ring-2 ring-primary" : ""
               }`}
             >
               <Image

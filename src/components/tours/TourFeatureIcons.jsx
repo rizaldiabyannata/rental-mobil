@@ -37,7 +37,7 @@ export default function TourFeatureIcons({ features = [] }) {
         return (
           <Tooltip key={feature + idx}>
             <TooltipTrigger asChild>
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 cursor-help">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-help">
                 <Icon className="w-4 h-4" />
               </span>
             </TooltipTrigger>
