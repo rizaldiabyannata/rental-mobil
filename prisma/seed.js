@@ -42,9 +42,15 @@ async function main() {
       data: {
         name: "Paket Mandalika & City Tour",
         slug: "paket-mandalika-city-tour",
-        description: "Jelajahi Sirkuit Mandalika yang ikonik dan temukan pesona budaya kota Mataram dalam satu paket lengkap. Termasuk kunjungan ke pusat kerajinan lokal dan kuliner khas Lombok.",
+        description:
+          "Jelajahi Sirkuit Mandalika yang ikonik dan temukan pesona budaya kota Mataram dalam satu paket lengkap. Termasuk kunjungan ke pusat kerajinan lokal dan kuliner khas Lombok.",
         duration: "2 Hari 1 Malam",
-        inclusions: ["Mobil + Driver", "Tiket Masuk Wisata", "Air Mineral", "Hotel"],
+        inclusions: [
+          "Mobil + Driver",
+          "Tiket Masuk Wisata",
+          "Air Mineral",
+          "Hotel",
+        ],
         galleryImages: ["/Hero-1.png", "/Hero-2.png"],
         showHotels: true,
         hotelTiers: {
@@ -58,8 +64,8 @@ async function main() {
                   { paxRange: "2-3 PAX", price: 1800000 },
                   { paxRange: "4-5 PAX", price: 1600000 },
                   { paxRange: "6-10 PAX", price: 1550000 },
-                ]
-              }
+                ],
+              },
             },
             {
               name: "Hotel Bintang 4",
@@ -70,21 +76,29 @@ async function main() {
                   { paxRange: "2-3 PAX", price: 2100000 },
                   { paxRange: "4-5 PAX", price: 1900000 },
                   { paxRange: "6-10 PAX", price: 1850000 },
-                ]
-              }
-            }
-          ]
-        }
-      }
+                ],
+              },
+            },
+          ],
+        },
+      },
     });
 
     await prisma.tourPackage.create({
       data: {
         name: "Snorkeling Gili Nanggu",
         slug: "snorkeling-gili-nanggu",
-        description: "Nikmati keindahan bawah laut Gili Nanggu, Gili Sudak, dan Gili Kedis. Paket ini cocok untuk Anda yang mencintai ketenangan dan keindahan pantai pribadi.",
+        description:
+          "Nikmati keindahan bawah laut Gili Nanggu, Gili Sudak, dan Gili Kedis. Paket ini cocok untuk Anda yang mencintai ketenangan dan keindahan pantai pribadi.",
         duration: "1 Hari Penuh",
-        inclusions: ["Mobil + Driver", "Perahu Pribadi", "Alat Snorkeling", "Dokumentasi (GoPro)", "Air Mineral", "Makan Siang"],
+        inclusions: [
+          "Mobil + Driver",
+          "Perahu Pribadi",
+          "Alat Snorkeling",
+          "Dokumentasi (GoPro)",
+          "Air Mineral",
+          "Makan Siang",
+        ],
         galleryImages: ["/Hero-2.png", "/imageforctasection.png"],
         showHotels: false, // This is a day trip, no hotels needed
         hotelTiers: {
@@ -98,12 +112,12 @@ async function main() {
                   { paxRange: "2-3 PAX", price: 750000 },
                   { paxRange: "4-5 PAX", price: 650000 },
                   { paxRange: "6-10 PAX", price: 550000 },
-                ]
-              }
-            }
-          ]
-        }
-      }
+                ],
+              },
+            },
+          ],
+        },
+      },
     });
   }
 

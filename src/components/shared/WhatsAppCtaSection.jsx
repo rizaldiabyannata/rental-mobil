@@ -18,17 +18,23 @@ export default function WhatsAppCtaSection({
   waUrlBase,
   imageSrc = "/imageforctasection.png",
   imageAlt = "Armada siap berangkat",
+  imageVisible = true,
   className,
 }) {
   return (
     <section className={cn("w-full py-10 md:py-14 bg-neutral-50", className)}>
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-6 md:gap-10 items-center",
+            imageVisible ? "md:grid-cols-2" : "md:grid-cols-1"
+          )}
+        >
           {/* Left: Text + CTA */}
-          <div>
+          <div className={cn(!imageVisible && "mx-auto max-w-2xl")}>
             <SectionHeading
               title="Siap Berangkat? Chat Kami Sekarang"
-              align="left"
+              align={imageVisible ? "left" : "center"}
               size="lg"
               underline
               underlineColor="bg-amber-500"
@@ -38,12 +44,22 @@ export default function WhatsAppCtaSection({
               underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
               className="mb-4"
             />
-            <p className="text-neutral-700 md:text-lg">
+            <p
+              className={cn(
+                "text-neutral-700 md:text-lg",
+                !imageVisible && "text-center"
+              )}
+            >
               Tanyakan ketersediaan {carName ? <b>{carName}</b> : "armada"} dan
               dapatkan penawaran terbaik langsung via WhatsApp.
             </p>
 
-            <ul className="mt-4 space-y-2">
+            <ul
+              className={cn(
+                "mt-4 space-y-2",
+                !imageVisible && "mx-auto max-w-md"
+              )}
+            >
               {perks.map((p, i) => (
                 <li
                   key={i}
@@ -57,7 +73,7 @@ export default function WhatsAppCtaSection({
               ))}
             </ul>
 
-            <div className="mt-6">
+            <div className={cn("mt-6", !imageVisible && "flex justify-center")}>
               {/* pass carName only if provided */}
               <WhatsAppCta
                 {...(carName ? { carName } : {})}
@@ -65,21 +81,21 @@ export default function WhatsAppCtaSection({
               />
             </div>
           </div>
-
-          {/* Right: Image */}
-          <div className="relative overflow-hidden rounded-2xl shadow-lg">
-            <div className="relative w-full h-64 md:h-[360px] lg:h-[440px]">
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-                priority={false}
-              />
+          {imageVisible && (
+            <div className="relative overflow-hidden rounded-2xl shadow-lg">
+              <div className="relative w-full h-64 md:h-[360px] lg:h-[440px]">
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt}
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover"
+                  priority={false}
+                />
+              </div>
+              <div className="pointer-events-none absolute inset-0 ring-1 ring-black/5 rounded-2xl" />
             </div>
-            <div className="pointer-events-none absolute inset-0 ring-1 ring-black/5 rounded-2xl" />
-          </div>
+          )}
         </div>
       </div>
     </section>
