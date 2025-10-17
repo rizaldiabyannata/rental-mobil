@@ -1,5 +1,6 @@
 // MinIO integration
-const MINIO_PUBLIC_URL = process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
+const MINIO_PUBLIC_URL =
+  process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
 const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
 function getImageUrl(src) {
   if (!src) return "/InnovaReborn.png";
@@ -10,7 +11,7 @@ function getImageUrl(src) {
   }
   return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
 }
-"use client";
+("use client");
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
