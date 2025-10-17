@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Mail, Phone, Instagram } from "lucide-react";
+import { MapPin, Mail, Phone, Instagram, Tiktok } from "lucide-react";
 
 const usefulLinks = [
   { href: "/tentang-kami", label: "Tentang Kami" },
@@ -80,7 +80,7 @@ const Footer = () => {
               {/* <Link href="#" className="hover:opacity-80">
                 <Image src="/x.svg" alt="X" width={24} height={24} />
               </Link>
-              <Link href="#" className="hover:opacity-80">
+              {/* <Link href="#" className="hover:opacity-80">
                 <Image
                   src="/youtube.svg"
                   alt="Youtube"
@@ -92,7 +92,7 @@ const Footer = () => {
 
             <div className="space-y-4">
               <Image
-                src="/logo.png"
+                src="/newLogo.png"
                 alt="Reborn Lombok Trans Logo"
                 width={100}
                 height={100}
@@ -143,7 +143,7 @@ const Footer = () => {
           <div className="flex flex-wrap justify-between items-start gap-10 pb-8">
             <div className="flex-shrink-0">
               <Image
-                src="/logo.png"
+                src="/newLogo.png"
                 alt="Reborn Lombok Trans Logo"
                 width={100}
                 height={100}
@@ -208,12 +208,19 @@ const Footer = () => {
                   <Image src="/Fb.svg" alt="Facebook" width={24} height={24} />
                 </Link> */}
                 <Link
-                  href="https://www.instagram.com/rebornlomboktrans?igsh=MWc0NHI3bXptbDJicg=="
+                  href="https://www.instagram.com/rebornlomboktrans"
                   className="hover:opacity-80 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
                   aria-label="Instagram Reborn Lombok Trans"
                 >
                   <Instagram className="w-5 h-5 text-gray-300" />
                 </Link>
+                {/* <Link
+                  href="https://www.instagram.com/rebornlomboktrans?igsh=MWc0NHI3bXptbDJicg=="
+                  className="hover:opacity-80 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
+                  aria-label="Instagram Reborn Lombok Trans"
+                >
+                  <Tiktok className="w-5 h-5 text-gray-300" />
+                </Link> */}
                 {/* <Link href="#" className="hover:opacity-80">
                   <Image src="/x.svg" alt="X" width={24} height={24} />
                 </Link>

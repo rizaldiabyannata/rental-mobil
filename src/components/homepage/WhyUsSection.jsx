@@ -36,7 +36,7 @@ const WhyUsSection = () => {
             underlineColor="bg-amber-500"
             underlineWidth="lg"
             underlineOffset="md"
-            titleClassName="text-emerald-700"
+            titleClassName="text-primary"
             underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
             className="mb-6 md:mb-10"
             description={
@@ -51,7 +51,7 @@ const WhyUsSection = () => {
             return (
               <Card key={index} className="text-center">
                 <CardContent className="flex flex-col items-center gap-4">
-                  <div className="flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                  <div className="flex size-14 items-center justify-center rounded-full bg-[#EFF7FF] text-primary">
                     <Icon className="size-8" />
                   </div>
                   <h3 className="text-xl md:text-lg lg:text-xl font-bold text-gray-900">

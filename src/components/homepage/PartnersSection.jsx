@@ -26,6 +26,10 @@ export default function PartnersSection() {
     fetchPartners();
   }, []);
 
+  if (logos.length === 0) {
+    return null;
+  }
+
   return (
     <section className="w-full py-8 md:py-12">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
@@ -37,7 +41,7 @@ export default function PartnersSection() {
           underlineColor="bg-amber-500"
           underlineWidth="lg"
           underlineOffset="md"
-          titleClassName="text-emerald-700"
+          titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
           description="Kami bangga bekerja sama dengan berbagai mitra terpercaya untuk memberikan layanan terbaik."

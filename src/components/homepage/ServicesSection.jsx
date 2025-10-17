@@ -40,7 +40,7 @@ const ServicesSection = () => {
           underlineColor="bg-amber-500"
           underlineWidth="lg"
           underlineOffset="md"
-          titleClassName="text-emerald-700"
+          titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
           description={

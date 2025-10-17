@@ -51,7 +51,7 @@ const VisiMisiSection = () => {
           title={
             <>
               <span className="text-black">Visi & Misi Reborn Lombok</span>
-              <span className="text-emerald-600"> Reborn Lombok Trans</span>
+              <span className="text-primary"> Reborn Lombok Trans</span>
             </>
           }
           align="center"
@@ -63,7 +63,7 @@ const VisiMisiSection = () => {
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
         />
-        <div className="md:bg-emerald-50 rounded-xl p-6 md:p-8 lg:p-10 mb-12">
+        <div className="md:bg-[#EFF7FF] rounded-xl p-6 md:p-8 lg:p-10 mb-12">
           <div className="flex items-center gap-4 mb-4">
             <Image src="/target.svg" alt="Visi Kami" width={50} height={50} />
             <h2 className="font-sans text-[20px] md:text-2xl font-bold text-[#051C35]">
@@ -80,7 +80,7 @@ const VisiMisiSection = () => {
         </div>
 
         {/* Misi */}
-        <div className="md:bg-emerald-50 rounded-xl p-6 md:p-8 lg:p-10">
+        <div className="md:bg-[#EFF7FF] rounded-xl p-6 md:p-8 lg:p-10">
           <div className="flex items-center gap-4 mb-6">
             <Image
               src="/target.svg"
@@ -101,11 +101,11 @@ const VisiMisiSection = () => {
               return (
                 <div
                   key={index}
-                  className="bg-[#F8F8F8] rounded-[10px] shadow-xl p-4 flex flex-col items-center text-center gap-4 md:p-6"
+                  className="bg-white rounded-[10px] shadow-xl p-4 flex flex-col items-center text-center gap-4 md:p-6"
                 >
-                  <span className="inline-flex items-center justify-center rounded-full bg-emerald-100 shadow-md p-3">
+                  <span className="inline-flex items-center justify-center rounded-full bg-[#EFF7FF] shadow-md p-3">
                     <Icon
-                      className="h-8 w-8 text-emerald-600"
+                      className="h-8 w-8 text-primary"
                       aria-label={item.title}
                     />
                   </span>

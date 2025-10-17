@@ -16,7 +16,7 @@ const FeatureBlock = ({ imageSrc, title, description, imageLeft = false }) => {
         />
       </div>
       <div className={`text-center ${textAlign}`}>
-        <h3 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        <h3 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl mb-8">
           {title}
         </h3>
         <p className="mt-4 text-lg text-gray-600">{description}</p>

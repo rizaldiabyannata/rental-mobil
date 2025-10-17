@@ -34,7 +34,7 @@ export default function WhatsAppCtaSection({
               underlineColor="bg-amber-500"
               underlineWidth="lg"
               underlineOffset="sm"
-              titleClassName="text-emerald-700"
+              titleClassName="text-primary"
               underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
               className="mb-4"
             />
@@ -49,7 +49,7 @@ export default function WhatsAppCtaSection({
                   key={i}
                   className="flex items-center gap-3 text-neutral-800"
                 >
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#EFF7FF] text-primary">
                     <p.icon className="h-4 w-4" />
                   </span>
                   <span className="text-sm md:text-base">{p.text}</span>
