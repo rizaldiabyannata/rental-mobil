@@ -457,7 +457,7 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
                           )
                         )
                       }
-                      className="border-emerald-600 text-emerald-700 hover:bg-emerald-50"
+                      className="border-emerald-600 text-white hover:bg-emerald-700"
                     >
                       Tambah Harga Pax
                     </Button>
@@ -501,7 +501,7 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
                         return copy;
                       })
                     }
-                    className="border-emerald-600 text-emerald-700 hover:bg-emerald-50"
+                    className="border-emerald-600 text-white hover:bg-emerald-700"
                   >
                     Tambah Tier di Bawah
                   </Button>
