@@ -64,11 +64,7 @@ const FleetSection = async () => {
         car.gallery.find((img) => img.order === 0) || car.gallery[0];
       if (firstImage?.url) {
         const raw = firstImage.url;
-        image = /^https?:\/\//i.test(raw)
-          ? raw
-          : raw.startsWith("/")
-          ? raw
-          : `/${raw}`;
+        image = raw;
       }
     }
 
