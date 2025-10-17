@@ -11,6 +11,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
+const MINIO_PUBLIC_URL =
+  process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
+const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
+
 const CarDetailCarousel = ({ images = [] }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -33,7 +37,21 @@ const CarDetailCarousel = ({ images = [] }) => {
     },
   ];
 
-  const carImages = images.length > 0 ? images : sampleImages;
+  // Helper to get MinIO image URL
+  function getImageUrl(src) {
+    if (!src) return "/imageforctasection.png";
+    if (/^https?:\/\//i.test(src)) return src;
+    if (src.startsWith("/")) src = src.slice(1);
+    if (src.startsWith(MINIO_BUCKET + "/")) {
+      return `${MINIO_PUBLIC_URL}/${src}`;
+    }
+    return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+  }
+
+  const carImages =
+    images.length > 0
+      ? images.map((img) => ({ ...img, src: getImageUrl(img.src) }))
+      : sampleImages.map((img) => ({ ...img, src: getImageUrl(img.src) }));
   const [emblaApi, setEmblaApi] = useState(null);
 
   const onSelect = useCallback(() => {

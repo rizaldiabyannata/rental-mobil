@@ -5,6 +5,20 @@ import TariffDetailSection from "@/components/detail-armada/TariffDetailSection"
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { prisma } from "@/lib/prisma";
 
+const MINIO_PUBLIC_URL =
+  process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
+const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
+
+function getImageUrl(src) {
+  if (!src) return "/imageforctasection.png";
+  if (/^https?:\/\//i.test(src)) return src;
+  if (src.startsWith("/")) src = src.slice(1);
+  if (src.startsWith(MINIO_BUCKET + "/")) {
+    return `${MINIO_PUBLIC_URL}/${src}`;
+  }
+  return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+}
+
 async function getCarBySlug(slug) {
   try {
     const car = await prisma.car.findFirst({
@@ -48,7 +62,7 @@ async function getCarBySlug(slug) {
       : [];
     const gallery = car.images.map((img) => ({
       id: img.id,
-      url: img.imageUrl,
+      url: getImageUrl(img.imageUrl),
       alt: img.alt,
       order: img.order,
     }));

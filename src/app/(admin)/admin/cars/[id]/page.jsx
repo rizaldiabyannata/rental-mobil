@@ -167,6 +167,19 @@ export default function CarDetailPage() {
     if (car?.coverImage) return car.coverImage;
     if (!car?.images || !car.images.length) return null;
     return car.images[0]?.imageUrl ?? null;
+
+  // MinIO integration
+  const MINIO_PUBLIC_URL = process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
+  const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
+  function getImageUrl(src) {
+    if (!src) return "/InnovaReborn.png";
+    if (/^https?:\/\//i.test(src)) return src;
+    if (src.startsWith("/")) src = src.slice(1);
+    if (src.startsWith(MINIO_BUCKET + "/")) {
+      return `${MINIO_PUBLIC_URL}/${src}`;
+    }
+    return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+  }
   }, [car]);
 
   if (loading) {
@@ -558,7 +571,7 @@ export default function CarDetailPage() {
                     >
                       {image.imageUrl ? (
                         <img
-                          src={image.imageUrl}
+                          src={getImageUrl(image.imageUrl)}
                           alt={image.alt || car.name}
                           className="h-full w-full object-cover"
                         />

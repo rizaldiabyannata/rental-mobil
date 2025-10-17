@@ -48,15 +48,15 @@ const data = {
       icon: Car,
     },
     {
+      title: "Paket Tour",
+      url: "/admin/tour-packages",
+      icon: Package,
+    },
+    {
       title: "Tarif",
       url: "/admin/tariffs",
       icon: Package,
     },
-    // {
-    //   title: "Paket Tour",
-    //   url: "/admin/tour-packages",
-    //   icon: MapPin,
-    // },
     {
       title: "Konten",
       url: "#",

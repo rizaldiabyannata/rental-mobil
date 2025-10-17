@@ -1,3 +1,15 @@
+// MinIO integration
+const MINIO_PUBLIC_URL = process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
+const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
+function getImageUrl(src) {
+  if (!src) return "/InnovaReborn.png";
+  if (/^https?:\/\//i.test(src)) return src;
+  if (src.startsWith("/")) src = src.slice(1);
+  if (src.startsWith(MINIO_BUCKET + "/")) {
+    return `${MINIO_PUBLIC_URL}/${src}`;
+  }
+  return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+}
 "use client";
 
 import Link from "next/link";
@@ -458,7 +470,7 @@ export default function CarImagesPage() {
                 <div className="flex items-center justify-center rounded-lg border-2 border-emerald-200 bg-muted lg:col-span-1">
                   {primaryImage.imageUrl ? (
                     <img
-                      src={primaryImage.imageUrl}
+                      src={getImageUrl(primaryImage.imageUrl)}
                       alt={primaryImage.alt || car.name}
                       className="h-full max-h-48 w-full object-contain"
                     />
@@ -523,7 +535,7 @@ export default function CarImagesPage() {
                   <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg border bg-muted">
                     {image.imageUrl ? (
                       <img
-                        src={image.imageUrl}
+                        src={getImageUrl(image.imageUrl)}
                         alt={image.alt || car.name}
                         className="h-full w-full object-cover"
                       />

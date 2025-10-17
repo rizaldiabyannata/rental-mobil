@@ -53,18 +53,31 @@ async function getCars() {
 const FleetSection = async () => {
   const carsData = await getCars();
 
+  // MinIO integration
+  const MINIO_PUBLIC_URL =
+    process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
+  const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
+  function getImageUrl(src) {
+    if (!src) return "/InnovaReborn.png";
+    if (/^https?:\/\//i.test(src)) return src;
+    if (src.startsWith("/")) src = src.slice(1);
+    if (src.startsWith(MINIO_BUCKET + "/")) {
+      return `${MINIO_PUBLIC_URL}/${src}`;
+    }
+    return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+  }
+
   // Map API data ke format yang dibutuhkan CarCard
   const cars = carsData.map((car) => {
     // Ambil image: prioritas coverImage, fallback ke gallery order 0, fallback ke placeholder
     let image = "/InnovaReborn.png"; // default placeholder
     if (car.coverImage) {
-      image = car.coverImage;
+      image = getImageUrl(car.coverImage);
     } else if (Array.isArray(car.gallery) && car.gallery.length > 0) {
       const firstImage =
         car.gallery.find((img) => img.order === 0) || car.gallery[0];
       if (firstImage?.url) {
-        const raw = firstImage.url;
-        image = raw;
+        image = getImageUrl(firstImage.url);
       }
     }
 
