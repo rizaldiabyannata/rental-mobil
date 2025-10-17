@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Car" (
     "id" TEXT NOT NULL,
+    "slug" TEXT,
     "name" TEXT NOT NULL DEFAULT 'Unnamed',
     "description" TEXT,
     "startingPrice" INTEGER NOT NULL DEFAULT 0,
@@ -8,7 +9,6 @@ CREATE TABLE "Car" (
     "transmission" TEXT NOT NULL DEFAULT 'Manual',
     "fuelType" TEXT NOT NULL DEFAULT 'Bensin',
     "available" BOOLEAN NOT NULL DEFAULT true,
-    "features" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "specifications" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -39,6 +39,43 @@ CREATE TABLE "CarFeature" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "CarFeature_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TourPackage" (
+    "id" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "duration" TEXT NOT NULL,
+    "inclusions" TEXT[],
+    "galleryImages" TEXT[],
+    "showHotels" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "TourPackage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HotelTier" (
+    "id" TEXT NOT NULL,
+    "tourPackageId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "hotels" TEXT[],
+    "order" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HotelTier_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PriceTier" (
+    "id" TEXT NOT NULL,
+    "hotelTierId" TEXT NOT NULL,
+    "paxRange" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+
+    CONSTRAINT "PriceTier_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -135,10 +172,25 @@ CREATE TABLE "PasswordResetRequest" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Car_slug_key" ON "Car"("slug");
+
+-- CreateIndex
 CREATE INDEX "CarFeature_carId_idx" ON "CarFeature"("carId");
 
 -- CreateIndex
 CREATE INDEX "CarFeature_order_idx" ON "CarFeature"("order");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TourPackage_slug_key" ON "TourPackage"("slug");
+
+-- CreateIndex
+CREATE INDEX "TourPackage_slug_idx" ON "TourPackage"("slug");
+
+-- CreateIndex
+CREATE INDEX "HotelTier_tourPackageId_idx" ON "HotelTier"("tourPackageId");
+
+-- CreateIndex
+CREATE INDEX "PriceTier_hotelTierId_idx" ON "PriceTier"("hotelTierId");
 
 -- CreateIndex
 CREATE INDEX "TermsAndConditions_category_idx" ON "TermsAndConditions"("category");
@@ -178,6 +230,12 @@ ALTER TABLE "CarImage" ADD CONSTRAINT "CarImage_carId_fkey" FOREIGN KEY ("carId"
 
 -- AddForeignKey
 ALTER TABLE "CarFeature" ADD CONSTRAINT "CarFeature_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HotelTier" ADD CONSTRAINT "HotelTier_tourPackageId_fkey" FOREIGN KEY ("tourPackageId") REFERENCES "TourPackage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PriceTier" ADD CONSTRAINT "PriceTier_hotelTierId_fkey" FOREIGN KEY ("hotelTierId") REFERENCES "HotelTier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TariffItem" ADD CONSTRAINT "TariffItem_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "TariffCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,21 +1,25 @@
 import FaqSection from "./FaqSection";
+import { prisma } from "@/lib/prisma";
 
-async function fetchFaqs() {
+async function getFaqs() {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/public/faqs`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json?.data || null;
-  } catch (e) {
-    console.error("Failed to fetch FAQs:", e);
+    // Model name is `FAQ` in Prisma schema, so the client accessor is `fAQ`
+    const faqs = await prisma.fAQ.findMany({
+      orderBy: { order: "asc" },
+      select: {
+        question: true,
+        answer: true,
+        order: true,
+      },
+    });
+    return faqs;
+  } catch (error) {
+    console.error("Failed to fetch FAQs directly:", error);
     return null;
   }
 }
 
 export default async function FaqSectionWrapper() {
-  const faqs = await fetchFaqs();
+  const faqs = await getFaqs();
   return <FaqSection faqs={faqs || undefined} />;
 }

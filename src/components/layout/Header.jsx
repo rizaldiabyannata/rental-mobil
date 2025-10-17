@@ -36,6 +36,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
           Sewa Mobil & Layanan
         </Link>
         <Link
+          href="/paket-tour"
+          className="text-2xl font-semibold hover:text-primary"
+          onClick={onClose}
+        >
+          Paket Tour
+        </Link>
+        <Link
           href="/tentang-kami"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
@@ -81,6 +88,13 @@ const Header = () => {
               }
             >
               Sewa Mobil & Layanan
+            </Button>
+          </Link>
+          <Link href="/paket-tour">
+            <Button
+              variant={pathname.startsWith("/paket-tour") ? "default" : "ghost"}
+            >
+              Paket Tour
             </Button>
           </Link>
           <Link href="/tentang-kami">

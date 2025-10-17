@@ -1,4 +1,5 @@
 import AntarJemputPage from "@/components/harga/AntarJemputClient";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Harga Antar Jemput Bandara Lombok - Tarif Murah & Terjangkau",
@@ -6,38 +7,36 @@ export const metadata = {
     "Lihat daftar harga layanan antar jemput dari dan ke Bandara Internasional Lombok. Tarif flat, transparan, dan kompetitif untuk berbagai jenis armada.",
 };
 
-async function fetchTariffData() {
+async function getTariffData() {
   try {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || ""
-      }/api/public/tariffs?serviceType=Tarif Antar Jemput Bandara`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
+    const items = await prisma.tariffItem.findMany({
+      where: {
+        category: { name: { contains: "antar jemput", mode: "insensitive" } },
+      },
+      include: {
+        car: { select: { name: true } },
+        category: { select: { name: true } },
+      },
+      orderBy: { order: "asc" },
+    });
 
-    // Transform API data to match frontend format
-    const grouped = json?.data?.groupedByService || {};
-    const antarJemputData = grouped["Tarif Antar Jemput Bandara"] || [];
-    console.log("Fetched antar-jemput data:", antarJemputData);
-    return antarJemputData.map((item) => ({
-      layanan: item.category || "Antar Jemput Bandara",
-      paket: item.packageType || item.name,
-      armada: item.car?.name || "INNOVA REBORN",
+    return items.map((item) => ({
+      layanan: item.category?.name || "Antar Jemput Bandara",
+      paket: item.name,
+      armada: item.car?.name || "Armada Pilihan",
       harga: new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
         minimumFractionDigits: 0,
       }).format(item.price),
     }));
-  } catch (e) {
-    console.error("Failed to fetch tariff data:", e);
+  } catch (error) {
+    console.error("Failed to fetch tariff data directly:", error);
     return null;
   }
 }
 
 export default async function AntarJemputWrapper() {
-  const data = await fetchTariffData();
+  const data = await getTariffData();
   return <AntarJemputPage data={data || undefined} />;
 }

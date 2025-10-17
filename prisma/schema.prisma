@@ -94,7 +94,7 @@ model Partner {
     updatedAt DateTime @updatedAt
 }
 
-//  Tariff Penyewaan Umum (bukan per-mobil)
+// Tariff Penyewaan Umum (bukan per-mobil)
 model TariffCategory {
     id          String   @id @default(uuid())
     name        String

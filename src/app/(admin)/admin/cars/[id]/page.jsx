@@ -572,7 +572,7 @@ export default function CarDetailPage() {
                     >
                       {image.imageUrl ? (
                         <img
-                          src={image.imageUrl}
+                          src={getImageUrl(image.imageUrl)}
                           alt={image.alt || car.name}
                           className="h-full w-full object-cover"
                         />

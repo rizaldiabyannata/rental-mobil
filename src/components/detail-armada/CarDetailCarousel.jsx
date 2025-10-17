@@ -33,7 +33,19 @@ const CarDetailCarousel = ({ images = [] }) => {
     },
   ];
 
-  const carImages = images.length > 0 ? images : sampleImages;
+  // Helper to get local uploads image URL
+  function getImageUrl(src) {
+    if (!src) return "/imageforctasection.png";
+    if (/^https?:\/\//i.test(src)) return src;
+    if (!src.startsWith("/")) src = `/${src}`;
+    if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
+    return src;
+  }
+
+  const carImages =
+    images.length > 0
+      ? images.map((img) => ({ ...img, src: getImageUrl(img.src) }))
+      : sampleImages.map((img) => ({ ...img, src: getImageUrl(img.src) }));
   const [emblaApi, setEmblaApi] = useState(null);
 
   const onSelect = useCallback(() => {

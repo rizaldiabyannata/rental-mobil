@@ -47,16 +47,7 @@ export async function saveImageFile(
     throw new Error(`File too large. Max ${maxSizeMB}MB`);
   }
 
-  await ensureUploadDir();
-
-  let targetDir = UPLOAD_BASE_DIR;
-  if (subfolder) {
-    targetDir = path.join(UPLOAD_BASE_DIR, subfolder);
-    await fs.mkdir(targetDir, { recursive: true });
-  }
-
   const filename = `${randomUUID()}${IMAGE_MIME_MAP[file.type]}`;
-  const filepath = path.join(targetDir, filename);
 
   // Validate image dimensions before persisting
   let dimensions;
@@ -75,9 +66,15 @@ export async function saveImageFile(
     throw new Error(`Image too small (min ${minWidth}x${minHeight})`);
   }
 
+  // Save to local filesystem under public/uploads
+  await ensureUploadDir();
+  let targetDir = UPLOAD_BASE_DIR;
+  if (subfolder) {
+    targetDir = path.join(UPLOAD_BASE_DIR, subfolder);
+    await fs.mkdir(targetDir, { recursive: true });
+  }
+  const filepath = path.join(targetDir, filename);
   await fs.writeFile(filepath, buffer);
-
-  // Return relative public path
   const publicPath = `/uploads${subfolder ? "/" + subfolder : ""}/${filename}`;
   return {
     filename,
@@ -86,6 +83,7 @@ export async function saveImageFile(
     mime: file.type,
     width: dimensions.width,
     height: dimensions.height,
+    storage: "local",
   };
 }
 

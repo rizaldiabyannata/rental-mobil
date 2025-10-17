@@ -3,25 +3,96 @@ import KeyFeatureSection from "@/components/detail-armada/KeyFeatureSection";
 import SpecsSection from "@/components/detail-armada/SpecsSection";
 import TariffDetailSection from "@/components/detail-armada/TariffDetailSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
+import { prisma } from "@/lib/prisma";
 
-async function fetchCarBySlug(slug) {
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_BASE_URL || ""
-    }/api/public/cars/slug/${encodeURIComponent(slug)}`,
-    {
-      // disable caching to always get fresh availability/prices
-      cache: "no-store",
-    }
-  );
-  if (!res.ok) return null;
-  const json = await res.json().catch(() => ({}));
-  return json?.data || null;
+function getImageUrl(src) {
+  if (!src) return "/imageforctasection.png";
+  if (/^https?:\/\//i.test(src)) return src;
+  if (!src.startsWith("/")) src = `/${src}`;
+  if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
+  return src;
+}
+
+async function getCarBySlug(slug) {
+  try {
+    const car = await prisma.car.findFirst({
+      where: { slug, available: true },
+      select: {
+        slug: true,
+        name: true,
+        description: true,
+        startingPrice: true,
+        capacity: true,
+        transmission: true,
+        fuelType: true,
+        specifications: true,
+        images: {
+          select: { id: true, imageUrl: true, alt: true, order: true },
+          orderBy: { order: "asc" },
+        },
+        featureBlocks: {
+          select: { title: true, description: true, icon: true, order: true },
+          orderBy: { order: "asc" },
+        },
+        tariffItems: {
+          select: {
+            name: true,
+            price: true,
+            order: true,
+            serviceType: true,
+            packageType: true,
+            category: { select: { name: true } },
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    if (!car) return null;
+
+    const coverImage = car.specifications?.coverImage || null;
+    const details = Array.isArray(car.specifications?.details)
+      ? car.specifications.details
+      : [];
+    const gallery = car.images.map((img) => ({
+      id: img.id,
+      url: getImageUrl(img.imageUrl),
+      alt: img.alt,
+      order: img.order,
+    }));
+    const tariffs = (car.tariffItems || []).map((t) => ({
+      name:
+        t.name ||
+        [t.serviceType, t.packageType].filter(Boolean).join(" - ") ||
+        "Tarif",
+      price: t.price,
+      category: t.category?.name || null,
+      order: t.order,
+    }));
+
+    return {
+      slug: car.slug,
+      name: car.name,
+      description: car.description,
+      startingPrice: car.startingPrice,
+      capacity: car.capacity,
+      transmission: car.transmission,
+      fuelType: car.fuelType,
+      coverImage,
+      details,
+      gallery,
+      featureBlocks: car.featureBlocks,
+      tariffs,
+    };
+  } catch (error) {
+    console.error(`Failed to fetch car by slug ${slug}:`, error);
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = params;
-  const car = await fetchCarBySlug(slug);
+  const { slug } = await params;
+  const car = await getCarBySlug(slug);
 
   if (!car) {
     return {
@@ -97,7 +168,7 @@ export async function generateMetadata({ params }) {
 
 export default async function ArmadaDetailPage({ params }) {
   const { slug } = await params;
-  const car = await fetchCarBySlug(slug);
+  const car = await getCarBySlug(slug);
 
   if (!car) {
     return (

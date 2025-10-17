@@ -136,7 +136,7 @@ const KeyFeatureSection = ({
               : featuresLen === 3
               ? "grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3"
               : featuresLen % 2 === 0
-              ? "grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-4"
+              ? "grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2"
               : "grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2"
           )}
         >

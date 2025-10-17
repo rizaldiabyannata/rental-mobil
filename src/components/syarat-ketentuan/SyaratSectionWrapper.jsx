@@ -1,32 +1,27 @@
 import SyaratSection from "./TermSection";
+import { prisma } from "@/lib/prisma";
 
-async function fetchTerms() {
+async function getTerms() {
   try {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || ""
-      }/api/public/terms-conditions?category=${encodeURIComponent(
-        "Syarat dan Ketentuan"
-      )}`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    // API sekarang mengembalikan array datar langsung di `data`
-    const termsList = json?.data || [];
-    return termsList.map((t) => ({
-      id: t.id,
-      title: t.title,
-      content: t.content,
-      order: t.order,
-    }));
-  } catch (e) {
-    console.error("Failed to fetch terms:", e);
+    const terms = await prisma.termsAndConditions.findMany({
+      where: { isActive: true },
+      orderBy: { order: "asc" },
+      select: {
+        id: true,
+        category: true,
+        title: true,
+        content: true,
+        order: true,
+      },
+    });
+    return terms;
+  } catch (error) {
+    console.error("Failed to fetch terms directly:", error);
     return null;
   }
 }
 
 export default async function SyaratSectionWrapper() {
-  const terms = await fetchTerms();
+  const terms = await getTerms();
   return <SyaratSection terms={terms || undefined} />;
 }

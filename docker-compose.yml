@@ -19,5 +19,30 @@ services:
       retries: 10
     restart: unless-stopped
 
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: RL-minio
+    restart: always
+    env_file:
+      - .env
+    environment:
+      # Fallback values if not provided in .env
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+      MINIO_DEFAULT_BUCKET: ${MINIO_DEFAULT_BUCKET:-uploads}
+    command: server /data --console-address ":9001"
+    ports:
+      - '9000:9000'   # S3 API
+      - '9001:9001'   # Web Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9000/minio/health/live || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
 volumes:
   db_data:
+  minio_data:
