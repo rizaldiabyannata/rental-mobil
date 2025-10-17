@@ -7,6 +7,7 @@ import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
 import PartnersSection from "@/components/homepage/PartnersSection";
+import VideoSection from "@/components/homepage/VideoSection";
 
 export const metadata = {
   title: "Reborn Lombok Trans - Rental Mobil Terpercaya di Lombok",
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <VideoSection />
       <WhyUsSection />
       <ServicesSection />
       <FleetSection />

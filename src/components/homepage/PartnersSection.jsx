@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function PartnersSection() {
   const [logos, setLogos] = useState([]);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     async function fetchPartners() {
@@ -24,6 +25,10 @@ export default function PartnersSection() {
       }
     }
     fetchPartners();
+  }, []);
+
+  useEffect(() => {
+    setIsClient(true);
   }, []);
 
   if (logos.length === 0) {
@@ -47,24 +52,26 @@ export default function PartnersSection() {
           description="Kami bangga bekerja sama dengan berbagai mitra terpercaya untuk memberikan layanan terbaik."
         />
         <div className="relative">
-          <Marquee className="w-full">
-            <MarqueeFade side="left" />
-            <MarqueeContent speed={40} pauseOnHover={true}>
-              {logos.length > 0
-                ? logos.concat(logos).map((partner, idx) => (
-                    <MarqueeItem key={partner.id + "-" + idx}>
-                      <img
-                        src={partner.logoUrl}
-                        alt={partner.name}
-                        className="h-12 md:h-16 lg:h-20 w-auto object-contain drop-shadow-md"
-                        draggable={false}
-                      />
-                    </MarqueeItem>
-                  ))
-                : null}
-            </MarqueeContent>
-            <MarqueeFade side="right" />
-          </Marquee>
+          {isClient && (
+            <Marquee className="w-full">
+              <MarqueeFade side="left" />
+              <MarqueeContent speed={40} pauseOnHover={true}>
+                {logos.length > 0
+                  ? logos.concat(logos).map((partner, idx) => (
+                      <MarqueeItem key={partner.id + "-" + idx}>
+                        <img
+                          src={partner.logoUrl}
+                          alt={partner.name}
+                          className="h-12 md:h-16 lg:h-20 w-auto object-contain drop-shadow-md"
+                          draggable={false}
+                        />
+                      </MarqueeItem>
+                    ))
+                  : null}
+              </MarqueeContent>
+              <MarqueeFade side="right" />
+            </Marquee>
+          )}
         </div>
       </div>
     </section>
