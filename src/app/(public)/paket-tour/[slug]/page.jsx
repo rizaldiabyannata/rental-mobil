@@ -23,8 +23,9 @@ export async function generateStaticParams() {
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
+  const slug = params?.slug;
   const tourPackage = await prisma.tourPackage.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     select: { name: true, description: true },
   });
 
@@ -85,7 +86,7 @@ export default async function TourDetailPage({ params }) {
       <PageHero
         title={tour.name}
         subtitle={`Paket Wisata ${tour.duration}`}
-        imageUrl={tour.galleryImages[0] || "/Hero-1.png"}
+        imageUrl={tour.galleryImages[0] || "/InnovaReborn-2.png"}
       />
       <div className="container mx-auto px-4 md:px-6 pt-0 md:pt-0 pb-10 md:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12">
@@ -160,17 +161,6 @@ export default async function TourDetailPage({ params }) {
               </div>
             </div>
           </aside>
-        </div>
-
-        {/* Bottom CTA for mobile/tablet */}
-        <div className="lg:hidden mt-10">
-          <WhatsAppCtaSection
-            waUrlBase="https://wa.me/6287741861681"
-            imageSrc="/imageforctasection.png"
-            imageAlt={`Gallery`}
-            className="shadow-md rounded-2xl"
-            message={`Halo, saya tertarik dengan paket wisata \"${tour.name}\". Mohon informasinya.`}
-          />
         </div>
       </div>
     </main>

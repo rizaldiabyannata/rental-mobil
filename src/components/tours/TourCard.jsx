@@ -5,10 +5,6 @@ import Link from "next/link";
 import TourFeatureIcons from "./TourFeatureIcons";
 import { FaUser, FaTicketAlt, FaUtensils, FaTint, FaCar } from "react-icons/fa";
 
-const MINIO_PUBLIC_URL =
-  process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
-const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
-
 export default function TourCard({ tour }) {
   const {
     slug = "",
@@ -30,16 +26,13 @@ export default function TourCard({ tour }) {
     ? `${durationHours} JAM`
     : "";
 
-  // Helper to get MinIO image URL
+  // Helper to map to local uploads URL
   function getImageUrl(src) {
     if (!src) return "/imageforctasection.png";
     if (/^https?:\/\//i.test(src)) return src;
-    // If already starts with bucket, don't double it
-    if (src.startsWith("/")) src = src.slice(1);
-    if (src.startsWith(MINIO_BUCKET + "/")) {
-      return `${MINIO_PUBLIC_URL}/${src}`;
-    }
-    return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+    if (!src.startsWith("/")) src = `/${src}`;
+    if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
+    return src;
   }
 
   // Includes section mapping

@@ -59,17 +59,12 @@ function formatDate(value) {
   }
 }
 
-const MINIO_PUBLIC_URL =
-  process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
-const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET || "uploads";
 function getImageUrl(src) {
   if (!src) return "/InnovaReborn.png";
   if (/^https?:\/\//i.test(src)) return src;
-  if (src.startsWith("/")) src = src.slice(1);
-  if (src.startsWith(MINIO_BUCKET + "/")) {
-    return `${MINIO_PUBLIC_URL}/${src}`;
-  }
-  return `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${src}`;
+  if (!src.startsWith("/")) src = `/${src}`;
+  if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
+  return src;
 }
 
 export default function CarImagesPage() {

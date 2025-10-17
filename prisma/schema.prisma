@@ -81,11 +81,12 @@ model TourPackage {
 
 // Tingkatan hotel untuk setiap paket (e.g., Bintang 2, Bintang 3)
 model HotelTier {
-    id            String @id @default(uuid())
+    id            String   @id @default(uuid())
     tourPackageId String
     name          String // e.g., "Hotel Bintang 2", "Hotel Bintang 3"
     hotels        String[] // List of hotel names in this tier
-    order         Int    @default(0)
+    order         Int      @default(0)
+    starRating    Int? // e.g., 2,3,4,5
 
     tourPackage TourPackage @relation(fields: [tourPackageId], references: [id], onDelete: Cascade)
     priceTiers  PriceTier[]
@@ -98,7 +99,7 @@ model PriceTier {
     id          String @id @default(uuid())
     hotelTierId String
     paxRange    String // e.g., "2-3 PAX"
-    price       Int    // Harga per pax dalam IDR
+    price       Int // Harga per pax dalam IDR
 
     hotelTier HotelTier @relation(fields: [hotelTierId], references: [id], onDelete: Cascade)
 

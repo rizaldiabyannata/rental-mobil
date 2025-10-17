@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { TourPackageForm } from "@/components/admin/TourPackageForm";
 import {
   Breadcrumb,
@@ -14,8 +15,9 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Package, Loader2 } from "lucide-react";
 
-export default function EditTourPackagePage({ params }) {
-  const { id } = params;
+export default function EditTourPackagePage() {
+  const params = useParams();
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +27,9 @@ export default function EditTourPackagePage({ params }) {
     const fetchPackage = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/admin/tour-packages/${id}`, { cache: "no-store" });
+        const res = await fetch(`/api/admin/tour-packages/${id}`, {
+          cache: "no-store",
+        });
         if (!res.ok) {
           throw new Error("Gagal memuat data paket tour");
         }
@@ -45,15 +49,22 @@ export default function EditTourPackagePage({ params }) {
       <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-[orientation=vertical]:h-4"
+          />
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/admin/dashboard">Dashboard</BreadcrumbLink>
+                <BreadcrumbLink href="/admin/dashboard">
+                  Dashboard
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink href="/admin/tour-packages">Paket Tour</BreadcrumbLink>
+                <BreadcrumbLink href="/admin/tour-packages">
+                  Paket Tour
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

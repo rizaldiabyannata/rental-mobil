@@ -2,11 +2,6 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import sizeOf from "image-size";
-import {
-  getMinioClient,
-  ensureBucketExists,
-  buildMinioPublicUrl,
-} from "./minio";
 
 // Konfigurasi dasar upload
 export const UPLOAD_BASE_DIR = path.join(process.cwd(), "public", "uploads");
@@ -36,7 +31,6 @@ export async function saveImageFile(
     maxHeight = 4000,
     minWidth = 50,
     minHeight = 50,
-    bucket = process.env.MINIO_BUCKET || "uploads",
   } = {}
 ) {
   if (!file) throw new Error("File is required");
@@ -72,31 +66,7 @@ export async function saveImageFile(
     throw new Error(`Image too small (min ${minWidth}x${minHeight})`);
   }
 
-  // Try MinIO first if configured
-  const minio = getMinioClient();
-  if (minio) {
-    const objectName = `${
-      subfolder ? subfolder.replace(/^\/+|\/+$/g, "") + "/" : ""
-    }${filename}`;
-    await ensureBucketExists(bucket);
-    await minio.putObject(bucket, objectName, buffer, buffer.length, {
-      "Content-Type": file.type,
-    });
-    const publicUrl = buildMinioPublicUrl({ bucket, objectName });
-    return {
-      filename,
-      path: publicUrl,
-      size: buffer.length,
-      mime: file.type,
-      width: dimensions.width,
-      height: dimensions.height,
-      storage: "minio",
-      bucket,
-      objectName,
-    };
-  }
-
-  // Fallback to local filesystem
+  // Save to local filesystem under public/uploads
   await ensureUploadDir();
   let targetDir = UPLOAD_BASE_DIR;
   if (subfolder) {
@@ -119,26 +89,6 @@ export async function saveImageFile(
 
 export async function deleteUploadedFile(relativePath) {
   if (!relativePath) return;
-  // If it's an absolute URL (MinIO), try to delete from bucket
-  try {
-    const url = new URL(relativePath, "http://dummy");
-    const host = url.host;
-    if (relativePath.startsWith("http")) {
-      const client = getMinioClient();
-      if (client) {
-        const pathname = url.pathname.replace(/^\/+/, "");
-        // path is like /bucket/objectName
-        const [bucket, ...rest] = pathname.split("/");
-        const objectName = rest.join("/");
-        if (bucket && objectName) {
-          await client.removeObject(bucket, objectName).catch(() => {});
-          return;
-        }
-      }
-    }
-  } catch (_) {
-    // not a valid URL, fall back to local
-  }
   const absolute = path.join(
     process.cwd(),
     "public",

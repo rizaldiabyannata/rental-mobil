@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -26,7 +25,7 @@ const Breadcrumb = ({ items }) => {
 };
 
 const PageHero = ({ title, breadcrumbs, backgroundImage }) => {
-  const bgImage = backgroundImage || "/gallery-3.jpg"; // Fallback image
+  const bgImage = backgroundImage || "/InnovaReborn-2.png"; // Fallback image
 
   return (
     <section className="relative bg-cover bg-center py-24 md:py-32">
