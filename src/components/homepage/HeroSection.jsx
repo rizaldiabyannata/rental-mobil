@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 const HeroSection = ({
   title = (
     <>
-      Sewa Mobil <span className="text-emerald-700">Terbaik di Lombok</span>
+      Sewa Mobil <span className="text-primary">Terbaik di Lombok</span>
     </>
   ),
   subtitle = "Jelajahi keindahan Lombok dengan nyaman bersama Reborn Lombok Trans. Armada terawat, supir profesional, dan harga terbaik.",
@@ -19,7 +19,7 @@ const HeroSection = ({
   waProps = {
     waUrlBase: "https://wa.me/6287741861681",
     label: "Hubungi Kami",
-    buttonClassName: "w-full bg-emerald-700 hover:bg-emerald-800 py-5",
+    buttonClassName: "w-full bg-[#3E6598] hover:bg-[#8FA6C3] py-5",
     iconClassName: "h-6 w-6",
     anchorClassName: "inline-flex items-center justify-center gap-3 w-full",
   },

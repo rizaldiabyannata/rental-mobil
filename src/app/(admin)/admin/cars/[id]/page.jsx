@@ -101,24 +101,29 @@ export default function CarDetailPage() {
     const controller = new AbortController();
 
     async function fetchDetail() {
+      setLoading(true);
+      setCar(null);
+      setError(null);
+      let nextCar = null;
+      let nextError = null;
       try {
-        setLoading(true);
         const res = await fetch(`/api/cars/${carId}`, {
           signal: controller.signal,
-          cache: "no-store",
+          cache: "default",
         });
         if (!res.ok) {
           const text = await res.text();
           throw new Error(text || "Gagal memuat detail kendaraan");
         }
         const json = await res.json();
-        setCar(json.data);
-        setError(null);
+        nextCar = json.data;
       } catch (err) {
         if (err.name === "AbortError") return;
         console.error("Fetch car detail error", err);
-        setError(err.message || "Tidak dapat memuat data kendaraan");
+        nextError = err.message || "Tidak dapat memuat data kendaraan";
       } finally {
+        setCar(nextCar);
+        setError(nextError);
         setLoading(false);
       }
     }
@@ -171,25 +176,18 @@ export default function CarDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-1 flex-col">
-        <header className="flex h-16 shrink-0 items-center gap-2">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Memuat detail
-              kendaraan...
-            </div>
-          </div>
-        </header>
+      <div className="flex flex-1 items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
+          <p className="text-lg font-semibold text-muted-foreground">
+            Memuat detail kendaraan...
+          </p>
+        </div>
       </div>
     );
   }
 
-  if (error || !car) {
+  if (!loading && error) {
     return (
       <div className="flex flex-1 flex-col">
         <header className="flex h-16 shrink-0 items-center gap-2">
@@ -223,9 +221,7 @@ export default function CarDetailPage() {
         <div className="flex flex-1 items-center justify-center p-10">
           <div className="flex flex-col items-center gap-3 text-center">
             <AlertCircle className="h-10 w-10 text-red-500" />
-            <p className="text-base font-semibold">
-              {error || "Data mobil tidak ditemukan"}
-            </p>
+            <p className="text-base font-semibold">{error}</p>
             <Button
               onClick={() => router.push("/admin/cars")}
               variant="outline"
@@ -235,6 +231,25 @@ export default function CarDetailPage() {
               Kembali ke daftar mobil
             </Button>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!loading && !car) {
+    return (
+      <div className="flex flex-1 items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <AlertCircle className="h-10 w-10 text-red-500" />
+          <p className="text-base font-semibold">Data mobil tidak ditemukan.</p>
+          <Button
+            onClick={() => router.push("/admin/cars")}
+            variant="outline"
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Kembali ke daftar mobil
+          </Button>
         </div>
       </div>
     );
@@ -406,7 +421,6 @@ export default function CarDetailPage() {
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {specifications.details.map((detail, index) => (
                       <div key={index} className="flex items-center gap-3">
-                        <Settings className="h-5 w-5 text-emerald-600" />
                         <div>
                           <p className="text-sm text-muted-foreground">
                             {detail.label}

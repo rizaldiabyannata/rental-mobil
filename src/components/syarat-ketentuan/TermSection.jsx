@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -53,13 +53,23 @@ const SyaratSection = ({ terms }) => {
           }))
       : termsData;
   const [selectedTerm, setSelectedTerm] = useState(items[0]);
+  const [dateString, setDateString] = useState("");
+
+  useEffect(() => {
+    const formattedDate = new Date().toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    setDateString(formattedDate);
+  }, []);
 
   return (
     <section className="bg-white py-[25px] md:py-[50px] flex justify-center items-center">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/*TAMPILAN MOBILE & TABLET (< 1024px)*/}
         <div className="text-center mx-auto mb-12">
-          <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-emerald-700">
+          <h2 className="font-sans text-[24px] md:text-3xl lg:text-4xl font-bold text-primary">
             Syarat dan Ketentuan
           </h2>
           <div className="w-[147px] md:w-[268px] h-[1px] bg-[#FF9700] mt-2 mx-auto" />
@@ -88,7 +98,7 @@ const SyaratSection = ({ terms }) => {
 
         {/* TAMPILAN DESKTOP (>= 1024px)*/}
         <div className="hidden lg:flex w-full max-w-6xl mx-auto shadow-md rounded-lg">
-          <div className="w-1/3 bg-[#F8F8F8] p-8 rounded-l-lg">
+          <div className="w-1/3 bg-white p-8 rounded-l-lg">
             <ul className="space-y-4">
               {items.map((term) => (
                 <li key={term.id}>
@@ -96,8 +106,8 @@ const SyaratSection = ({ terms }) => {
                     onClick={() => setSelectedTerm(term)}
                     className={`w-full text-left p-3 rounded-md transition-colors font-semibold flex items-center gap-3 text-gray-600 ${
                       selectedTerm.id === term.id
-                        ? "bg-emerald-100 text-emerald-800"
-                        : "hover:bg-gray-200"
+                        ? "bg-[#EFF7FF] text-primary"
+                        : "hover:[#E0E0E0]"
                     }`}
                   >
                     <svg
@@ -121,7 +131,7 @@ const SyaratSection = ({ terms }) => {
             </ul>
           </div>
 
-          <div className="w-2/3 bg-emerald-50 p-8 rounded-r-lg">
+          <div className="w-2/3 bg-[#8FA6C3]/50 p-8 rounded-r-lg">
             <h2 className="font-geist text-3xl font-semibold text-black mb-2">
               {selectedTerm.title}
             </h2>

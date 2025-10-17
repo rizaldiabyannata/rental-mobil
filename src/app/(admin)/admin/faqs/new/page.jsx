@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function NewFAQPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ question: "", answer: "", order: "0" });
+  const [form, setForm] = useState({ question: "", answer: "" });
   const [saving, setSaving] = useState(false);
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export default function NewFAQPage() {
       const res = await fetch("/api/faqs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, order: parseInt(form.order || "0") }),
+        body: JSON.stringify(form),
       });
       if (!res.ok)
         throw new Error((await res.json()).error || "Gagal membuat FAQ");
@@ -99,15 +99,6 @@ export default function NewFAQPage() {
                   onChange={(e) => setForm({ ...form, answer: e.target.value })}
                   required
                   className="min-h-[120px] border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Urutan</Label>
-                <Input
-                  type="number"
-                  value={form.order}
-                  onChange={(e) => setForm({ ...form, order: e.target.value })}
-                  className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                 />
               </div>
               <div className="flex justify-end gap-2">

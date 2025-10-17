@@ -130,6 +130,7 @@ export default function EditCarPage() {
     capacity: "",
     transmission: "Manual",
     fuelType: "Bensin",
+    year: "",
     startingPrice: "",
     available: true,
     licensePlate: "",
@@ -177,6 +178,7 @@ export default function EditCarPage() {
           capacity: String(car.capacity ?? ""),
           transmission: car.transmission || "Manual",
           fuelType: car.fuelType || "Bensin",
+          year: specs.year ? String(specs.year) : "",
           startingPrice:
             car.startingPrice != null ? String(car.startingPrice) : "",
           available: !!car.available,
@@ -256,6 +258,7 @@ export default function EditCarPage() {
       // Merge custom specifications while preserving unknown keys
       const nextSpecs = {
         ...originalSpecsRef.current,
+        year: formData.year ? parseInt(formData.year) : undefined,
         details:
           specDetails && specDetails.length
             ? specDetails.map((d) => ({ label: d.label, value: d.value }))
@@ -335,7 +338,7 @@ export default function EditCarPage() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/admin/cars/1">
+                  <BreadcrumbLink href={`/admin/cars/${carId}`}>
                     {formData.name}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
@@ -480,6 +483,18 @@ export default function EditCarPage() {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="year">Tahun Kendaraan</Label>
+                    <Input
+                      id="year"
+                      type="number"
+                      value={formData.year}
+                      onChange={(e) =>
+                        handleInputChange("year", e.target.value)
+                      }
+                      className={cn(baseFieldClasses)}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -565,7 +580,8 @@ export default function EditCarPage() {
               <CardHeader>
                 <CardTitle>Fitur Unggulan</CardTitle>
                 <CardDescription>
-                  Kelola fitur (icon, judul, deskripsi) yang akan ditampilkan.
+                  Kelola fitur (icon, judul, deskripsi). Jumlah fitur harus
+                  genap.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -575,11 +591,17 @@ export default function EditCarPage() {
                       Fitur Unggulan (Icon, Judul, Deskripsi)
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      Kelola fitur-fitur utama mobil.
+                      Jumlah fitur harus genap.
                     </p>
                   </div>
                   <div className="text-sm">
-                    <span className="text-muted-foreground">
+                    <span
+                      className={cn(
+                        featureBlocks.length % 2 === 0
+                          ? "text-emerald-600"
+                          : "text-red-600"
+                      )}
+                    >
                       {featureBlocks.length} item
                     </span>
                   </div>
@@ -866,6 +888,11 @@ export default function EditCarPage() {
             {/* Vehicle Details removed per request */}
 
             {/* Action Buttons */}
+            {featureBlocks.length % 2 !== 0 && (
+              <div className="text-sm text-red-600 text-right">
+                Jumlah fitur unggulan harus genap agar dapat disimpan.
+              </div>
+            )}
             <div className="flex gap-4 justify-end">
               <Button
                 type="button"
@@ -877,7 +904,7 @@ export default function EditCarPage() {
               <Button
                 type="submit"
                 className="bg-emerald-600 hover:bg-emerald-700 gap-2"
-                disabled={saving}
+                disabled={saving || featureBlocks.length % 2 !== 0}
               >
                 <Save className="h-4 w-4" />
                 {saving ? "Menyimpan..." : "Simpan Perubahan"}

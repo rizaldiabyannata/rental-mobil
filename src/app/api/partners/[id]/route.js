@@ -100,7 +100,7 @@ async function updatePartner(request, props) {
 async function deletePartner(request, props) {
   try {
     const { params } = await props;
-    const { id } = params;
+    const { id } = await params;
 
     const existing = await prisma.partner.findUnique({ where: { id } });
     if (!existing) {

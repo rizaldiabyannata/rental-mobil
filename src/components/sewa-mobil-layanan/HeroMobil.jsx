@@ -21,7 +21,7 @@ const HeroMobil = () => {
         <div className="flex h-full flex-col items-center justify-center gap-12 text-center lg:flex-row lg:justify-between lg:text-left">
           {/* Text Content */}
           <div className="flex max-w-xl flex-col items-center gap-6 lg:items-start">
-            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-emerald-600 xl:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-primary xl:text-5xl">
               Layanan Rental Mobil
             </h1>
             <p className="text-lg text-gray-100 lg:text-xl lg:text-gray-800 xl:text-2xl">

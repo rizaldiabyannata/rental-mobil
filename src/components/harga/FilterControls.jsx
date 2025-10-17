@@ -27,12 +27,12 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
   };
 
   return (
-    <Card className="mb-8 border border-emerald-100 shadow-md">
+    <Card className="mb-8 border border-[#EFF7FF] shadow-md">
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <CardTitle className="flex items-center gap-2 text-emerald-700">
-              <span className="rounded-full bg-emerald-100 p-2 text-emerald-600">
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <span className="rounded-full bg-[#EFF7FF] p-2 text-primary">
                 <SlidersHorizontal className="h-4 w-4" />
               </span>
               Sesuaikan Harga
@@ -45,7 +45,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
           <Button
             variant="ghost"
             size="sm"
-            className="gap-2 text-emerald-700 hover:bg-emerald-100"
+            className="gap-2 text-primary hover:bg-[#EFF7FF]"
             onClick={handleReset}
           >
             <RotateCcw className="h-4 w-4" /> Reset
@@ -57,9 +57,9 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
             {activeFilters.map(({ label, value }) => (
               <span
                 key={`${label}-${value}`}
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700"
+                className="inline-flex items-center gap-2 rounded-full bg-[#EFF7FF] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary"
               >
-                <span className="text-emerald-500">{label}:</span>
+                <span className="text-primary">{label}:</span>
                 {value}
               </span>
             ))}
@@ -73,7 +73,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
               <div className="rounded-md bg-white p-2 shadow-sm">
-                <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+                <SlidersHorizontal className="h-4 w-4 text-primary" />
               </div>
               Jenis Kendaraan
             </div>
@@ -83,7 +83,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
                 onFilterChange("armada", value === "all" ? "" : value)
               }
             >
-              <SelectTrigger className="w-full border-emerald-200 focus:border-emerald-400 focus:ring-emerald-300">
+              <SelectTrigger className="w-full border-[#3E6598] focus:border-primary focus:ring-[#8FA6C3]">
                 <SelectValue placeholder="Semua Kendaraan" />
               </SelectTrigger>
               <SelectContent>
@@ -101,7 +101,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
               <div className="rounded-md bg-white p-2 shadow-sm">
-                <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+                <SlidersHorizontal className="h-4 w-4 text-primary" />
               </div>
               Jenis Paket
             </div>
@@ -111,7 +111,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
                 onFilterChange("paket", value === "all" ? "" : value)
               }
             >
-              <SelectTrigger className="w-full border-emerald-200 focus:border-emerald-400 focus:ring-emerald-300">
+              <SelectTrigger className="w-full border-[#3E6598] focus:border-primary focus:ring-[#8FA6C3]">
                 <SelectValue placeholder="Semua Paket" />
               </SelectTrigger>
               <SelectContent>
@@ -129,7 +129,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
               <div className="rounded-md bg-white p-2 shadow-sm">
-                <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+                <SlidersHorizontal className="h-4 w-4 text-primary" />
               </div>
               Range Harga
             </div>
@@ -139,7 +139,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
                 onFilterChange("harga", value === "all" ? "" : value)
               }
             >
-              <SelectTrigger className="w-full border-emerald-200 focus:border-emerald-400 focus:ring-emerald-300">
+              <SelectTrigger className="w-full border-[#3E6598] focus:border-primary focus:ring-[#8FA6C3]">
                 <SelectValue placeholder="Semua Harga" />
               </SelectTrigger>
               <SelectContent>

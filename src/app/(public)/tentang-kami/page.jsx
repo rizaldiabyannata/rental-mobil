@@ -20,7 +20,7 @@ export default function TentangKami() {
           title={
             <>
               <span className="text-black">Mengenal Kami </span>
-              <span className="text-emerald-700">Lebih Dekat</span>
+              <span className="text-primary">Lebih Dekat</span>
             </>
           }
           subtitle="Pelajari lebih lanjut tentang sejarah, visi, dan nilai-nilai yang membentuk kami."

@@ -17,8 +17,8 @@ import {
 const PriceTable = ({ title, data }) => {
   return (
     <div className="mb-12">
-      <Card className="overflow-hidden border border-emerald-100 shadow-lg py-0 gap-0">
-        <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-500 py-6">
+      <Card className="overflow-hidden border border-[#EFF7FF] shadow-lg py-0 gap-0">
+        <CardHeader className="bg-gradient-to-r from-primary to-primary/50 py-6">
           <CardTitle className="text-2xl font-semibold text-white">
             {title}
           </CardTitle>
@@ -30,7 +30,7 @@ const PriceTable = ({ title, data }) => {
         <CardContent className="p-0">
           <div className="w-full overflow-x-auto">
             <Table className="min-w-[480px] text-xs sm:text-sm">
-              <TableHeader className="bg-emerald-50 text-emerald-900 sticky top-0 z-10">
+              <TableHeader className="bg-[#EFF7FF] text-[#051C35] sticky top-0 z-10">
                 <TableRow className="border-b border-emerald-100">
                   <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
                     Jenis Layanan
@@ -50,10 +50,10 @@ const PriceTable = ({ title, data }) => {
                 {data.map((item, index) => (
                   <TableRow
                     key={index}
-                    className="border-b border-emerald-50 bg-white transition-colors hover:bg-emerald-50/60"
+                    className="border-b border-[#8FA6C3]/30 bg-white transition-colors hover:bg-[#8FA6C3]/10"
                   >
                     <TableCell className="px-3 py-3 sm:px-6 sm:py-5 text-gray-700">
-                      <span className="block text-sm sm:text-base font-semibold text-emerald-800">
+                      <span className="block text-sm sm:text-base font-semibold text-primary">
                         {item.layanan}
                       </span>
                     </TableCell>
@@ -61,11 +61,11 @@ const PriceTable = ({ title, data }) => {
                       {item.paket || "-"}
                     </TableCell>
                     <TableCell className="px-3 py-3 sm:px-6 sm:py-5">
-                      <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-1 sm:px-3 sm:py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                      <span className="inline-flex items-center rounded-full bg-[#8FA6C3] px-2 py-1 sm:px-3 sm:py-1 text-xs font-semibold uppercase tracking-wide text-white">
                         {item.armada}
                       </span>
                     </TableCell>
-                    <TableCell className="px-3 py-3 sm:px-6 sm:py-5 text-right text-base sm:text-lg font-bold text-emerald-700">
+                    <TableCell className="px-3 py-3 sm:px-6 sm:py-5 text-right text-base sm:text-lg font-bold text-[#051C35]">
                       {item.harga}
                     </TableCell>
                   </TableRow>

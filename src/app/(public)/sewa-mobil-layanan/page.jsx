@@ -18,7 +18,7 @@ export default function SewaMobilLayanan() {
         title={
           <>
             <span className="text-black">Layanan </span>
-            <span className="text-emerald-700">Rental Mobil</span>
+            <span className="text-primary">Rental Mobil</span>
           </>
         }
         subtitle="Kepuasan Anda adalah yang Utama. Ingat Lombok! Ingat Reborn Lombok Trans!!"

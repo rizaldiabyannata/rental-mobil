@@ -42,12 +42,9 @@ import { Loader2, Plus, RefreshCcw, GripVertical, Trash2 } from "lucide-react";
 
 export default function AdminFaqsPage() {
   const [items, setItems] = useState([]);
-  const [localItems, setLocalItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [reorderMode, setReorderMode] = useState(false);
-  const [savingOrder, setSavingOrder] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const load = async () => {
@@ -64,7 +61,6 @@ export default function AdminFaqsPage() {
       if (!res.ok) throw new Error(json?.error || "Gagal memuat FAQ");
       const list = Array.isArray(json.data) ? json.data : [];
       setItems(list);
-      setLocalItems(list);
     } catch (e) {
       setError(e.message || "Tidak dapat memuat data");
     } finally {
@@ -77,52 +73,7 @@ export default function AdminFaqsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Drag & drop reorder helpers
-  const onDragStart = (e, id) => {
-    e.dataTransfer.setData("text/plain", id);
-    e.dataTransfer.effectAllowed = "move";
-  };
-  const onDragOver = (e) => {
-    if (!reorderMode) return;
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
-  const onDrop = (e, overId) => {
-    if (!reorderMode) return;
-    e.preventDefault();
-    const draggedId = e.dataTransfer.getData("text/plain");
-    if (!draggedId || draggedId === overId) return;
-    const fromIdx = localItems.findIndex((x) => x.id === draggedId);
-    const toIdx = localItems.findIndex((x) => x.id === overId);
-    if (fromIdx === -1 || toIdx === -1) return;
-    const next = [...localItems];
-    const [moved] = next.splice(fromIdx, 1);
-    next.splice(toIdx, 0, moved);
-    setLocalItems(next);
-  };
-
-  const saveOrder = async () => {
-    setSavingOrder(true);
-    try {
-      // Issue PUT per item with new order = index (starting from 0 or 1).
-      const updates = localItems.map((it, idx) => ({ id: it.id, order: idx }));
-      await Promise.all(
-        updates.map((u) =>
-          fetch(`/api/faqs/${u.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ order: u.order }),
-          })
-        )
-      );
-      setItems(localItems);
-      setReorderMode(false);
-    } catch (e) {
-      alert(e.message || "Gagal menyimpan urutan");
-    } finally {
-      setSavingOrder(false);
-    }
-  };
+  // Drag & drop reorder helpers removed
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
@@ -133,7 +84,6 @@ export default function AdminFaqsPage() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Gagal menghapus FAQ");
       setItems((prev) => prev.filter((x) => x.id !== deleteTarget.id));
-      setLocalItems((prev) => prev.filter((x) => x.id !== deleteTarget.id));
       setDeleteTarget(null);
     } catch (e) {
       alert(e.message || "Tidak dapat menghapus");
@@ -177,22 +127,7 @@ export default function AdminFaqsPage() {
             <Button variant="outline" onClick={load}>
               <RefreshCcw className="h-4 w-4" />
             </Button>
-            <Button
-              variant={reorderMode ? "secondary" : "outline"}
-              onClick={() => setReorderMode((v) => !v)}
-            >
-              <GripVertical className="h-4 w-4" />{" "}
-              {reorderMode ? "Selesai" : "Urutkan"}
-            </Button>
-            {reorderMode && (
-              <Button
-                onClick={saveOrder}
-                disabled={savingOrder}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                {savingOrder ? "Menyimpan..." : "Simpan Urutan"}
-              </Button>
-            )}
+            {/* Urutkan and Simpan Urutan buttons removed */}
             <Link href="/admin/faqs/new">
               <Button className="bg-emerald-600 hover:bg-emerald-700">
                 <Plus className="h-4 w-4" /> Tambah FAQ
@@ -232,23 +167,14 @@ export default function AdminFaqsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[70px]">Urutan</TableHead>
                       <TableHead>Pertanyaan</TableHead>
                       <TableHead>Jawaban</TableHead>
                       <TableHead className="w-[160px]">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {(reorderMode ? localItems : items).map((f) => (
-                      <TableRow
-                        key={f.id}
-                        draggable={reorderMode}
-                        onDragStart={(e) => onDragStart(e, f.id)}
-                        onDragOver={onDragOver}
-                        onDrop={(e) => onDrop(e, f.id)}
-                        className={reorderMode ? "cursor-move" : undefined}
-                      >
-                        <TableCell>{f.order}</TableCell>
+                    {items.map((f) => (
+                      <TableRow key={f.id}>
                         <TableCell className="font-medium">
                           {f.question}
                         </TableCell>

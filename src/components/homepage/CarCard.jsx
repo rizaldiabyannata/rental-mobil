@@ -47,7 +47,7 @@ const CarCard = ({ car }) => {
             >
               <Button
                 variant="outline"
-                className="w-full md:w-44 bg-emerald-700 text-white hover:bg-emerald-800"
+                className="w-full md:w-44 bg-primary text-white hover:bg-[#EFF7FF]"
               >
                 Detail
               </Button>

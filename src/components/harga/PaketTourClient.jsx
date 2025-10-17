@@ -40,7 +40,7 @@ const PaketTourPage = ({ data }) => {
 
   return (
     <>
-      <HeroSection imageOnRight={false} imageSrc="/Hero-3.png" />
+      <HeroSection imageOnRight={false} imageSrc="/Hero-3-1.png" />
       <main className="container mx-auto px-4 py-12 md:py-16">
         <div className="space-y-8">
           <FilterControls

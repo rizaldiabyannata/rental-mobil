@@ -27,7 +27,6 @@ export default function EditPartnerPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
-    order: "0",
     logo: null,
     logoUrl: "",
   });
@@ -44,7 +43,6 @@ export default function EditPartnerPage() {
         if (cancelled) return;
         setForm({
           name: json.data?.name || "",
-          order: String(json.data?.order ?? 0),
           logo: null,
           logoUrl: json.data?.logoUrl || "",
         });
@@ -68,7 +66,6 @@ export default function EditPartnerPage() {
       if (form.logo) {
         const fd = new FormData();
         fd.append("name", form.name);
-        fd.append("order", String(parseInt(form.order || "0")));
         fd.append("logo", form.logo);
         res = await fetch(`/api/partners/${id}`, { method: "PUT", body: fd });
       } else {
@@ -77,7 +74,6 @@ export default function EditPartnerPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: form.name,
-            order: parseInt(form.order || "0"),
           }),
         });
       }
@@ -136,17 +132,6 @@ export default function EditPartnerPage() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
-                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Urutan</Label>
-                  <Input
-                    type="number"
-                    value={form.order}
-                    onChange={(e) =>
-                      setForm({ ...form, order: e.target.value })
-                    }
                     className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                   />
                 </div>

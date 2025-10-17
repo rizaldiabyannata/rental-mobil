@@ -12,7 +12,7 @@ export default function WhatsAppCta({
   // Icon can be a component (lucide) or a react node (Image)
   Icon = MessageCircle,
   // classes to customize button sizing / styling from caller
-  buttonClassName = "bg-emerald-700 hover:bg-emerald-800",
+  buttonClassName = "bg-primary hover:bg-[#8FA6C3]",
   iconClassName = "h-4 w-4",
   anchorClassName = "inline-flex items-center gap-2",
 }) {

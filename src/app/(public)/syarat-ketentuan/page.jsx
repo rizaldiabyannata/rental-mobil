@@ -19,7 +19,7 @@ export default function SyaratKetentuan() {
           title={
             <>
               <span className="text-black">Syarat & Ketentuaan </span>
-              <span className="text-emerald-700">Sewa Kendaraan</span>
+              <span className="text-primary">Sewa Kendaraan</span>
             </>
           }
           subtitle="Selamat datang di layanan rental mobil Reborn Lombok Trans. Dengan melanjutkan proses pemesanan, Anda menyatakan telah membaca, memahami, dan setuju untuk terikat pada semua syarat dan ketentuan yang tercantum di halaman ini. Mohon luangkan waktu untuk mempelajarinya dengan saksama."

@@ -30,7 +30,6 @@ export default function NewTermsPage() {
     category: "",
     title: "",
     content: "",
-    order: "0",
     isActive: true,
   });
   const [saving, setSaving] = useState(false);
@@ -46,7 +45,6 @@ export default function NewTermsPage() {
           category: form.category,
           title: form.title,
           content: form.content,
-          order: parseInt(form.order || "0"),
           isActive: !!form.isActive,
         }),
       });
@@ -129,27 +127,14 @@ export default function NewTermsPage() {
                   className="min-h-[160px] border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Urutan</Label>
-                  <Input
-                    type="number"
-                    value={form.order}
-                    onChange={(e) =>
-                      setForm({ ...form, order: e.target.value })
-                    }
-                    className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                  />
+              <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                <div className="space-y-0.5">
+                  <Label className="cursor-pointer">Aktif</Label>
                 </div>
-                <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                  <div className="space-y-0.5">
-                    <Label className="cursor-pointer">Aktif</Label>
-                  </div>
-                  <Switch
-                    checked={form.isActive}
-                    onCheckedChange={(v) => setForm({ ...form, isActive: v })}
-                  />
-                </div>
+                <Switch
+                  checked={form.isActive}
+                  onCheckedChange={(v) => setForm({ ...form, isActive: v })}
+                />
               </div>
               <div className="flex justify-end gap-2">
                 <Button

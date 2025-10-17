@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 
 export default function NewPartnerPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", order: "0", logo: null });
+  const [form, setForm] = useState({ name: "", logo: null });
   const [saving, setSaving] = useState(false);
 
   const onSubmit = async (e) => {
@@ -33,7 +33,6 @@ export default function NewPartnerPage() {
     try {
       const fd = new FormData();
       fd.append("name", form.name);
-      fd.append("order", String(parseInt(form.order || "0")));
       if (form.logo) fd.append("logo", form.logo);
 
       const res = await fetch("/api/partners/upload", {
@@ -92,15 +91,6 @@ export default function NewPartnerPage() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
-                  className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Urutan</Label>
-                <Input
-                  type="number"
-                  value={form.order}
-                  onChange={(e) => setForm({ ...form, order: e.target.value })}
                   className="border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60"
                 />
               </div>
