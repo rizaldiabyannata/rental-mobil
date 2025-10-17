@@ -72,16 +72,16 @@ const FleetSection = async () => {
 
   // Map API data ke format yang dibutuhkan CarCard
   const cars = carsData.map((car) => {
-    // Ambil image: prioritas coverImage, fallback ke gallery order 0, fallback ke placeholder
+    // Ambil image: prioritas gallery order 0, fallback coverImage, terakhir placeholder
     let image = "/InnovaReborn.png"; // default placeholder
-    if (car.coverImage) {
-      image = getImageUrl(car.coverImage);
-    } else if (Array.isArray(car.gallery) && car.gallery.length > 0) {
+    if (Array.isArray(car.gallery) && car.gallery.length > 0) {
       const firstImage =
         car.gallery.find((img) => img.order === 0) || car.gallery[0];
       if (firstImage?.url) {
         image = getImageUrl(firstImage.url);
       }
+    } else if (car.coverImage) {
+      image = getImageUrl(car.coverImage);
     }
 
     return {
