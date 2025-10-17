@@ -5,7 +5,11 @@ import {
   FaUsers,
   FaUmbrellaBeach,
 } from "react-icons/fa";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
 // Example: features = ["car", "beach", "city", "group", "duration"]
 const ICON_MAP = {
@@ -33,15 +37,11 @@ export default function TourFeatureIcons({ features = [] }) {
         return (
           <Tooltip key={feature + idx}>
             <TooltipTrigger asChild>
-              <span
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 cursor-help"
-              >
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 cursor-help">
                 <Icon className="w-4 h-4" />
               </span>
             </TooltipTrigger>
-            <TooltipContent side="top">
-              {label}
-            </TooltipContent>
+            <TooltipContent side="top">{label}</TooltipContent>
           </Tooltip>
         );
       })}
