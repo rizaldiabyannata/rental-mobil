@@ -34,91 +34,259 @@ async function main() {
     },
   });
 
-  // 2) Tour Packages
+  // 2) Tour Packages (Lombok) — create a comprehensive set from provided data
   const tourPackageCount = await prisma.tourPackage.count();
   if (tourPackageCount === 0) {
-    console.log("Creating seed tour packages...");
-    await prisma.tourPackage.create({
-      data: {
-        name: "Paket Mandalika & City Tour",
-        slug: "paket-mandalika-city-tour",
-        description:
-          "Jelajahi Sirkuit Mandalika yang ikonik dan temukan pesona budaya kota Mataram dalam satu paket lengkap. Termasuk kunjungan ke pusat kerajinan lokal dan kuliner khas Lombok.",
-        duration: "2 Hari 1 Malam",
-        inclusions: [
-          "Mobil + Driver",
-          "Tiket Masuk Wisata",
-          "Air Mineral",
-          "Hotel",
-        ],
-        galleryImages: ["/Hero-1.png", "/Hero-2.png"],
-        showHotels: true,
-        hotelTiers: {
-          create: [
-            {
-              name: "Hotel Bintang 2-3",
-              hotels: ["Fave Hotel", "Lombok Plaza", "Montana Senggigi"],
-              order: 1,
-              priceTiers: {
-                create: [
-                  { paxRange: "2-3 PAX", price: 1800000 },
-                  { paxRange: "4-5 PAX", price: 1600000 },
-                  { paxRange: "6-10 PAX", price: 1550000 },
-                ],
-              },
-            },
-            {
-              name: "Hotel Bintang 4",
-              hotels: ["Aruna Hotel", "Prime Park Hotel", "Aston Hotel"],
-              order: 2,
-              priceTiers: {
-                create: [
-                  { paxRange: "2-3 PAX", price: 2100000 },
-                  { paxRange: "4-5 PAX", price: 1900000 },
-                  { paxRange: "6-10 PAX", price: 1850000 },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    });
+    console.log("Creating Lombok tour packages...");
 
-    await prisma.tourPackage.create({
-      data: {
-        name: "Snorkeling Gili Nanggu",
-        slug: "snorkeling-gili-nanggu",
-        description:
-          "Nikmati keindahan bawah laut Gili Nanggu, Gili Sudak, dan Gili Kedis. Paket ini cocok untuk Anda yang mencintai ketenangan dan keindahan pantai pribadi.",
-        duration: "1 Hari Penuh",
-        inclusions: [
-          "Mobil + Driver",
-          "Perahu Pribadi",
-          "Alat Snorkeling",
-          "Dokumentasi (GoPro)",
-          "Air Mineral",
-          "Makan Siang",
-        ],
-        galleryImages: ["/Hero-2.png", "/imageforctasection.png"],
-        showHotels: false, // This is a day trip, no hotels needed
-        hotelTiers: {
-          create: [
-            {
-              name: "Tanpa Hotel",
-              hotels: [],
-              order: 1,
-              priceTiers: {
-                create: [
-                  { paxRange: "2-3 PAX", price: 750000 },
-                  { paxRange: "4-5 PAX", price: 650000 },
-                  { paxRange: "6-10 PAX", price: 550000 },
-                ],
-              },
-            },
-          ],
+    const HOTEL_TIERS = [
+      {
+        name: "Hotel Bintang 2-3",
+        starRating: 3,
+        hotels: ["M HOTEL", "MAYURA", "HEART PREMIUM", "RATIH", "FORTUNE"],
+        prices: {
+          "2-3 PAX": 2100000,
+          "4-5 PAX": 1600000,
+          "6-10 PAX": 1550000,
+          "11-15 PAX": 1500000,
+          "16-19 PAX": 1450000,
         },
       },
-    });
+      {
+        name: "Hotel Bintang 3",
+        starRating: 3,
+        hotels: [
+          "PURI INDAH MATARAM",
+          "FAVE HOTEL",
+          "LOMBOK PLAZA",
+          "MONTANA SENGGIGI",
+          "GILI SANDS",
+          "KAUTAMAN",
+        ],
+        prices: {
+          "2-3 PAX": 2300000,
+          "4-5 PAX": 1800000,
+          "6-10 PAX": 1750000,
+          "11-15 PAX": 1700000,
+          "16-19 PAX": 1650000,
+        },
+      },
+      {
+        name: "Hotel Bintang 4",
+        starRating: 4,
+        hotels: [
+          "ASTORIA HOTEL",
+          "ARUNA HOTEL",
+          "PRIME PARK HOTEL",
+          "JAYAKARTA HOTEL",
+          "ASTON HOTEL",
+          "SVARGA HOTEL",
+          "SWISS BELL",
+          "GOLDEN PALACE",
+          "RAJA KUTA HOTEL",
+        ],
+        prices: {
+          "2-3 PAX": 2600000,
+          "4-5 PAX": 2100000,
+          "6-10 PAX": 2050000,
+          "11-15 PAX": 2000000,
+          "16-19 PAX": 1950000,
+        },
+      },
+      {
+        name: "Hotel Bintang 5",
+        starRating: 5,
+        hotels: [
+          "SHERATON HOTEL",
+          "JEEVA KLUI HOTEL",
+          "VILLA OMBAK",
+          "MERUMATA HOTEL",
+          "KATAMARA HOTEL",
+        ],
+        prices: {
+          "2-3 PAX": 3100000,
+          "4-5 PAX": 2600000,
+          "6-10 PAX": 2500000,
+          "11-15 PAX": 2450000,
+          "16-19 PAX": 2400000,
+        },
+      },
+    ];
+
+    const MULTINIGHT_INCLUSIONS = [
+      "Hotel",
+      "Mobil",
+      "Driver",
+      "Tiket Wisata (opsional per paket)",
+      "Food & Mineral Water",
+    ];
+
+    const PACKAGES = [
+      {
+        name: "WISATA 2 HARI 1 MALAM SIRKUIT MANDALIKA & CITY TOUR DI LOMBOK",
+        slug: "2h1m-mandalika-city-tour",
+        duration: "2 Hari 1 Malam",
+        description:
+          "Eksplorasi sirkuit Mandalika dan city tour Mataram dalam 2H1M.",
+        inclusions: [
+          "Hotel",
+          "Mobil",
+          "Driver",
+          "Tiket Wisata",
+          "Food & Mineral Water",
+        ],
+        galleryImages: ["/Hero-1.png"],
+        showHotels: true,
+      },
+      {
+        name: "WISATA KULTUR BUDAYA DAN ADAT KHAS LOMBOK",
+        slug: "2h1m-kultur-budaya-adat",
+        duration: "2 Hari 1 Malam",
+        description: "Jelajahi budaya, adat, dan kerajinan khas Lombok.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-2.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 3 HARI 2 MALAM OPSI A",
+        slug: "3h2m-opsi-a",
+        duration: "3 Hari 2 Malam",
+        description: "Paket wisata 3H2M opsi A dengan itinerary unggulan.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-1.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 3 HARI 2 MALAM OPSI B",
+        slug: "3h2m-opsi-b",
+        duration: "3 Hari 2 Malam",
+        description: "Paket wisata 3H2M opsi B dengan destinasi alternatif.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-2.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 4 HARI 3 MALAM OPSI A",
+        slug: "4h3m-opsi-a",
+        duration: "4 Hari 3 Malam",
+        description: "Paket wisata 4H3M opsi A untuk pengalaman lengkap.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-1.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 4 HARI 3 MALAM OPSI B",
+        slug: "4h3m-opsi-b",
+        duration: "4 Hari 3 Malam",
+        description: "Paket wisata 4H3M opsi B dengan rute berbeda.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-2.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 5 HARI 4 MALAM OPSI A",
+        slug: "5h4m-opsi-a",
+        duration: "5 Hari 4 Malam",
+        description: "Paket wisata 5H4M opsi A untuk eksplorasi maksimal.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-1.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 5 HARI 4 MALAM OPSI B",
+        slug: "5h4m-opsi-b",
+        duration: "5 Hari 4 Malam",
+        description: "Paket wisata 5H4M opsi B untuk variasi destinasi.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-2.png"],
+        showHotels: true,
+      },
+      {
+        name: "PAKET WISATA 5 HARI 4 MALAM OPSI C",
+        slug: "5h4m-opsi-c",
+        duration: "5 Hari 4 Malam",
+        description: "Paket wisata 5H4M opsi C untuk preferensi berbeda.",
+        inclusions: MULTINIGHT_INCLUSIONS,
+        galleryImages: ["/Hero-1.png"],
+        showHotels: true,
+      },
+      {
+        name: "AKTIFITAS SNORKLING GILI NANGGU LOMBOK",
+        slug: "snorkeling-gili-nanggu",
+        duration: "1 Hari Penuh",
+        description:
+          "Aktivitas snorkeling Gili Nanggu, Sudak, Kedis dengan perahu dan alat snorkeling.",
+        inclusions: [
+          "Mobil",
+          "Driver",
+          "Dokumentasi",
+          "Alat Snorkeling",
+          "Food & Mineral Water",
+        ],
+        galleryImages: ["/Hero-2.png"],
+        showHotels: false,
+      },
+    ];
+
+    // Create all multi-night tour packages with hotel tiers & price tiers
+    for (const pkg of PACKAGES) {
+      if (pkg.showHotels) {
+        await prisma.tourPackage.create({
+          data: {
+            name: pkg.name,
+            slug: pkg.slug,
+            description: pkg.description,
+            duration: pkg.duration,
+            inclusions: pkg.inclusions,
+            galleryImages: pkg.galleryImages,
+            showHotels: true,
+            hotelTiers: {
+              create: HOTEL_TIERS.map((tier, idx) => ({
+                name: tier.name,
+                hotels: tier.hotels,
+                order: idx + 1,
+                starRating: tier.starRating,
+                priceTiers: {
+                  create: Object.entries(tier.prices).map(([pax, price]) => ({
+                    paxRange: pax,
+                    price: Number(price) || 0,
+                  })),
+                },
+              })),
+            },
+          },
+        });
+      } else {
+        // Day trip without hotels: keep a single tier "Tanpa Hotel" with sample pricing
+        await prisma.tourPackage.create({
+          data: {
+            name: pkg.name,
+            slug: pkg.slug,
+            description: pkg.description,
+            duration: pkg.duration,
+            inclusions: pkg.inclusions,
+            galleryImages: pkg.galleryImages,
+            showHotels: false,
+            hotelTiers: {
+              create: [
+                {
+                  name: "Tanpa Hotel",
+                  hotels: [],
+                  order: 1,
+                  priceTiers: {
+                    create: [
+                      { paxRange: "2-3 PAX", price: 750000 },
+                      { paxRange: "4-5 PAX", price: 650000 },
+                      { paxRange: "6-10 PAX", price: 550000 },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        });
+      }
+    }
   }
 
   // 3) Cars

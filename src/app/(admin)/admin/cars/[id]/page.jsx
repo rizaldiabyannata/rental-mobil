@@ -85,6 +85,15 @@ function formatNumber(value) {
   return new Intl.NumberFormat("id-ID").format(value);
 }
 
+// Normalize image URL to a safe, absolute path for <img src>
+function getImageUrl(src) {
+  if (!src || typeof src !== "string") return "/InnovaReborn.png";
+  // absolute http(s)
+  if (/^https?:\/\//i.test(src)) return src;
+  // ensure leading slash for relative paths
+  return src.startsWith("/") ? src : `/${src}`;
+}
+
 export default function CarDetailPage() {
   const params = useParams();
   const router = useRouter();
