@@ -61,7 +61,49 @@ model CarFeature {
     @@index([order])
 }
 
-// 🎯 Manajemen Paket Tour (dihapus)
+// 🎯 Manajemen Paket Tour
+model TourPackage {
+    id            String   @id @default(uuid())
+    slug          String   @unique // SEO-friendly unique slug
+    name          String
+    description   String
+    duration      String // e.g., "3 Hari 2 Malam"
+    inclusions    String[] // List of what's included
+    galleryImages String[] // List of image URLs
+    showHotels    Boolean  @default(true) // Option to show/hide hotel names
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    hotelTiers HotelTier[]
+
+    @@index([slug])
+}
+
+// Tingkatan hotel untuk setiap paket (e.g., Bintang 2, Bintang 3)
+model HotelTier {
+    id            String @id @default(uuid())
+    tourPackageId String
+    name          String // e.g., "Hotel Bintang 2", "Hotel Bintang 3"
+    hotels        String[] // List of hotel names in this tier
+    order         Int    @default(0)
+
+    tourPackage TourPackage @relation(fields: [tourPackageId], references: [id], onDelete: Cascade)
+    priceTiers  PriceTier[]
+
+    @@index([tourPackageId])
+}
+
+// Tingkatan harga berdasarkan jumlah orang (pax)
+model PriceTier {
+    id          String @id @default(uuid())
+    hotelTierId String
+    paxRange    String // e.g., "2-3 PAX"
+    price       Int    // Harga per pax dalam IDR
+
+    hotelTier HotelTier @relation(fields: [hotelTierId], references: [id], onDelete: Cascade)
+
+    @@index([hotelTierId])
+}
 
 // ❓ Manajemen FAQ
 model FAQ {
@@ -98,7 +140,7 @@ model Partner {
     updatedAt DateTime @updatedAt
 }
 
-//  Tariff Penyewaan Umum (bukan per-mobil)
+// Tariff Penyewaan Umum (bukan per-mobil)
 model TariffCategory {
     id          String   @id @default(uuid())
     name        String
