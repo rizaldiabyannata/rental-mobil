@@ -9,27 +9,19 @@ export const metadata = {
 
 async function getTariffData() {
   try {
-    const tariffs = await prisma.tariff.findMany({
+    const items = await prisma.tariffItem.findMany({
       where: {
-        serviceType: {
-          name: {
-            equals: "Paket Tour Mataram, Lombok",
-            mode: "insensitive",
-          },
-        },
+        category: { name: { contains: "paket tour", mode: "insensitive" } },
       },
       include: {
-        car: {
-          select: { name: true },
-        },
+        car: { select: { name: true } },
+        category: { select: { name: true } },
       },
-      orderBy: {
-        order: "asc",
-      },
+      orderBy: { order: "asc" },
     });
 
-    return tariffs.map((item) => ({
-      layanan: item.category || "Paket Tour Mataram, Lombok",
+    return items.map((item) => ({
+      layanan: item.category?.name || "Paket Tour",
       paket: item.name,
       armada: item.car?.name || "Armada Pilihan",
       harga: new Intl.NumberFormat("id-ID", {

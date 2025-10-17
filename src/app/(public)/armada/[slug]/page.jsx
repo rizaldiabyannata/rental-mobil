@@ -7,16 +7,17 @@ import { prisma } from "@/lib/prisma";
 
 async function getCarBySlug(slug) {
   try {
-    const car = await prisma.car.findUnique({
+    const car = await prisma.car.findFirst({
       where: { slug, available: true },
       select: {
+        slug: true,
         name: true,
         description: true,
         startingPrice: true,
         capacity: true,
         transmission: true,
         fuelType: true,
-        specifications: true, // For coverImage
+        specifications: true,
         images: {
           select: { id: true, imageUrl: true, alt: true, order: true },
           orderBy: { order: "asc" },
@@ -25,13 +26,14 @@ async function getCarBySlug(slug) {
           select: { title: true, description: true, icon: true, order: true },
           orderBy: { order: "asc" },
         },
-        tariffs: {
+        tariffItems: {
           select: {
             name: true,
-            description: true,
             price: true,
-            category: true,
             order: true,
+            serviceType: true,
+            packageType: true,
+            category: { select: { name: true } },
           },
           orderBy: { order: "asc" },
         },
@@ -40,16 +42,39 @@ async function getCarBySlug(slug) {
 
     if (!car) return null;
 
-    // Map a few fields to match the old structure for compatibility
+    const coverImage = car.specifications?.coverImage || null;
+    const details = Array.isArray(car.specifications?.details)
+      ? car.specifications.details
+      : [];
+    const gallery = car.images.map((img) => ({
+      id: img.id,
+      url: img.imageUrl,
+      alt: img.alt,
+      order: img.order,
+    }));
+    const tariffs = (car.tariffItems || []).map((t) => ({
+      name:
+        t.name ||
+        [t.serviceType, t.packageType].filter(Boolean).join(" - ") ||
+        "Tarif",
+      price: t.price,
+      category: t.category?.name || null,
+      order: t.order,
+    }));
+
     return {
-      ...car,
-      coverImage: car.specifications?.coverImage || null,
-      gallery: car.images.map((img) => ({
-        id: img.id,
-        url: img.imageUrl,
-        alt: img.alt,
-        order: img.order,
-      })),
+      slug: car.slug,
+      name: car.name,
+      description: car.description,
+      startingPrice: car.startingPrice,
+      capacity: car.capacity,
+      transmission: car.transmission,
+      fuelType: car.fuelType,
+      coverImage,
+      details,
+      gallery,
+      featureBlocks: car.featureBlocks,
+      tariffs,
     };
   } catch (error) {
     console.error(`Failed to fetch car by slug ${slug}:`, error);
@@ -134,7 +159,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ArmadaDetailPage({ params }) {
-  const { slug } = await params;
+  const { slug } = params;
   const car = await getCarBySlug(slug);
 
   if (!car) {

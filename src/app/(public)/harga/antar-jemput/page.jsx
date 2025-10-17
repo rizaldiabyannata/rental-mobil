@@ -9,27 +9,19 @@ export const metadata = {
 
 async function getTariffData() {
   try {
-    const tariffs = await prisma.tariff.findMany({
+    const items = await prisma.tariffItem.findMany({
       where: {
-        serviceType: {
-          name: {
-            equals: "Tarif Antar Jemput Bandara",
-            mode: "insensitive",
-          },
-        },
+        category: { name: { contains: "antar jemput", mode: "insensitive" } },
       },
       include: {
-        car: {
-          select: { name: true },
-        },
+        car: { select: { name: true } },
+        category: { select: { name: true } },
       },
-      orderBy: {
-        order: "asc",
-      },
+      orderBy: { order: "asc" },
     });
 
-    return tariffs.map((item) => ({
-      layanan: item.category || "Antar Jemput Bandara",
+    return items.map((item) => ({
+      layanan: item.category?.name || "Antar Jemput Bandara",
       paket: item.name,
       armada: item.car?.name || "Armada Pilihan",
       harga: new Intl.NumberFormat("id-ID", {
