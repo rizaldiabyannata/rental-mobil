@@ -97,7 +97,7 @@ async function getCarBySlug(slug) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const car = await getCarBySlug(slug);
 
   if (!car) {
