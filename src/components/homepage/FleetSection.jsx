@@ -1,25 +1,57 @@
 import CarCard from "./CarCard";
 import SectionHeading from "@/components/SectionHeading";
+import { prisma } from "@/lib/prisma";
 
-async function fetchCars() {
+async function getCars() {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/public/cars?limit=6`,
-      {
-        cache: "no-store", // atau 'force-cache' jika ingin caching
-      }
-    );
-    if (!res.ok) return [];
-    const json = await res.json();
-    return json?.data || [];
+    const cars = await prisma.car.findMany({
+      where: { available: true },
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      select: {
+        slug: true,
+        name: true,
+        description: true,
+        startingPrice: true,
+        capacity: true,
+        transmission: true,
+        fuelType: true,
+        specifications: true, // Untuk coverImage
+        images: {
+          select: {
+            imageUrl: true,
+            alt: true,
+            order: true,
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    // Strukturnya sedikit berbeda dari API, kita sesuaikan di sini
+    return cars.map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      description: c.description,
+      startingPrice: c.startingPrice,
+      capacity: c.capacity,
+      transmission: c.transmission,
+      fuelType: c.fuelType,
+      coverImage: c.specifications?.coverImage || null,
+      gallery: c.images.map((img) => ({
+        url: img.imageUrl,
+        alt: img.alt,
+        order: img.order,
+      })),
+    }));
   } catch (error) {
-    console.error("Failed to fetch cars:", error);
-    return [];
+    console.error("Failed to fetch cars directly:", error);
+    return []; // Return empty array on error
   }
 }
 
 const FleetSection = async () => {
-  const carsData = await fetchCars();
+  const carsData = await getCars();
 
   // Map API data ke format yang dibutuhkan CarCard
   const cars = carsData.map((car) => {

@@ -3,7 +3,6 @@ import KeyFeatureSection from "@/components/detail-armada/KeyFeatureSection";
 import SpecsSection from "@/components/detail-armada/SpecsSection";
 import TariffDetailSection from "@/components/detail-armada/TariffDetailSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
-
 import { prisma } from "@/lib/prisma";
 
 async function getCarBySlug(slug) {

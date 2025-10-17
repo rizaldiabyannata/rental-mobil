@@ -1,5 +1,4 @@
 import FaqSection from "./FaqSection";
-
 import { prisma } from "@/lib/prisma";
 
 async function getFaqs() {

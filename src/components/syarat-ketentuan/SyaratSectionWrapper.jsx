@@ -1,5 +1,4 @@
 import SyaratSection from "./TermSection";
-
 import { prisma } from "@/lib/prisma";
 
 async function getTerms() {
