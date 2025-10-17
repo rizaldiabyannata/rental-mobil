@@ -11,8 +11,7 @@ async function fetchTariffData() {
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_BASE_URL || ""
-      }/api/public/tariffs?serviceType=Tarif sewa per 12 jam`,
-      { cache: "no-store" }
+      }/api/public/tariffs?serviceType=Tarif sewa per 12 jam`
     );
     if (!res.ok) return null;
     const json = await res.json();

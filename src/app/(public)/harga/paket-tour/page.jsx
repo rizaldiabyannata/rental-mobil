@@ -12,8 +12,7 @@ async function fetchTariffData() {
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_BASE_URL || ""
-      }/api/public/tariffs?serviceType=${serviceType}`,
-      { cache: "no-store" }
+      }/api/public/tariffs?serviceType=${serviceType}`
     );
     if (!res.ok) return null;
     const json = await res.json();

@@ -11,8 +11,7 @@ async function fetchTariffData() {
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_BASE_URL || ""
-      }/api/public/tariffs?serviceType=Tarif Antar Jemput Bandara`,
-      { cache: "no-store" }
+      }/api/public/tariffs?serviceType=Tarif Antar Jemput Bandara`
     );
     if (!res.ok) return null;
     const json = await res.json();

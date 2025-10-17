@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.rentalmobil.com";
+const siteUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://www.rentalmobil.com";
 
 export default async function sitemap() {
   // Halaman statis
@@ -12,7 +13,7 @@ export default async function sitemap() {
     "/harga/sewa-harian",
     "/syarat-ketentuan",
     "/sewa-mobil-layanan",
-    "/armada" // Halaman daftar armada
+    "/armada", // Halaman daftar armada
   ].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date().toISOString(),
@@ -21,20 +22,31 @@ export default async function sitemap() {
   }));
 
   // Halaman dinamis untuk setiap mobil
-  const cars = await prisma.car.findMany({
-    where: { available: true },
-    select: {
-      slug: true,
-      updatedAt: true,
-    },
-  });
+  let carRoutes = [];
+  try {
+    const cars = await prisma.car.findMany({
+      where: { available: true },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    });
 
-  const carRoutes = cars.map((car) => ({
-    url: `${siteUrl}/armada/${car.slug}`,
-    lastModified: car.updatedAt.toISOString(),
-    changeFrequency: "weekly",
-    priority: 0.9,
-  }));
+    carRoutes = cars.map((car) => ({
+      url: `${siteUrl}/armada/${car.slug}`,
+      lastModified: car.updatedAt.toISOString(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    }));
+  } catch (err) {
+    // If the database/table isn't available during build, avoid failing the whole build.
+    // Return only the static routes and log the error for diagnosis.
+    // eslint-disable-next-line no-console
+    console.error(
+      "sitemap: failed to load cars from DB, returning static routes only",
+      err?.message || err
+    );
+  }
 
   return [...staticRoutes, ...carRoutes];
 }
