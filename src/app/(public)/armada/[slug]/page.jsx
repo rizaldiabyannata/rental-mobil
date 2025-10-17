@@ -173,7 +173,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ArmadaDetailPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const car = await getCarBySlug(slug);
 
   if (!car) {
