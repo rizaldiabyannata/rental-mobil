@@ -125,14 +125,19 @@ export default function TourCard({ tour }) {
         <div className="mt-4 flex items-center justify-between">
           {minPrice !== null ? (
             <div className="text-sm">
-              <span className="font-bold text-primary">
-                {new Intl.NumberFormat("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                  minimumFractionDigits: 0,
-                }).format(minPrice)}
-              </span>
-              <span className="ml-1 text-neutral-600">/ PAX</span>
+              <div className="text-xs text-neutral-600 leading-none mb-1">
+                Mulai dari
+              </div>
+              <div>
+                <span className="font-bold text-primary">
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }).format(minPrice)}{" "}
+                  / PAX
+                </span>
+              </div>
             </div>
           ) : (
             <div />
