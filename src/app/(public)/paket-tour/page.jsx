@@ -15,21 +15,50 @@ async function getTourPackages() {
         duration: true,
         inclusions: true,
         galleryImages: true,
-        // No need to fetch hotel tiers/prices for list view anymore
+        hotelTiers: {
+          select: {
+            priceTiers: {
+              select: { price: true },
+              orderBy: { price: "asc" },
+            },
+          },
+          orderBy: { order: "asc" },
+        },
       },
     });
   } catch (e) {
     console.error("getTourPackages failed:", e?.message || e);
   }
 
-  // Map to card data: no price, add durationText for ribbon
+  // Process to find the minimum price and format for the TourCard component
   return tourPackages.map((pkg) => {
+    let minPrice = null;
+    const prices = pkg.hotelTiers.flatMap((tier) =>
+      tier.priceTiers.map((p) => p.price)
+    );
+    if (prices.length > 0) {
+      minPrice = Math.min(...prices);
+    }
+
     // Heuristic mapping of inclusions text to icon keys for card
     const includes = Array.isArray(pkg.inclusions)
       ? pkg.inclusions
           .map((i) => (typeof i === "string" ? i.toLowerCase() : ""))
           .reduce((acc, text) => {
             if (!text) return acc;
+            // Dokumentasi variants: Indonesian & English typos/synonyms
+            if (
+              text.includes("dokumentasi") ||
+              text.includes("dokumentation") ||
+              text.includes("documentation") ||
+              text.includes("foto") ||
+              text.includes("photo") ||
+              text.includes("kamera") ||
+              text.includes("camera") ||
+              text.includes("video")
+            ) {
+              acc.add("camera");
+            }
             if (text.includes("hotel")) acc.add("hotel");
             if (text.includes("mobil")) acc.add("car");
             if (text.includes("driver") || text.includes("sopir"))
@@ -53,6 +82,7 @@ async function getTourPackages() {
       shortDescription: pkg.description,
       coverImage: pkg.galleryImages ? pkg.galleryImages[0] : null,
       durationText: pkg.duration, // Pass string duration for ribbon
+      minPrice: minPrice,
       features: [], // Fallback icons if needed
       includes: Array.from(includes),
     };
@@ -71,19 +101,10 @@ export default async function TourListPage() {
       <section className="w-full py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 md:px-6">
           <SectionHeading
-            title={"Semua Paket Wisata"}
+            title="Semua Paket Wisata"
             align="center"
-            size="md"
-            underline
-            underlineColor="bg-amber-500"
-            underlineWidth="lg"
-            underlineOffset="md"
-            titleClassName="text-primary"
-            underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
-            className="mb-6 md:mb-10"
-            description={
-              "Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda."
-            }
+            className="mb-8 md:mb-12"
+            description="Pilih paket yang paling sesuai dengan gaya perjalanan Anda."
           />
           {tours.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">

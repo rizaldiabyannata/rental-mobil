@@ -10,6 +10,7 @@ import {
   FaTint,
   FaCar,
   FaHotel,
+  FaCamera,
 } from "react-icons/fa";
 
 export default function TourCard({ tour }) {
@@ -55,6 +56,7 @@ export default function TourCard({ tour }) {
     ticket: "Tiket Wisata",
     meal: "Makan",
     water: "Air Mineral",
+    camera: "Dokumentasi",
   };
   const INCLUDE_ICONS = {
     hotel: FaHotel,
@@ -63,6 +65,7 @@ export default function TourCard({ tour }) {
     ticket: FaTicketAlt,
     meal: FaUtensils,
     water: FaTint,
+    camera: FaCamera,
   };
 
   return (
@@ -120,7 +123,7 @@ export default function TourCard({ tour }) {
 
         {/* Footer: price per pax + button */}
         <div className="mt-4 flex items-center justify-between">
-          {/* {minPrice !== null ? (
+          {minPrice !== null ? (
             <div className="text-sm">
               <span className="font-bold text-primary">
                 {new Intl.NumberFormat("id-ID", {
@@ -133,7 +136,7 @@ export default function TourCard({ tour }) {
             </div>
           ) : (
             <div />
-          )} */}
+          )}
           <Button
             asChild
             variant="outline"

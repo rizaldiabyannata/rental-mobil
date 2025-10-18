@@ -45,10 +45,7 @@ const CarCard = ({ car }) => {
                   : `/detail-armada?name=${car.name}`
               }
             >
-              <Button
-                variant="outline"
-                className="w-full md:w-44 bg-primary text-white hover:bg-[#EFF7FF]"
-              >
+              <Button variant="outline" className="w-full md:w-44 bg-primary text-white hover:bg-[#2165a9]">
                 Detail
               </Button>
             </Link>
