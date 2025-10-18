@@ -66,7 +66,7 @@ model TourPackage {
     id            String   @id @default(uuid())
     slug          String   @unique // SEO-friendly unique slug
     name          String
-    description   String
+    description   Json
     duration      String // e.g., "3 Hari 2 Malam"
     inclusions    String[] // List of what's included
     galleryImages String[] // List of image URLs

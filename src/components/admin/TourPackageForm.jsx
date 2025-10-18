@@ -1,12 +1,14 @@
 "use client";
 
+import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import dynamic from "next/dynamic";
+const EditorJs = dynamic(() => import("./EditorJs"), { ssr: false });
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Loader2 } from "lucide-react";
@@ -29,9 +31,22 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
   const [name, setName] = useState(initialData?.name || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
   const [duration, setDuration] = useState(initialData?.duration || "");
-  const [description, setDescription] = useState(
-    initialData?.description || ""
-  );
+  // Editor.js expects JSON object, parse if string
+  const [description, setDescription] = useState(() => {
+    if (initialData?.description) {
+      if (typeof initialData.description === "string") {
+        try {
+          return JSON.parse(initialData.description);
+        } catch {
+          return {};
+        }
+      }
+      if (typeof initialData.description === "object") {
+        return initialData.description;
+      }
+    }
+    return {};
+  });
   const [inclusionsText, setInclusionsText] = useState(
     toCommaFromArray(initialData?.inclusions) || ""
   );
@@ -89,7 +104,7 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
         name: name.trim(),
         slug: slug.trim(),
         duration: duration.trim(),
-        description: description.trim(),
+        description,
         inclusions: toArrayFromComma(inclusionsText),
         galleryImages: toArrayFromComma(galleryImagesText),
         showHotels: Boolean(showHotels),
@@ -212,14 +227,10 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
             <Label htmlFor="description" className="text-emerald-700">
               Deskripsi
             </Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Tuliskan deskripsi paket..."
-              rows={6}
-              className="border-emerald-300 focus-visible:ring-emerald-500 focus-visible:ring-2 focus-visible:border-emerald-500"
-            />
+            <EditorJs value={description} onChange={setDescription} />
+            <span className="text-xs text-emerald-700/80">
+              Gunakan editor di atas untuk menulis deskripsi paket wisata.
+            </span>
           </div>
 
           <Separator />

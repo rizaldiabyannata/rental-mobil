@@ -16,6 +16,7 @@ export async function GET(_request, { params }) {
       },
     });
     if (!data) return new Response("Tidak ditemukan", { status: 404 });
+    console.log("Tour package data:", data);
     return Response.json(data);
   } catch (err) {
     console.error(`GET /api/admin/tour-packages/${params?.id} error`, err);
@@ -56,7 +57,10 @@ export async function PUT(request, { params }) {
         data: {
           name,
           slug,
-          description,
+          description:
+            typeof description === "object"
+              ? JSON.stringify(description)
+              : description,
           duration,
           inclusions,
           galleryImages,
@@ -116,7 +120,10 @@ export async function PUT(request, { params }) {
     });
     return Response.json(updated);
   } catch (err) {
-    console.error(`PUT /api/admin/tour-packages/${params?.id} error`, err);
+    console.error(
+      `PUT /api/admin/tour-packages/${await params?.id} error`,
+      err
+    );
     return new Response("Gagal memperbarui paket tour", { status: 500 });
   }
 }

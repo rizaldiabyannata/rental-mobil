@@ -8,6 +8,7 @@ import {
 } from "@/components/tours/TourDetails";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { Badge } from "@/components/ui/badge";
+import TourDescription from "@/components/tours/TourDescription";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ export async function generateStaticParams() {
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   try {
-    const slug = await params?.slug;
+    const slug = params.slug;
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       select: { name: true, description: true },
@@ -106,9 +107,7 @@ export default async function TourDetailPage({ params }) {
               <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
                 Deskripsi Paket
               </h2>
-              <p className="text-gray-700 whitespace-pre-wrap text-base xl:text-lg">
-                {tour.description}
-              </p>
+              <TourDescription description={tour.description} />
             </section>
             <section
               id="inklusi"
