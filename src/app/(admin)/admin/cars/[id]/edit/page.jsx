@@ -129,7 +129,7 @@ export default function EditCarPage() {
     description: "",
     capacity: "",
     transmission: "Manual",
-    fuelType: "Bensin",
+    fuelType: "BBM",
     year: "",
     startingPrice: "",
     available: true,
@@ -476,7 +476,7 @@ export default function EditCarPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Bensin">Bensin</SelectItem>
+                        <SelectItem value="BBM">BBM</SelectItem>
                         <SelectItem value="Solar">Solar</SelectItem>
                         <SelectItem value="Hybrid">Hybrid</SelectItem>
                         <SelectItem value="Listrik">Listrik</SelectItem>

@@ -95,7 +95,7 @@ export default function AddCarPage() {
     description: "",
     capacity: "",
     transmission: "Manual",
-    fuelType: "Bensin",
+    fuelType: "BBM",
     startingPrice: "",
     available: true,
     licensePlate: "",
@@ -412,7 +412,7 @@ export default function AddCarPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Bensin">Bensin</SelectItem>
+                        <SelectItem value="BBM">BBM</SelectItem>
                         <SelectItem value="Solar">Solar</SelectItem>
                         <SelectItem value="Hybrid">Hybrid</SelectItem>
                         <SelectItem value="Listrik">Listrik</SelectItem>
