@@ -46,7 +46,7 @@ function TourPriceMatrix({ hotelTiers = [], showHotels = true }) {
                   <tr>
                     <th className="p-4 font-medium">Jumlah Peserta</th>
                     <th className="p-4 font-medium text-right">
-                      Harga per Orang
+                      Harga per PAX
                     </th>
                   </tr>
                 </thead>

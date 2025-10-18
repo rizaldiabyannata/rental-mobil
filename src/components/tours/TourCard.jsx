@@ -122,7 +122,7 @@ export default function TourCard({ tour }) {
                   minimumFractionDigits: 0,
                 }).format(minPrice)}
               </span>
-              <span className="ml-1 text-neutral-600">/ orang</span>
+              <span className="ml-1 text-neutral-600">/ PAX</span>
             </div>
           ) : (
             <div />

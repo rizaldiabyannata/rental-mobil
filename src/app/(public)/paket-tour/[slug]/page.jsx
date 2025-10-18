@@ -147,7 +147,7 @@ export default async function TourDetailPage({ params }) {
                         minimumFractionDigits: 0,
                       }).format(minPrice)}
                       <span className="ml-1 text-sm font-medium text-neutral-600">
-                        / orang
+                        / PAX
                       </span>
                     </p>
                   </div>
