@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import CarDetailSection from "@/components/detail-armada/CarDetailSection";
 import KeyFeatureSection from "@/components/detail-armada/KeyFeatureSection";
 import SpecsSection from "@/components/detail-armada/SpecsSection";

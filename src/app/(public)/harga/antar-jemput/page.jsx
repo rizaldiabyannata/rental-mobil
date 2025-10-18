@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import AntarJemputPage from "@/components/harga/AntarJemputClient";
 import { prisma } from "@/lib/prisma";
 

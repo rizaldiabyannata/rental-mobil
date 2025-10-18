@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import SewaHarianPage from "@/components/harga/SewaHarianClient";
 import { prisma } from "@/lib/prisma";
 

@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
 }
 
@@ -23,7 +23,7 @@ model Car {
     transmission   String   @default("Manual") // Transmisi (Manual/Automatic)
     fuelType       String   @default("Bensin") // Jenis bahan bakar
     available      Boolean  @default(true)
-    specifications Json? // Spesifikasi lengkap
+    specifications String? // Spesifikasi lengkap (diubah dari Json ke String)
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
 
@@ -66,10 +66,10 @@ model TourPackage {
     id            String   @id @default(uuid())
     slug          String   @unique // SEO-friendly unique slug
     name          String
-    description   Json
+    description   String   // diubah dari Json ke String
     duration      String // e.g., "3 Hari 2 Malam"
-    inclusions    String[] // List of what's included
-    galleryImages String[] // List of image URLs
+    inclusions    String   // diubah dari String[] ke String
+    galleryImages String   // diubah dari String[] ke String
     showHotels    Boolean  @default(true) // Option to show/hide hotel names
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
@@ -84,7 +84,7 @@ model HotelTier {
     id            String   @id @default(uuid())
     tourPackageId String
     name          String // e.g., "Hotel Bintang 2", "Hotel Bintang 3"
-    hotels        String[] // List of hotel names in this tier
+    hotels        String   // diubah dari String[] ke String
     order         Int      @default(0)
     starRating    Int? // e.g., 2,3,4,5
 

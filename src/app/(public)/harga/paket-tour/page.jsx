@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import PaketTourPage from "@/components/harga/PaketTourClient";
 import { prisma } from "@/lib/prisma";
 

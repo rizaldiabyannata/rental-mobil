@@ -237,13 +237,13 @@ async function main() {
             slug: pkg.slug,
             description: pkg.description,
             duration: pkg.duration,
-            inclusions: pkg.inclusions,
-            galleryImages: pkg.galleryImages,
+            inclusions: JSON.stringify(pkg.inclusions),
+            galleryImages: JSON.stringify(pkg.galleryImages),
             showHotels: true,
             hotelTiers: {
               create: HOTEL_TIERS.map((tier, idx) => ({
                 name: tier.name,
-                hotels: tier.hotels,
+                hotels: JSON.stringify(tier.hotels),
                 order: idx + 1,
                 starRating: tier.starRating,
                 priceTiers: {
@@ -264,14 +264,14 @@ async function main() {
             slug: pkg.slug,
             description: pkg.description,
             duration: pkg.duration,
-            inclusions: pkg.inclusions,
-            galleryImages: pkg.galleryImages,
+            inclusions: JSON.stringify(pkg.inclusions),
+            galleryImages: JSON.stringify(pkg.galleryImages),
             showHotels: false,
             hotelTiers: {
               create: [
                 {
                   name: "Tanpa Hotel",
-                  hotels: [],
+                  hotels: JSON.stringify([]),
                   order: 1,
                   priceTiers: {
                     create: [
@@ -303,7 +303,7 @@ async function main() {
           transmission: "Automatic",
           fuelType: "Bensin",
           available: true,
-          specifications: { coverImage: "/vercel.svg", color: "Silver" },
+          specifications: JSON.stringify({ coverImage: "/vercel.svg", color: "Silver" }),
         },
         {
           name: "TOYOTA HIACE",
@@ -314,7 +314,7 @@ async function main() {
           transmission: "Automatic",
           fuelType: "Bensin",
           available: true,
-          specifications: { coverImage: "/next.svg", color: "White" },
+          specifications: JSON.stringify({ coverImage: "/next.svg", color: "White" }),
         },
       ],
     });
