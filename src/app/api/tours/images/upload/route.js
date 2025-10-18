@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "@/lib/auth/middleware";
-import { saveMultipleImages } from "@/lib/upload";
+import { uploadMultipleFilesToMinio } from "@/lib/minio-upload";
 import { uploadRateLimiter } from "@/lib/rateLimit";
 
 // POST /api/tours/images/upload
@@ -29,15 +29,15 @@ async function uploadTourImagesHandler(request) {
       );
     }
 
-    const saved = await saveMultipleImages(imageFiles, {
+    const saved = await uploadMultipleFilesToMinio(imageFiles, {
       subfolder: "tours",
       maxSizeMB: 5,
     });
 
     return NextResponse.json({
       success: true,
-      files: saved,
-      urls: saved.map((s) => s.path),
+      files: saved, // Mengembalikan detail lengkap dari MinIO
+      urls: saved.map((s) => s.url), // Mengembalikan URL lengkap
       rateLimit: { remaining: rl.remaining },
     });
   } catch (error) {

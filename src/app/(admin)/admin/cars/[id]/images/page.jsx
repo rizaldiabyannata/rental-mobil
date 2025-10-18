@@ -59,14 +59,6 @@ function formatDate(value) {
   }
 }
 
-function getImageUrl(src) {
-  if (!src) return "/InnovaReborn.png";
-  if (/^https?:\/\//i.test(src)) return src;
-  if (!src.startsWith("/")) src = `/${src}`;
-  if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
-  return src;
-}
-
 export default function CarImagesPage() {
   const params = useParams();
   const router = useRouter();
@@ -466,7 +458,7 @@ export default function CarImagesPage() {
                 <div className="flex items-center justify-center rounded-lg border-2 border-emerald-200 bg-muted lg:col-span-1">
                   {primaryImage.imageUrl ? (
                     <img
-                      src={getImageUrl(primaryImage.imageUrl)}
+                      src={primaryImage.imageUrl}
                       alt={primaryImage.alt || car.name}
                       className="h-full max-h-48 w-full object-contain"
                     />
@@ -531,7 +523,7 @@ export default function CarImagesPage() {
                   <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg border bg-muted">
                     {image.imageUrl ? (
                       <img
-                        src={getImageUrl(image.imageUrl)}
+                        src={image.imageUrl}
                         alt={image.alt || car.name}
                         className="h-full w-full object-cover"
                       />

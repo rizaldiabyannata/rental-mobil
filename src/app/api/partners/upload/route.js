@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
-import { saveImageFile, deleteUploadedFile } from "@/lib/upload";
+import { uploadFileToMinio } from "@/lib/minio-upload";
 
 // POST - Upload partner logo & create partner
 async function uploadPartner(request) {
@@ -22,17 +22,17 @@ async function uploadPartner(request) {
       );
     }
 
-    // Save file
-    const stored = await saveImageFile(file, {
+    // Upload file to MinIO
+    const stored = await uploadFileToMinio(file, {
       subfolder: "partners",
       maxSizeMB: 3,
     });
 
-    // Create partner
+    // Create partner with MinIO URL
     const partner = await prisma.partner.create({
       data: {
         name,
-        logoUrl: stored.path,
+        logoUrl: stored.url, // Simpan URL lengkap dari MinIO
         order,
       },
     });
