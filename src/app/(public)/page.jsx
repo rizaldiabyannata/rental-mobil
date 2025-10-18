@@ -9,6 +9,8 @@ import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
 import PartnersSection from "@/components/homepage/PartnersSection";
 import VideoSection from "@/components/homepage/VideoSection";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Reborn Lombok Trans - Rental Mobil Terpercaya di Lombok",
   description:

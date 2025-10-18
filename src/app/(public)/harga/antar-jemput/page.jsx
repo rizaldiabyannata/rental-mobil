@@ -1,6 +1,8 @@
 import AntarJemputPage from "@/components/harga/AntarJemputClient";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Harga Antar Jemput Bandara Lombok - Tarif Murah & Terjangkau",
   description:

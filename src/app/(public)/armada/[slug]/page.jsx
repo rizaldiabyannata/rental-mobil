@@ -5,6 +5,8 @@ import TariffDetailSection from "@/components/detail-armada/TariffDetailSection"
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 function getImageUrl(src) {
   if (!src) return "/imageforctasection.png";
   if (/^https?:\/\//i.test(src)) return src;

@@ -1,6 +1,8 @@
 import SewaHarianPage from "@/components/harga/SewaHarianClient";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Harga Sewa Mobil Harian di Lombok - Lepas Kunci & Dengan Sopir",
   description:

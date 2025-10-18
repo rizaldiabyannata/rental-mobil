@@ -1,6 +1,8 @@
 import PaketTourPage from "@/components/harga/PaketTourClient";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Harga Paket Tour Lombok - Wisata Murah & Berkesan",
   description:
