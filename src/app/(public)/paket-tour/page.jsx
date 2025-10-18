@@ -101,11 +101,26 @@ export default async function TourListPage() {
       <section className="w-full py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 md:px-6">
           <SectionHeading
+            title={"Semua Paket Wisata"}
+            align="center"
+            size="md"
+            underline
+            underlineColor="bg-amber-500"
+            underlineWidth="lg"
+            underlineOffset="md"
+            titleClassName="text-primary"
+            underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+            className="mb-6 md:mb-10"
+            description={
+              "Pilih paket yang paling sesuai dengan kebutuhan perjalanan Anda."
+            }
+          />
+          {/* <SectionHeading
             title="Semua Paket Wisata"
             align="center"
             className="mb-8 md:mb-12"
             description="Pilih paket yang paling sesuai dengan gaya perjalanan Anda."
-          />
+          /> */}
           {tours.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {tours.map((tour) => (

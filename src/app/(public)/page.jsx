@@ -6,6 +6,7 @@ import GallerySection from "@/components/homepage/GallerySection";
 import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
+import TourTeaserSection from "@/components/homepage/TourTeaserSection";
 import PartnersSection from "@/components/homepage/PartnersSection";
 import VideoSection from "@/components/homepage/VideoSection";
 
@@ -23,6 +24,7 @@ export default function Home() {
       <WhyUsSection />
       <ServicesSection />
       <FleetSection />
+      <TourTeaserSection />
       <PaketTourSection />
       <GallerySection />
       <PartnersSection />
