@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/shared/PageHero";
@@ -9,22 +11,6 @@ import {
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { Badge } from "@/components/ui/badge";
 import TourDescription from "@/components/tours/TourDescription";
-
-export const dynamic = "force-dynamic";
-
-// Generate static pages for better performance
-export async function generateStaticParams() {
-  try {
-    const packages = await prisma.tourPackage.findMany({
-      select: { slug: true },
-    });
-    return packages.map((pkg) => ({ slug: pkg.slug }));
-  } catch (e) {
-    console.error("generateStaticParams tourPackage failed:", e?.message || e);
-    // During build or when DB is not ready, return no params to avoid build failure
-    return [];
-  }
-}
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {

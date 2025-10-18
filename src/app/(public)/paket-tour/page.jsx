@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/SectionHeading";
 import TourCard from "@/components/tours/TourCard";
