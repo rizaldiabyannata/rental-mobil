@@ -17,7 +17,7 @@ const HeroSection = ({
   primaryLabel = "Lihat Armada",
   primaryHref = "/#armada",
   waProps = {
-    waUrlBase: "https://wa.me/6287741861681",
+    waUrlBase: "https://wa.me/6285353818685",
     label: "Hubungi Kami",
     buttonClassName: "w-full bg-[#3E6598] hover:bg-[#8FA6C3] py-5",
     iconClassName: "h-6 w-6",

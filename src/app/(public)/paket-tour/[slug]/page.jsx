@@ -137,7 +137,7 @@ export default async function TourDetailPage({ params }) {
                 >
                   {tour.duration}
                 </Badge>
-                {minPrice !== null && (
+                {minPrice !== null ? (
                   <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
                     <p className="text-sm text-neutral-700">Mulai dari</p>
                     <p className="text-2xl font-extrabold text-primary">
@@ -151,15 +151,27 @@ export default async function TourDetailPage({ params }) {
                       </span>
                     </p>
                   </div>
+                ) : (
+                  <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
+                    <p className="text-sm font-medium text-primary">
+                      Harga paket bersifat dinamis
+                    </p>
+                    <p className="text-sm text-neutral-700 mt-1">
+                      Tanyakan harga terbaru dan dapatkan penawaran terbaik
+                      sesuai jumlah peserta dan pilihan hotel.
+                    </p>
+                  </div>
                 )}
                 <div className="mt-6">
                   <WhatsAppCtaSection
-                    waUrlBase="https://wa.me/6287741861681"
+                    waUrlBase="https://wa.me/6285353818685"
                     imageSrc="/imageforctasection.png"
                     imageAlt={`Gallery`}
-                    className="shadow-md rounded-2xl"
-                    message={`Halo, saya tertarik dengan paket wisata \"${tour.name}\". Mohon informasinya.`}
+                    className="bg-transparent py-0"
+                    message={`Halo, saya ingin menanyakan harga dan ketersediaan paket wisata \"${tour.name}\". Mohon informasinya.`}
                     imageVisible={false}
+                    sectionHeadingText="Tanyakan Harga Paket Ini"
+                    sectionDescription={`Dapatkan estimasi biaya untuk ${tour.name}. Kami bantu hitung sesuai jumlah peserta dan pilihan hotel.`}
                   />
                 </div>
               </div>

@@ -27,7 +27,7 @@ export default function SewaMobilLayanan() {
       <ServicesSection />
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8 pb-12">
         <WhatsAppCtaSection
-          waUrlBase="https://wa.me/6287741861681"
+          waUrlBase="https://wa.me/6285353818685"
           imageSrc="/imageforctasection.png"
           imageAlt={`Gallery`}
           className="shadow-md rounded-2xl"

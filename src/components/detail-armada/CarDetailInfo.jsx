@@ -19,7 +19,7 @@ const CarDetailInfo = ({
     const message = encodeURIComponent(
       "Halo, saya tertarik dengan layanan Anda"
     );
-    window.open(`https://wa.me/6287741861681?text=${message}`, "_blank");
+    window.open(`https://wa.me/6285353818685?text=${message}`, "_blank");
   };
 
   return (

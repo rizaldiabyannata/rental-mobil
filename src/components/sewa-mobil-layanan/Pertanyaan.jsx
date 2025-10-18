@@ -14,7 +14,7 @@ const Pertanyaan = () => {
             merencanakan perjalanan terbaik di Lombok.
           </p>
           <div className="mt-8">
-            <Link href="https://wa.me/6287741861681">
+            <Link href="https://wa.me/6285353818685">
               <Button size="lg" className="rounded-full px-8 py-6 text-lg">
                 Hubungi Kami
               </Button>

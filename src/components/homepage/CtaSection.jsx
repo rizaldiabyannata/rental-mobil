@@ -22,7 +22,7 @@ const CtaSection = () => {
               Ada Pertanyaan? Silakan <br />
               <span className="text-emerald-700">Hubungi Kami</span>
             </h2>
-            <Link href="https://wa.me/6287741861681" target="_blank">
+            <Link href="https://wa.me/6285353818685" target="_blank">
               <Button size="lg">Hubungi Kami</Button>
             </Link>
           </div>

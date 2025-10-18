@@ -9,6 +9,9 @@ export default function WhatsAppCta({
   waUrlBase,
   messageTemplate,
   label = "Pesan via WhatsApp",
+  // Whether to include current page link in the WhatsApp message (client-side)
+  // If undefined, we auto-exclude on certain public pages (/, /paket-tour, /sewa-mobil-layanan, /tentang-kami, /syarat-ketentuan)
+  includePageLink,
   // Icon can be a component (lucide) or a react node (Image)
   Icon = MessageCircle,
   // classes to customize button sizing / styling from caller
@@ -38,9 +41,24 @@ export default function WhatsAppCta({
     try {
       const base = new URL(waUrlBase);
       const pageUrl = window.location.href;
+      // Determine whether we should include current page link
+      const pathname = window.location.pathname || "/";
+      const normalizedPath =
+        pathname !== "/" ? pathname.replace(/\/+$/, "") : pathname;
+      const EXCLUDED_PATHS = [
+        "/",
+        "/paket-tour",
+        "/sewa-mobil-layanan",
+        "/tentang-kami",
+        "/syarat-ketentuan",
+      ];
+      const shouldIncludeLink =
+        typeof includePageLink === "boolean"
+          ? includePageLink
+          : !EXCLUDED_PATHS.includes(normalizedPath);
       const defaultMsg = [
         `Halo Admin, saya tertarik memesan${carName ? ` ${carName}` : ""}.`,
-        pageUrl && `Link: ${pageUrl}`,
+        shouldIncludeLink && pageUrl ? `Link: ${pageUrl}` : null,
       ]
         .filter(Boolean)
         .join("\n");
@@ -53,7 +71,7 @@ export default function WhatsAppCta({
       // fallback: keep baseHref
       setHref(baseHref);
     }
-  }, [carName, waUrlBase, messageTemplate, baseHref]);
+  }, [carName, waUrlBase, messageTemplate, includePageLink, baseHref]);
 
   return (
     <Button asChild className={buttonClassName}>

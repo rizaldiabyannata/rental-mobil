@@ -28,7 +28,7 @@ const HeroMobil = () => {
               Kepuasan Anda adalah yang Utama <br />
               Ingat Lombok! Ingat Reborn Lombok Trans!!
             </p>
-            <Link href="https://wa.me/6287741861681" className="mt-4">
+            <Link href="https://wa.me/6285353818685" className="mt-4">
               <Button size="lg" className="rounded-full px-8 py-6 text-lg">
                 Hubungi Kami
               </Button>

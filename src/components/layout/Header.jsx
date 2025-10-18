@@ -114,7 +114,7 @@ const Header = () => {
         </nav>
 
         <a
-          href="https://wa.me/6287741861681"
+          href="https://wa.me/6285353818685"
           target="_blank"
           rel="noopener noreferrer"
           className="hidden lg:flex items-center gap-2 text-sm"

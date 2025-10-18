@@ -19,7 +19,10 @@ export default function WhatsAppCtaSection({
   imageSrc = "/imageforctasection.png",
   imageAlt = "Armada siap berangkat",
   imageVisible = true,
+  sectionHeadingText = "Siap Berangkat? Chat Kami Sekarang",
+  sectionDescription = "Tanyakan ketersediaan armada dan dapatkan penawaran paket tour terbaik langsung via WhatsApp.",
   className,
+  includePageLink, // optional override; if undefined, auto-exclusion applies in WhatsAppCta
 }) {
   return (
     <section className={cn("w-full py-10 md:py-14 bg-neutral-50", className)}>
@@ -33,7 +36,7 @@ export default function WhatsAppCtaSection({
           {/* Left: Text + CTA */}
           <div className={cn(!imageVisible && "mx-auto max-w-2xl")}>
             <SectionHeading
-              title="Siap Berangkat? Chat Kami Sekarang"
+              title={sectionHeadingText}
               align={imageVisible ? "left" : "center"}
               size="lg"
               underline
@@ -43,6 +46,7 @@ export default function WhatsAppCtaSection({
               titleClassName="text-primary"
               underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
               className="mb-4"
+              description={sectionDescription}
             />
             <p
               className={cn(
@@ -78,6 +82,7 @@ export default function WhatsAppCtaSection({
               <WhatsAppCta
                 {...(carName ? { carName } : {})}
                 waUrlBase={waUrlBase}
+                includePageLink={includePageLink}
               />
             </div>
           </div>

@@ -3,7 +3,14 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import TourFeatureIcons from "./TourFeatureIcons";
-import { FaUser, FaTicketAlt, FaUtensils, FaTint, FaCar } from "react-icons/fa";
+import {
+  FaUser,
+  FaTicketAlt,
+  FaUtensils,
+  FaTint,
+  FaCar,
+  FaHotel,
+} from "react-icons/fa";
 
 export default function TourCard({ tour }) {
   const {
@@ -42,6 +49,7 @@ export default function TourCard({ tour }) {
 
   // Includes section mapping
   const INCLUDE_LABELS = {
+    hotel: "Hotel",
     car: "Mobil",
     driver: "Driver",
     ticket: "Tiket Wisata",
@@ -49,6 +57,7 @@ export default function TourCard({ tour }) {
     water: "Air Mineral",
   };
   const INCLUDE_ICONS = {
+    hotel: FaHotel,
     car: FaCar,
     driver: FaUser,
     ticket: FaTicketAlt,
@@ -80,10 +89,8 @@ export default function TourCard({ tour }) {
             {title}
           </h3>
         </Link>
-        {/* Divider */}
         <div className="my-3 h-[2px] w-full bg-neutral-200" />
 
-        {/* Includes or feature icons */}
         {includes && includes.length > 0 ? (
           <div>
             <div className="text-[11px] font-semibold uppercase text-neutral-600 mb-2">
@@ -113,7 +120,7 @@ export default function TourCard({ tour }) {
 
         {/* Footer: price per pax + button */}
         <div className="mt-4 flex items-center justify-between">
-          {minPrice !== null ? (
+          {/* {minPrice !== null ? (
             <div className="text-sm">
               <span className="font-bold text-primary">
                 {new Intl.NumberFormat("id-ID", {
@@ -126,7 +133,7 @@ export default function TourCard({ tour }) {
             </div>
           ) : (
             <div />
-          )}
+          )} */}
           <Button
             asChild
             variant="outline"
