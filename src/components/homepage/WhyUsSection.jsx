@@ -7,7 +7,7 @@ const features = [
     icon: Car,
     title: "Armada Terawat & Berkualitas",
     description:
-      "Semua mobil kami dalam kondisi prima dan terawat secara rutin untuk menjamin keamanan dan kenyamanan Anda.",
+      "Semua mobil kami adalah keluaran tahun 2025, dalam kondisi prima dan terawat secara rutin untuk menjamin keamanan dan kenyamanan Anda.",
   },
   {
     icon: Medal,
