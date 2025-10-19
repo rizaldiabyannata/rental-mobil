@@ -2,7 +2,7 @@ import CarCard from "./CarCard";
 import SectionHeading from "@/components/SectionHeading";
 import { prisma } from "@/lib/prisma";
 
-async function getCars() {
+async function getCars(locale = "id") {
   try {
     const cars = await prisma.car.findMany({
       where: { available: true },
@@ -10,8 +10,10 @@ async function getCars() {
       orderBy: { createdAt: "desc" },
       select: {
         slug: true,
-        name: true,
-        description: true,
+        name_id: true,
+        name_en: true,
+        description_id: true,
+        description_en: true,
         startingPrice: true,
         capacity: true,
         transmission: true,
@@ -29,29 +31,38 @@ async function getCars() {
     });
 
     // Strukturnya sedikit berbeda dari API, kita sesuaikan di sini
-    return cars.map((c) => ({
-      slug: c.slug,
-      name: c.name,
-      description: c.description,
-      startingPrice: c.startingPrice,
-      capacity: c.capacity,
-      transmission: c.transmission,
-      fuelType: c.fuelType,
-      coverImage: c.specifications?.coverImage || null,
-      gallery: c.images.map((img) => ({
-        url: img.imageUrl,
-        alt: img.alt,
-        order: img.order,
-      })),
-    }));
+    return cars.map((c) => {
+      const specifications = c.specifications
+        ? JSON.parse(c.specifications)
+        : {};
+      return {
+        slug: c.slug,
+        name: locale === "en" ? c.name_en : c.name_id,
+        description: locale === "en" ? c.description_en : c.description_id,
+        startingPrice: c.startingPrice,
+        capacity: c.capacity,
+        transmission: c.transmission,
+        fuelType: c.fuelType,
+        coverImage: specifications?.coverImage || null,
+        gallery: c.images.map((img) => ({
+          url: img.imageUrl,
+          alt: img.alt,
+          order: img.order,
+        })),
+      };
+    });
   } catch (error) {
     console.error("Failed to fetch cars directly:", error);
     return []; // Return empty array on error
   }
 }
 
+import { useLocale, useTranslations } from "next-intl";
+
 const FleetSection = async () => {
-  const carsData = await getCars();
+  const locale = useLocale();
+  const t = useTranslations("HomePage.fleet");
+  const carsData = await getCars(locale);
 
   // Local uploads mapping
   function getImageUrl(src) {
@@ -108,7 +119,7 @@ const FleetSection = async () => {
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
           <SectionHeading
-            title={"Armada Pilihan Kami"}
+            title={t("title")}
             align="center"
             size="md"
             underline
@@ -118,9 +129,7 @@ const FleetSection = async () => {
             titleClassName="text-primary"
             underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
             className="mb-6 md:mb-10"
-            description={
-              "Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda."
-            }
+            description={t("description")}
           />
         </div>
 

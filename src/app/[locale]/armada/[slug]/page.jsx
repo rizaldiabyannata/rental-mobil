@@ -15,14 +15,16 @@ function getImageUrl(src) {
   return src;
 }
 
-async function getCarBySlug(slug) {
+async function getCarBySlug(slug, locale = "id") {
   try {
     const car = await prisma.car.findFirst({
       where: { slug, available: true },
       select: {
         slug: true,
-        name: true,
-        description: true,
+        name_id: true,
+        name_en: true,
+        description_id: true,
+        description_en: true,
         startingPrice: true,
         capacity: true,
         transmission: true,
@@ -33,7 +35,14 @@ async function getCarBySlug(slug) {
           orderBy: { order: "asc" },
         },
         featureBlocks: {
-          select: { title: true, description: true, icon: true, order: true },
+          select: {
+            title_id: true,
+            title_en: true,
+            description_id: true,
+            description_en: true,
+            icon: true,
+            order: true,
+          },
           orderBy: { order: "asc" },
         },
         tariffItems: {
@@ -52,9 +61,11 @@ async function getCarBySlug(slug) {
 
     if (!car) return null;
 
-    const coverImage = car.specifications?.coverImage || null;
-    const details = Array.isArray(car.specifications?.details)
-      ? car.specifications.details
+    // Spesifikasi di-parse dari string JSON
+    const specifications = car.specifications ? JSON.parse(car.specifications) : {};
+    const coverImage = specifications?.coverImage || null;
+    const details = Array.isArray(specifications?.details)
+      ? specifications.details
       : [];
     const gallery = car.images.map((img) => ({
       id: img.id,
@@ -74,8 +85,8 @@ async function getCarBySlug(slug) {
 
     return {
       slug: car.slug,
-      name: car.name,
-      description: car.description,
+      name: locale === "en" ? car.name_en : car.name_id,
+      description: locale === "en" ? car.description_en : car.description_id,
       startingPrice: car.startingPrice,
       capacity: car.capacity,
       transmission: car.transmission,
@@ -83,7 +94,11 @@ async function getCarBySlug(slug) {
       coverImage,
       details,
       gallery,
-      featureBlocks: car.featureBlocks,
+      featureBlocks: car.featureBlocks.map((fb) => ({
+        ...fb,
+        title: locale === "en" ? fb.title_en : fb.title_id,
+        description: locale === "en" ? fb.description_en : fb.description_id,
+      })),
       tariffs,
     };
   } catch (error) {
@@ -93,8 +108,8 @@ async function getCarBySlug(slug) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const car = await getCarBySlug(slug);
+  const { slug, locale } = await params;
+  const car = await getCarBySlug(slug, locale);
 
   if (!car) {
     return {
@@ -169,8 +184,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ArmadaDetailPage({ params }) {
-  const { slug } = await params;
-  const car = await getCarBySlug(slug);
+  const { slug, locale } = await params;
+  const car = await getCarBySlug(slug, locale);
 
   if (!car) {
     return (

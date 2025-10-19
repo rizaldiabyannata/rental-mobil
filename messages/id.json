@@ -1,0 +1,16 @@
+{
+  "Navbar": {
+    "home": "Beranda",
+    "about": "Tentang Kami",
+    "fleet": "Sewa Mobil & Layanan",
+    "tourPackage": "Paket Tour",
+    "terms": "Syarat & Ketentuan",
+    "contact": "Kontak"
+  },
+  "HomePage": {
+    "fleet": {
+      "title": "Armada Pilihan Kami",
+      "description": "Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda."
+    }
+  }
+}

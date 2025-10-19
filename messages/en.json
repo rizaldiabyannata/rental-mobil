@@ -1,0 +1,16 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "about": "About Us",
+    "fleet": "Car Rental & Services",
+    "tourPackage": "Tour Package",
+    "terms": "Terms & Conditions",
+    "contact": "Contact"
+  },
+  "HomePage": {
+    "fleet": {
+      "title": "Our Featured Fleet",
+      "description": "Choose the car that best suits your travel needs."
+    }
+  }
+}

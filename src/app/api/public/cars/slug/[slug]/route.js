@@ -7,12 +7,17 @@ export async function GET(request, props) {
     const { params } = await props;
     const { slug } = params;
 
+    const { searchParams } = new URL(request.url);
+    const locale = searchParams.get("locale") || "id";
+
     const car = await prisma.car.findFirst({
       where: { slug, available: true },
       select: {
         slug: true,
-        name: true,
-        description: true,
+        name_id: true,
+        name_en: true,
+        description_id: true,
+        description_en: true,
         startingPrice: true,
         capacity: true,
         transmission: true,
@@ -32,7 +37,14 @@ export async function GET(request, props) {
           orderBy: { order: "asc" },
         },
         featureBlocks: {
-          select: { icon: true, title: true, description: true, order: true },
+          select: {
+            icon: true,
+            title_id: true,
+            title_en: true,
+            description_id: true,
+            description_en: true,
+            order: true,
+          },
           orderBy: { order: "asc" },
         },
       },
@@ -49,8 +61,8 @@ export async function GET(request, props) {
       success: true,
       data: {
         slug: car.slug,
-        name: car.name,
-        description: car.description,
+        name: locale === "en" ? car.name_en : car.name_id,
+        description: locale === "en" ? car.description_en : car.description_id,
         startingPrice: car.startingPrice,
         capacity: car.capacity,
         transmission: car.transmission,
@@ -62,8 +74,8 @@ export async function GET(request, props) {
         // The frontend uses `featureBlocks`, so we map that.
         featureBlocks: car.featureBlocks.map((fb) => ({
           icon: fb.icon,
-          title: fb.title,
-          description: fb.description,
+          title: locale === "en" ? fb.title_en : fb.title_id,
+          description: locale === "en" ? fb.description_en : fb.description_id,
           order: fb.order,
         })),
         gallery: car.images.map((i) => ({

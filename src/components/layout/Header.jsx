@@ -5,9 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Icon } from "@iconify-icon/react";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const MobileMenu = ({ isOpen, onClose }) => {
+  const t = useTranslations("Navbar");
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5 md:pl-24 md:pr-10 md:pt-5">
@@ -26,35 +29,36 @@ const MobileMenu = ({ isOpen, onClose }) => {
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Beranda
+          {t("home")}
         </Link>
         <Link
           href="/sewa-mobil-layanan"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Sewa Mobil & Layanan
+          {t("fleet")}
         </Link>
         <Link
           href="/paket-tour"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Paket Tour
+          {t("tourPackage")}
         </Link>
         <Link
           href="/tentang-kami"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Tentang Kami
+          {t("about")}
         </Link>
         <Link
           href="/syarat-ketentuan"
-          className="text-2xl font-semibold hover:text-primary"
+          className
+          ="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Syarat & Ketentuan
+          {t("terms")}
         </Link>
       </nav>
     </div>
@@ -64,6 +68,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
 const Header = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const t = useTranslations("Navbar");
 
   return (
     <header className="bg-white shadow-md sticky w-full top-0 left-0 z-40">
@@ -78,7 +83,7 @@ const Header = () => {
         <nav className="hidden lg:flex items-center gap-2">
           <Link href="/">
             <Button variant={pathname === "/" ? "default" : "ghost"}>
-              Beranda
+              {t("home")}
             </Button>
           </Link>
           <Link href="/sewa-mobil-layanan">
@@ -87,28 +92,28 @@ const Header = () => {
                 pathname.startsWith("/sewa-mobil-layanan") ? "default" : "ghost"
               }
             >
-              Sewa Mobil & Layanan
+              {t("fleet")}
             </Button>
           </Link>
           <Link href="/paket-tour">
             <Button
               variant={pathname.startsWith("/paket-tour") ? "default" : "ghost"}
             >
-              Paket Tour
+              {t("tourPackage")}
             </Button>
           </Link>
           <Link href="/tentang-kami">
             <Button
               variant={pathname === "/tentang-kami" ? "default" : "ghost"}
             >
-              Tentang Kami
+              {t("about")}
             </Button>
           </Link>
           <Link href="/syarat-ketentuan">
             <Button
               variant={pathname === "/syarat-ketentuan" ? "default" : "ghost"}
             >
-              Syarat & Ketentuan
+              {t("terms")}
             </Button>
           </Link>
         </nav>
@@ -132,16 +137,19 @@ const Header = () => {
           </div>
         </a>
 
-        <div className="lg:hidden">
-          <Button
-            size="icon"
-            variant="ghost"
+        <div className="flex items-center gap-2">
+          <LocaleSwitcher />
+          <div className="lg:hidden">
+            <Button
+              size="icon"
+              variant="ghost"
             className="self-end size-12"
             onClick={() => setIsMenuOpen(true)}
             aria-label="Buka menu"
           >
             <Menu className="size-6" />
-          </Button>
+            </Button>
+          </div>
         </div>
       </div>
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
