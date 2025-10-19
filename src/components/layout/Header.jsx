@@ -128,7 +128,7 @@ const Header = () => {
 
           <div>
             <p className="font-medium">Butuh Rental?</p>
-            <p className="font-bold text-green-600">+62-877-4186-1681</p>
+            <p className="font-bold text-green-600">+62-853-5818-685</p>
           </div>
         </a>
 
