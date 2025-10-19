@@ -10,7 +10,7 @@ import { Icon } from "@iconify-icon/react";
 const MobileMenu = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 pt-5 md:pl-24 md:pr-10 md:pt-5">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 md:pl-24 md:pr-10 md:pt-5">
       <Button
         size="icon"
         variant="ghost"
@@ -67,12 +67,13 @@ const Header = () => {
 
   return (
     <header className="bg-white shadow-md sticky w-full top-0 left-0 z-40">
-      <div className="container mx-auto px-4 lg:px-8 xl:px-32 py-4 flex items-center justify-between">
+      <div className="container mx-auto px-2 lg:px-6 xl:px-28 py-4 flex items-center justify-between">
         <Image
           src="/newLogo.png"
           alt="Reborn Lombok Trans Logo"
           width={100}
           height={100}
+          className="size-16 md:size-20 lg:size-24"
         />
 
         <nav className="hidden lg:flex items-center gap-2">
@@ -128,7 +129,7 @@ const Header = () => {
 
           <div>
             <p className="font-medium">Butuh Rental?</p>
-            <p className="font-bold text-green-600">+62-853-5818-685</p>
+            <p className="font-bold text-green-600">+62-853-5381-8685</p>
           </div>
         </a>
 

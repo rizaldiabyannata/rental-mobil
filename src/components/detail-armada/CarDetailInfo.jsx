@@ -33,7 +33,7 @@ const CarDetailInfo = ({
       <div className="flex flex-col gap-1 w-full px-2.5 md:px-0">
         {/* Car Title */}
         <div className="w-full">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-700 leading-[56.32px] md:leading-[1.2] font-sans">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary leading-[56.32px] md:leading-[1.2] font-sans">
             {car.name}
           </h1>
         </div>
@@ -75,7 +75,7 @@ const CarDetailInfo = ({
         <div className="flex items-start justify-center md:justify-start gap-[103px] w-full">
           <button
             onClick={handleContactClick}
-            className="bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 flex gap-2.5 items-center justify-center overflow-hidden px-[18px] py-2.5 rounded-xl shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] cursor-pointer"
+            className="bg-primary hover:bg-primary/70 transition-colors duration-200 flex gap-2.5 items-center justify-center overflow-hidden px-[18px] py-2.5 rounded-xl shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] cursor-pointer"
           >
             <span className="text-xs md:text-sm font-semibold leading-normal text-center text-white tracking-[0.5px] font-sans">
               Hubungi Kami

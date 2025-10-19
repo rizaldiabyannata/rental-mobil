@@ -62,7 +62,7 @@ export default function SectionHeading({
   return (
     <div className={cn("w-full flex flex-col", alignMap[align], className)}>
       {eyebrow ? (
-        <span className="text-xs font-medium tracking-wide uppercase text-emerald-700">
+        <span className="text-xs font-medium tracking-wide uppercase text-primary">
           {eyebrow}
         </span>
       ) : null}
@@ -71,7 +71,7 @@ export default function SectionHeading({
         <As
           className={cn(
             sizeClasses[size],
-            "leading-tight text-emerald-700",
+            "leading-tight text-primary",
             titleClassName
           )}
         >

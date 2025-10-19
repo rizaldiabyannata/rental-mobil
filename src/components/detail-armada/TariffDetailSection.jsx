@@ -51,7 +51,7 @@ export default function TariffDetailSection({
           underlineColor="bg-amber-500"
           underlineWidth="lg"
           underlineOffset="md"
-          titleClassName="text-emerald-700"
+          titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
         />
@@ -91,7 +91,7 @@ export default function TariffDetailSection({
                 <CardContent className="p-5 md:p-6">
                   {/* Card Title */}
                   {card.title ? (
-                    <h3 className="text-lg md:text-xl font-extrabold text-emerald-700">
+                    <h3 className="text-lg md:text-xl font-extrabold text-primary">
                       {card.title}
                     </h3>
                   ) : null}
