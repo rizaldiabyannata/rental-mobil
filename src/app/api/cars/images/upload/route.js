@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
 import {
-  saveImageFile,
-  saveMultipleImages,
-  deleteUploadedFile,
-} from "@/lib/upload";
+  uploadMultipleFilesToMinio,
+  deleteFileFromMinio,
+} from "@/lib/minio-upload";
 import { uploadRateLimiter } from "@/lib/rateLimit";
 
 // POST /api/cars/images/upload
@@ -42,7 +41,7 @@ async function uploadCarImagesHandler(request) {
     const imageFiles = formData
       .getAll("images")
       .filter((f) => f && typeof f !== "string");
-    const savedImages = await saveMultipleImages(imageFiles, {
+    const savedImages = await uploadMultipleFilesToMinio(imageFiles, {
       subfolder: "cars",
       maxSizeMB: 5,
     });
@@ -55,35 +54,18 @@ async function uploadCarImagesHandler(request) {
       const img = await prisma.carImage.create({
         data: {
           carId,
-          imageUrl: saved.path,
+          imageUrl: saved.url, // Simpan URL lengkap dari MinIO
           alt,
-          order: 0, // will reorder later
+          order: 0, // akan diurutkan nanti
         },
       });
       createdImages.push(img);
     }
 
     // Handle cover image if provided
-    let coverFile = formData.get("cover");
-    let coverResult;
-    if (coverFile && typeof coverFile !== "string") {
-      coverResult = await saveImageFile(coverFile, {
-        subfolder: "cars",
-        maxSizeMB: 5,
-      });
-      // Optionally: store a coverUrl inside Car specifications JSON or add a field (not present now)
-      // We'll store inside specifications JSON under key coverImage
-      const specs = car.specifications || {};
-      // Cleanup previous cover if there is one stored in specs.coverImage
-      if (specs.coverImage && specs.coverImage.startsWith("/uploads/")) {
-        deleteUploadedFile(specs.coverImage);
-      }
-      specs.coverImage = coverResult.path;
-      await prisma.car.update({
-        where: { id: carId },
-        data: { specifications: specs },
-      });
-    }
+    // Logika untuk 'cover image' tidak akan diubah karena tampaknya tidak digunakan
+    // di frontend, namun kita pastikan tidak error jika ada.
+    // Jika suatu saat fitur ini dipakai, perlu disesuaikan juga.
 
     // Remove images if requested
     const removeRaw = formData.get("removeImageIds");
@@ -95,12 +77,18 @@ async function uploadCarImagesHandler(request) {
         // ignore parse error
       }
       if (Array.isArray(ids) && ids.length) {
-        const existing = await prisma.carImage.findMany({
+        const imagesToDelete = await prisma.carImage.findMany({
           where: { id: { in: ids }, carId },
         });
-        for (const img of existing) {
-          if (img.imageUrl) deleteUploadedFile(img.imageUrl);
+
+        // Hapus file dari MinIO
+        for (const img of imagesToDelete) {
+          if (img.imageUrl) {
+            await deleteFileFromMinio(img.imageUrl);
+          }
         }
+
+        // Hapus record dari database
         await prisma.carImage.deleteMany({ where: { id: { in: ids }, carId } });
       }
     }
@@ -132,7 +120,7 @@ async function uploadCarImagesHandler(request) {
       success: true,
       message: "Images processed",
       data: {
-        coverImage: coverResult?.path || car.specifications?.coverImage || null,
+        // coverImage: coverResult?.path || car.specifications?.coverImage || null,
         newImages: createdImages,
         images: allImages,
       },

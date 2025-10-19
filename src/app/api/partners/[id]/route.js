@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withAuth, maybeWithAuth } from "@/lib/auth/middleware";
 import { prisma } from "@/lib/prisma";
-import { saveImageFile, deleteUploadedFile } from "@/lib/upload";
+import { uploadFileToMinio, deleteFileFromMinio } from "@/lib/minio-upload";
 
 // GET - Detail partner
 async function getPartner(request, props) {
@@ -52,15 +52,15 @@ async function updatePartner(request, props) {
       if (order !== undefined) updateData.order = order;
 
       if (newLogoFile && typeof newLogoFile !== "string") {
-        // Upload new logo
-        const stored = await saveImageFile(newLogoFile, {
+        // Upload new logo to MinIO
+        const stored = await uploadFileToMinio(newLogoFile, {
           subfolder: "partners",
           maxSizeMB: 3,
         });
-        updateData.logoUrl = stored.path;
-        // Delete old logo asynchronously
+        updateData.logoUrl = stored.url; // Simpan URL lengkap
+        // Hapus logo lama dari MinIO
         if (existing.logoUrl) {
-          deleteUploadedFile(existing.logoUrl);
+          await deleteFileFromMinio(existing.logoUrl);
         }
       }
     } else {
@@ -107,11 +107,13 @@ async function deletePartner(request, props) {
       return NextResponse.json({ error: "Partner not found" }, { status: 404 });
     }
 
-    await prisma.partner.delete({ where: { id } });
-
+    // Hapus logo dari MinIO terlebih dahulu
     if (existing.logoUrl) {
-      deleteUploadedFile(existing.logoUrl);
+      await deleteFileFromMinio(existing.logoUrl);
     }
+
+    // Kemudian hapus record dari database
+    await prisma.partner.delete({ where: { id } });
 
     return NextResponse.json({
       success: true,
