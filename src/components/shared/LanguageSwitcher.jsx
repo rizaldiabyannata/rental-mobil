@@ -1,8 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { usePathname } from "next-intl";
-import { Link } from "next-intl";
+import { Link, usePathname } from "@/navigation";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();

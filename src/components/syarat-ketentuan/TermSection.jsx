@@ -82,7 +82,7 @@ const SyaratSection = ({ terms }) => {
                     className={`w-full text-left p-3 rounded-md transition-colors font-semibold flex items-center gap-3 text-gray-600 ${
                       selectedTerm.id === term.id
                         ? "bg-[#EFF7FF] text-primary"
-                        - : "hover:[#E0E0E0]"
+                        : "hover:[#E0E0E0]"
                     }`}
                   >
                     <svg

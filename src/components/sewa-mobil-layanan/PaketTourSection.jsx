@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { Link } from "next-intl"; // Correct import
+import { Link } from "@/navigation"; // Correct import
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import { useTranslations } from "next-intl";

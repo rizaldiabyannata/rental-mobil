@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Link } from "next-intl";
+import { Link } from "@/navigation";
 import { useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
