@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // domains: ["localhost", process.env.MINIO_ENDPOINT],
+    domains: ["localhost", process.env.MINIO_ENDPOINT],
     remotePatterns: [
       {
         protocol: "http",
