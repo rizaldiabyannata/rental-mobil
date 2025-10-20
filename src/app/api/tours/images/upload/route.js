@@ -52,6 +52,7 @@ async function uploadTourImagesHandler(request) {
         subfolder: "tours",
         maxSizeMB: 5,
       });
+      console.log("MinIO upload results:", saved);
     }
 
     if (!imageFiles.length && removed.length === 0) {
@@ -61,11 +62,13 @@ async function uploadTourImagesHandler(request) {
       );
     }
 
+    const urls = saved.map((s) => s.url);
+    console.log("Returning URLs to frontend:", urls);
     return NextResponse.json({
       success: true,
       message: "Tours images processed",
       files: saved, // detail dari MinIO
-      urls: saved.map((s) => s.url), // array URL lengkap untuk frontend
+      urls, // array URL lengkap untuk frontend
       removed,
       rateLimit: { remaining: rl.remaining },
     });

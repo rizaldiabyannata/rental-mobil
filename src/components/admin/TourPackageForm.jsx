@@ -194,27 +194,45 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
   }
 
   async function handleUploadFiles() {
-    if (!selectedFiles?.length) return;
+    if (!selectedFiles?.length) {
+      setError("Pilih file gambar terlebih dahulu");
+      return;
+    }
     setUploading(true);
     setError(null);
     try {
       const form = new FormData();
-      for (const f of selectedFiles) form.append("images", f);
+      for (const f of selectedFiles) {
+        console.log("Adding file to FormData:", f.name, f.type, f.size);
+        form.append("images", f);
+      }
+      console.log("Uploading to /api/tours/images/upload...");
       const res = await fetch("/api/tours/images/upload", {
         method: "POST",
         body: form,
       });
+      console.log("Upload response status:", res.status);
       if (!res.ok) {
         const txt = await res.text();
+        console.error("Upload failed:", txt);
         throw new Error(txt || "Upload gagal");
       }
       const json = await res.json();
+      console.log("Upload success:", json);
       const urls = Array.isArray(json?.urls) ? json.urls : [];
+      console.log("Extracted URLs:", urls);
+      if (!urls.length) {
+        throw new Error("Tidak ada URL gambar yang dikembalikan dari server");
+      }
       const current = toArrayFromComma(galleryImagesText);
       const next = [...current, ...urls];
+      console.log("Current gallery:", current);
+      console.log("New gallery:", next);
       setGalleryImagesText(toCommaFromArray(next));
       setSelectedFiles([]);
+      setError(null); // Clear any previous errors on success
     } catch (err) {
+      console.error("Upload error:", err);
       setError(err.message || "Upload gagal");
     } finally {
       setUploading(false);
