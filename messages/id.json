@@ -211,7 +211,10 @@
       },
       "hero": {
         "title": "Harga <span class='text-primary'>Paket Tour</span>"
-      }
+      },
+      "allPackagesTitle": "Semua Paket Wisata",
+      "allPackagesDescription": "Pilih paket yang paling sesuai dengan kebutuhan perjalanan Anda.",
+      "noPackagesAvailable": "Saat ini belum ada paket wisata yang tersedia. Silakan periksa kembali nanti."
     },
     "airportTransfer": {
       "meta": {
@@ -233,7 +236,8 @@
       "subtitle": "Selamat datang di layanan rental mobil Reborn Lombok Trans. Dengan melanjutkan proses pemesanan, Anda menyatakan telah membaca, memahami, dan setuju untuk terikat pada semua syarat dan ketentuan yang tercantum di halaman ini. Mohon luangkan waktu untuk mempelajarinya dengan saksama."
     },
     "sectionTitle": "Syarat dan Ketentuan",
-    "sectionDescription": "Temukan syarat dan ketentuan penyewaan di sini."
+    "sectionDescription": "Temukan syarat dan ketentuan penyewaan di sini.",
+    "lastUpdated": "Diperbarui pada"
   },
   "servicesPage": {
     "meta": {
@@ -252,13 +256,23 @@
     "notFound": "Armada tidak ditemukan"
   },
   "tourDetail": {
-    "heroTitle": "Paket Wisata Pilihan",
+    "meta": {
+      "titleSuffix": "Paket Wisata Lombok",
+      "defaultTitle": "Paket Wisata",
+      "notFound": "Paket Tidak Ditemukan"
+    },
+    "heroSubtitlePrefix": "Paket Wisata",
     "descriptionTitle": "Deskripsi Paket",
     "inclusionsTitle": "Termasuk Dalam Paket",
     "priceMatrixTitle": "Tabel Harga",
     "dynamicPrice": "Harga paket bersifat dinamis",
     "askForPrice": "Tanyakan harga terbaru dan dapatkan penawaran terbaik sesuai jumlah peserta dan pilihan hotel.",
-    "askCtaTitle": "Tanyakan Harga Paket Ini"
+    "askCtaTitle": "Tanyakan Harga Paket Ini",
+    "startingFrom": "Mulai dari",
+    "perPax": "/ PAX",
+    "hotelOptionsPrefix": "Pilihan Hotel:",
+    "paxColumn": "Jumlah Peserta",
+    "pricePerPaxColumn": "Harga per PAX"
   },
   "auth": {
     "login": {

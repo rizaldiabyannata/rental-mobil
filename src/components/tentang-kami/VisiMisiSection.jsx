@@ -1,59 +1,60 @@
+"use client";
 import Image from "next/image";
 import SectionHeading from "@/components/SectionHeading";
 import {
   Car,
   Handshake,
   ShieldCheck,
-  Users,
   KeyRound,
   Globe2,
   Settings2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const misiItems = [
+const getMisiItems = (t) => [
   {
-    title: "Menyajikan Armada Terbaik",
-    description: "Menjamin setiap kendaraan dalam kondisi prima",
+    title: t("missions.0.title"),
+    description: t("missions.0.description"),
     Icon: Car,
   },
   {
-    title: "Memberikan Kemudahan Maksimal",
-    description: "Menawarkan paket all-in-one bebas repot",
+    title: t("missions.1.title"),
+    description: t("missions.1.description"),
     Icon: Settings2,
   },
   {
-    title: "Memprioritaskan Pelayanan Prima",
-    description: "Menempatkan keamanan & kepuasan anda",
+    title: t("missions.2.title"),
+    description: t("missions.2.description"),
     Icon: ShieldCheck,
   },
   {
-    title: "Berkontribusi Untuk Pariwisata Indonesia",
-    description: "Menyediakan akses transportasi yang andal",
+    title: t("missions.3.title"),
+    description: t("missions.3.description"),
     Icon: Globe2,
   },
   {
-    title: "Menghadirkan Akses yang Mudah",
-    description: "Sistem reservasi yang cepat dan fleksibel",
+    title: t("missions.4.title"),
+    description: t("missions.4.description"),
     Icon: KeyRound,
   },
   {
-    title: "Membangun Kemitraan",
-    description: "Aktif menjalani kerjasama demi pariwisata Lombok",
+    title: t("missions.5.title"),
+    description: t("missions.5.description"),
     Icon: Handshake,
   },
 ];
 
 const VisiMisiSection = () => {
+  const t = useTranslations("aboutUs.visionMission");
+  const misiItems = getMisiItems(t);
+
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-32">
         <SectionHeading
-          title={
-            <>
-              <span className="text-black">Visi & Misi Reborn Lombok</span>
-              <span className="text-primary"> Reborn Lombok Trans</span>
-            </>
-          }
+          title={t.rich("title", {
+            span: (chunks) => <span className="text-primary">{chunks}</span>,
+          })}
           align="center"
           size="md"
           underline
@@ -65,17 +66,18 @@ const VisiMisiSection = () => {
         />
         <div className="md:bg-[#EFF7FF] rounded-xl p-6 md:p-8 lg:p-10 mb-12">
           <div className="flex items-center gap-4 mb-4">
-            <Image src="/target.svg" alt="Visi Kami" width={50} height={50} />
+            <Image
+              src="/target.svg"
+              alt={t("visionTitle")}
+              width={50}
+              height={50}
+            />
             <h2 className="font-sans text-[20px] md:text-2xl font-bold text-[#051C35]">
-              Visi Kami
+              {t("visionTitle")}
             </h2>
           </div>
           <p className="text-[#051C35] md:text-lg text-justify font-normal">
-            Menjadi perusahaan rental mobil terpercaya di Kota Mataram yang
-            menghadirkan layanan transportasi aman (berbadan Hukum), nyaman
-            (Unit terbaru 2025), dan praktis (mudah pemesanan dan transparan)
-            untuk mendukung kebutuhan perjalanan wisata, bisnis, dan keluarga di
-            Lombok.
+            {t("visionDescription")}
           </p>
         </div>
 
@@ -84,13 +86,13 @@ const VisiMisiSection = () => {
           <div className="flex items-center gap-4 mb-6">
             <Image
               src="/target.svg"
-              alt="Visi Kami"
+              alt={t("missionTitle")}
               width={50}
               height={50}
               className="size-[32px] md:size-[50px]"
             />
             <h2 className="font-sans text-[20px] md:text-2xl font-bold text-[#051C35]">
-              Misi Kami
+              {t("missionTitle")}
             </h2>
           </div>
 

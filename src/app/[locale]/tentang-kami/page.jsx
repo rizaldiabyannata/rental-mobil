@@ -1,29 +1,37 @@
+"use client";
+
 import TentangSection from "@/components/tentang-kami/TentangSection";
 import VisiMisiSection from "@/components/tentang-kami/VisiMisiSection";
 import GallerySection from "@/components/tentang-kami/GallerySection";
 import HeroSection from "@/components/homepage/HeroSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
+import { useTranslations } from "next-intl";
 
-export const metadata = {
-  title: "Tentang Kami - Penyedia Rental Mobil Terpercaya di Lombok",
-  description:
-    "Kenali lebih dekat penyedia rental mobil Anda di Lombok. Kami berkomitmen memberikan layanan terbaik dengan armada berkualitas dan harga yang kompetitif.",
-};
+// Note: generateMetadata is a server-side function.
+// Next.js allows it to be in the same file as a Client Component.
+export async function generateMetadata({ params: { locale } }) {
+  // Using a separate t function for server-side metadata
+  const t = (await import(`../../../messages/${locale}.json`)).default;
+  const meta = t.aboutUs.meta;
+  return {
+    title: meta.title,
+    description: meta.description,
+  };
+}
 
 export default function TentangKami() {
+  const t = useTranslations("aboutUs.hero");
+
   return (
     <>
       <main>
         <HeroSection
           imageOnRight={false}
           imageSrc="/Hero-3-1.png"
-          title={
-            <>
-              <span className="text-black">Mengenal Kami </span>
-              <span className="text-primary">Lebih Dekat</span>
-            </>
-          }
-          subtitle="Pelajari lebih lanjut tentang sejarah, visi, dan nilai-nilai yang membentuk kami."
+          title={t.rich("title", {
+            span: (chunks) => <span className="text-primary">{chunks}</span>,
+          })}
+          subtitle={t("subtitle")}
         />
         <TentangSection />
         <VisiMisiSection />

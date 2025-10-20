@@ -1,10 +1,14 @@
+"use client";
+
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 function TourInclusions({ inclusions = [] }) {
+  const t = useTranslations("tourDetail");
   if (!inclusions || inclusions.length === 0) return null;
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-4">Termasuk Dalam Paket</h3>
+      <h3 className="text-xl font-semibold mb-4">{t("inclusionsTitle")}</h3>
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
         {inclusions.map((item, index) => (
           <li key={index} className="flex items-center gap-3">
@@ -18,6 +22,7 @@ function TourInclusions({ inclusions = [] }) {
 }
 
 function TourPriceMatrix({ hotelTiers = [], showHotels = true }) {
+  const t = useTranslations("tourDetail");
   if (!hotelTiers || hotelTiers.length === 0) return null;
 
   const currencyFormatter = new Intl.NumberFormat("id-ID", {
@@ -28,7 +33,7 @@ function TourPriceMatrix({ hotelTiers = [], showHotels = true }) {
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-4">Tabel Harga</h3>
+      <h3 className="text-xl font-semibold mb-4">{t("priceMatrixTitle")}</h3>
       <div className="space-y-6">
         {hotelTiers.map((tier, index) => (
           <div key={index} className="border rounded-lg overflow-hidden">
@@ -36,7 +41,7 @@ function TourPriceMatrix({ hotelTiers = [], showHotels = true }) {
               <h4 className="font-semibold text-lg">{tier.name}</h4>
               {showHotels && tier.hotels && tier.hotels.length > 0 && (
                 <p className="text-sm text-gray-600 mt-1">
-                  Pilihan Hotel: {tier.hotels.join(", ")}
+                  {t("hotelOptionsPrefix")} {tier.hotels.join(", ")}
                 </p>
               )}
             </div>
@@ -44,9 +49,9 @@ function TourPriceMatrix({ hotelTiers = [], showHotels = true }) {
               <table className="w-full text-left">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="p-4 font-medium">Jumlah Peserta</th>
+                    <th className="p-4 font-medium">{t("paxColumn")}</th>
                     <th className="p-4 font-medium text-right">
-                      Harga per PAX
+                      {t("pricePerPaxColumn")}
                     </th>
                   </tr>
                 </thead>

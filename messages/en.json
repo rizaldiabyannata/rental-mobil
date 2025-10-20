@@ -211,7 +211,10 @@
       },
       "hero": {
         "title": "<span class='text-primary'>Tour Package</span> Prices"
-      }
+      },
+      "allPackagesTitle": "All Tour Packages",
+      "allPackagesDescription": "Choose the package that best suits your travel needs.",
+      "noPackagesAvailable": "There are currently no tour packages available. Please check back later."
     },
     "airportTransfer": {
       "meta": {
@@ -233,7 +236,8 @@
       "subtitle": "Welcome to the Reborn Lombok Trans car rental service. By proceeding with the booking process, you declare that you have read, understood, and agree to be bound by all the terms and conditions listed on this page. Please take the time to study them carefully."
     },
     "sectionTitle": "Terms and Conditions",
-    "sectionDescription": "Find the rental terms and conditions here."
+    "sectionDescription": "Find the rental terms and conditions here.",
+    "lastUpdated": "Last updated on"
   },
   "servicesPage": {
     "meta": {
@@ -252,13 +256,23 @@
     "notFound": "Fleet not found"
   },
   "tourDetail": {
-    "heroTitle": "Featured Tour Packages",
+    "meta": {
+      "titleSuffix": "Lombok Tour Package",
+      "defaultTitle": "Tour Package",
+      "notFound": "Package Not Found"
+    },
+    "heroSubtitlePrefix": "Tour Package",
     "descriptionTitle": "Package Description",
     "inclusionsTitle": "Included in the Package",
     "priceMatrixTitle": "Price Table",
     "dynamicPrice": "Package price is dynamic",
     "askForPrice": "Ask for the latest prices and get the best offer according to the number of participants and hotel choices.",
-    "askCtaTitle": "Ask for This Package's Price"
+    "askCtaTitle": "Ask for This Package's Price",
+    "startingFrom": "Starting from",
+    "perPax": "/ PAX",
+    "hotelOptionsPrefix": "Hotel Options:",
+    "paxColumn": "Number of Participants",
+    "pricePerPaxColumn": "Price per PAX"
   },
   "auth": {
     "login": {

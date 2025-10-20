@@ -1,28 +1,32 @@
+"use client";
+
 import SyaratSectionWrapper from "@/components/syarat-ketentuan/SyaratSectionWrapper";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import HeroSection from "@/components/homepage/HeroSection";
 import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
+import { useTranslations } from "next-intl";
 
-export const metadata = {
-  title: "Syarat dan Ketentuan Sewa Mobil di Lombok",
-  description:
-    "Pahami syarat dan ketentuan yang berlaku untuk semua layanan sewa mobil kami di Lombok. Informasi penting mengenai pemesanan, pembayaran, dan penggunaan kendaraan.",
-};
+export async function generateMetadata({ params: { locale } }) {
+  const t = (await import(`../../../messages/${locale}.json`)).default;
+  const meta = t.terms.meta;
+  return {
+    title: meta.title,
+    description: meta.description,
+  };
+}
 
 export default function SyaratKetentuan() {
+  const t = useTranslations("terms.hero");
   return (
     <>
       <main>
         <HeroSection
           imageOnRight={false}
           imageSrc="/Hero-1.png"
-          title={
-            <>
-              <span className="text-black">Syarat & Ketentuaan </span>
-              <span className="text-primary">Sewa Kendaraan</span>
-            </>
-          }
-          subtitle="Selamat datang di layanan rental mobil Reborn Lombok Trans. Dengan melanjutkan proses pemesanan, Anda menyatakan telah membaca, memahami, dan setuju untuk terikat pada semua syarat dan ketentuan yang tercantum di halaman ini. Mohon luangkan waktu untuk mempelajarinya dengan saksama."
+          title={t.rich("title", {
+            span: (chunks) => <span className="text-primary">{chunks}</span>,
+          })}
+          subtitle={t("subtitle")}
         />
         <SyaratSectionWrapper />
         <FaqSectionWrapper />

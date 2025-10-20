@@ -11,23 +11,24 @@ import {
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { Badge } from "@/components/ui/badge";
 import TourDescription from "@/components/tours/TourDescription";
+import { getTranslations } from "next-intl/server";
 
-// Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "tourDetail.meta" });
   try {
-    const { slug } = await params;
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       select: { name: true, description: true },
     });
-    if (!tourPackage) return { title: "Paket Tidak Ditemukan" };
+    if (!tourPackage) return { title: t("notFound") };
     return {
-      title: `${tourPackage.name} | Paket Wisata Lombok`,
+      title: `${tourPackage.name} | ${t("titleSuffix")}`,
       description: (tourPackage.description || "").substring(0, 160),
     };
   } catch (e) {
     console.error("generateMetadata tourPackage failed:", e?.message || e);
-    return { title: "Paket Wisata" };
+    return { title: t("defaultTitle") };
   }
 }
 
@@ -55,10 +56,10 @@ async function getTourPackage(slug) {
 }
 
 export default async function TourDetailPage({ params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "tourDetail" });
   const tour = await getTourPackage(slug);
 
-  // Compute minimal price across all tiers for quick highlight
   const minPrice = (() => {
     try {
       const prices = (tour?.hotelTiers || [])
@@ -76,12 +77,11 @@ export default async function TourDetailPage({ params }) {
     <main>
       <PageHero
         title={tour.name}
-        subtitle={`Paket Wisata ${tour.duration}`}
+        subtitle={`${t("heroSubtitlePrefix")} ${tour.duration}`}
         imageUrl={tour.galleryImages[0] || "/InnovaReborn-2.png"}
       />
       <div className="container mx-auto px-4 md:px-6 pt-0 md:pt-0 pb-10 md:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12">
-          {/* Left: Gallery & Details */}
           <div className="lg:col-span-8 space-y-8 xl:space-y-10 py-4 lg:py-8 xl:py-10">
             <section>
               <TourGallery images={tour.galleryImages} alt={tour.name} />
@@ -91,7 +91,7 @@ export default async function TourDetailPage({ params }) {
               className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
             >
               <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
-                Deskripsi Paket
+                {t("descriptionTitle")}
               </h2>
               <TourDescription description={tour.description} />
             </section>
@@ -109,7 +109,6 @@ export default async function TourDetailPage({ params }) {
             </section>
           </div>
 
-          {/* Right: Sidebar */}
           <aside className="lg:col-span-4 mt-0 lg:mt-8 xl:mt-10">
             <div className="sticky top-24 space-y-6">
               <div className="p-6 xl:p-8 border rounded-xl shadow-md bg-white">
@@ -124,7 +123,7 @@ export default async function TourDetailPage({ params }) {
                 </Badge>
                 {minPrice !== null ? (
                   <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
-                    <p className="text-sm text-neutral-700">Mulai dari</p>
+                    <p className="text-sm text-neutral-700">{t("startingFrom")}</p>
                     <p className="text-2xl font-extrabold text-primary">
                       {new Intl.NumberFormat("id-ID", {
                         style: "currency",
@@ -132,18 +131,17 @@ export default async function TourDetailPage({ params }) {
                         minimumFractionDigits: 0,
                       }).format(minPrice)}
                       <span className="ml-1 text-sm font-medium text-neutral-600">
-                        / PAX
+                        {t("perPax")}
                       </span>
                     </p>
                   </div>
                 ) : (
                   <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
                     <p className="text-sm font-medium text-primary">
-                      Harga paket bersifat dinamis
+                      {t("dynamicPrice")}
                     </p>
                     <p className="text-sm text-neutral-700 mt-1">
-                      Tanyakan harga terbaru dan dapatkan penawaran terbaik
-                      sesuai jumlah peserta dan pilihan hotel.
+                      {t("askForPrice")}
                     </p>
                   </div>
                 )}
@@ -155,7 +153,7 @@ export default async function TourDetailPage({ params }) {
                     className="bg-transparent py-0"
                     message={`Halo, saya ingin menanyakan harga dan ketersediaan paket wisata \"${tour.name}\". Mohon informasinya.`}
                     imageVisible={false}
-                    sectionHeadingText="Tanyakan Harga Paket Ini"
+                    sectionHeadingText={t("askCtaTitle")}
                     sectionDescription={`Dapatkan estimasi biaya untuk ${tour.name}. Kami bantu hitung sesuai jumlah peserta dan pilihan hotel.`}
                   />
                 </div>

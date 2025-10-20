@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-intl"; // Correct import
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import { useTranslations } from "next-intl";
@@ -38,7 +38,7 @@ const PaketTourSection = () => {
           underlineWidth="lg"
           underlineOffset="md"
           titleClassName="text-primary"
-          underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
+          underlineClassName="h-[3-px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
           description={t("description")}
         />

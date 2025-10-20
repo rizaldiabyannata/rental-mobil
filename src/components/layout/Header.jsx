@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Link } from "next-intl";
 import { useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
@@ -84,7 +84,7 @@ const Header = () => {
         />
 
         <nav className="hidden lg:flex items-center gap-2">
-          <Link href={`/${locale}/`}>
+          <Link href="/">
             <Button
               variant={
                 pathname === `/${locale}` || pathname === `/${locale}/`
@@ -95,7 +95,7 @@ const Header = () => {
               {t("nav.home")}
             </Button>
           </Link>
-          <Link href={`/${locale}/sewa-mobil-layanan`}>
+          <Link href="/sewa-mobil-layanan">
             <Button
               variant={
                 pathname.startsWith(`/${locale}/sewa-mobil-layanan`)
@@ -106,7 +106,7 @@ const Header = () => {
               {t("nav.services")}
             </Button>
           </Link>
-          <Link href={`/${locale}/paket-tour`}>
+          <Link href="/paket-tour">
             <Button
               variant={
                 pathname.startsWith(`/${locale}/paket-tour`)
@@ -117,7 +117,7 @@ const Header = () => {
               {t("nav.tour")}
             </Button>
           </Link>
-          <Link href={`/${locale}/tentang-kami`}>
+          <Link href="/tentang-kami">
             <Button
               variant={
                 pathname === `/${locale}/tentang-kami` ? "default" : "ghost"
@@ -126,7 +126,7 @@ const Header = () => {
               {t("nav.about")}
             </Button>
           </Link>
-          <Link href={`/${locale}/syarat-ketentuan`}>
+          <Link href="/syarat-ketentuan">
             <Button
               variant={
                 pathname === `/${locale}/syarat-ketentuan` ? "default" : "ghost"

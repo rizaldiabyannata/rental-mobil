@@ -1,27 +1,33 @@
+"use client";
+
 import HeroSection from "@/components/homepage/HeroSection";
 import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
+import { useTranslations } from "next-intl";
 
-export const metadata = {
-  title: "Layanan Sewa Mobil & Tour di Lombok - Paket Lengkap",
-  description:
-    "Jelajahi semua layanan kami, mulai dari sewa mobil harian, antar jemput bandara, hingga paket wisata eksklusif di Lombok. Solusi transportasi lengkap untuk liburan Anda.",
-};
+// Note: generateMetadata is a server-side function.
+export async function generateMetadata({ params: { locale } }) {
+  const t = (await import(`../../../messages/${locale}.json`)).default;
+  const meta = t.servicesPage.meta;
+  return {
+    title: meta.title,
+    description: meta.description,
+  };
+}
 
 export default function SewaMobilLayanan() {
+  const t = useTranslations("servicesPage.hero");
+
   return (
     <main>
       <HeroSection
         imageOnRight={false}
         imageSrc="/Hero-2.png"
-        title={
-          <>
-            <span className="text-black">Layanan </span>
-            <span className="text-primary">Rental Mobil</span>
-          </>
-        }
-        subtitle="Kepuasan Anda adalah yang Utama. Ingat Lombok! Ingat Reborn Lombok Trans!!"
+        title={t.rich("title", {
+          span: (chunks) => <span className="text-primary">{chunks}</span>,
+        })}
+        subtitle={t("subtitle")}
       />
       <PaketTourSection />
       <ServicesSection />
