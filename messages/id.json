@@ -1,8 +1,328 @@
 {
-  "HeroSection": {
-    "title": "Sewa Mobil <span class='text-primary'>Terbaik di Lombok</span>",
-    "subtitle": "Jelajahi keindahan Lombok dengan nyaman bersama Reborn Lombok Trans. Armada terawat, supir profesional, dan harga terbaik.",
-    "primaryLabel": "Lihat Armada",
-    "contactLabel": "Hubungi Kami"
+  "global": {
+    "contactUs": "Hubungi Kami",
+    "viewFleet": "Lihat Armada",
+    "details": "Detail",
+    "car": "Mobil",
+    "driver": "Supir",
+    "fuel": "BBM",
+    "ticket": "Tiket Wisata",
+    "meal": "Makan",
+    "water": "Air Mineral",
+    "documentation": "Dokumentasi",
+    "hotel": "Hotel",
+    "perDay": "/hari",
+    "per12Hours": "/12 Jam",
+    "startingFrom": "Mulai dari",
+    "perPax": "/ PAX",
+    "learnMore": "Selengkapnya &rarr;"
+  },
+  "homepage": {
+    "meta": {
+      "title": "Reborn Lombok Trans - Rental Mobil Terpercaya di Lombok",
+      "description": "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!"
+    },
+    "hero": {
+      "title": "Sewa Mobil <span class='text-primary'>Terbaik di Lombok</span>",
+      "subtitle": "Jelajahi keindahan Lombok dengan nyaman bersama Reborn Lombok Trans. Armada terawat, supir profesional, dan harga terbaik.",
+      "primaryLabel": "Lihat Armada",
+      "contactLabel": "Hubungi Kami"
+    },
+    "video": {
+      "title": "Video Profil Reborn Lombok Trans"
+    },
+    "whyUs": {
+      "title": "Kenapa Memilih Reborn Lombok Trans?",
+      "description": "Kami berkomitmen memberikan lebih dari sekadar sewa mobil.",
+      "features": [
+        {
+          "title": "Armada Terawat & Berkualitas",
+          "description": "Semua mobil kami adalah keluaran tahun 2025, dalam kondisi prima dan terawat secara rutin untuk menjamin keamanan dan kenyamanan Anda."
+        },
+        {
+          "title": "Supir Profesional & Berpengalaman",
+          "description": "Supir kami tidak hanya ahli mengemudi, tetapi juga ramah dan siap menjadi pemandu wisata Anda."
+        },
+        {
+          "title": "Harga Terbaik & Transparan",
+          "description": "Kami menawarkan harga sewa yang kompetitif tanpa biaya tersembunyi, memberikan nilai terbaik untuk Anda."
+        }
+      ]
+    },
+    "services": {
+      "title": "Jenis Layanan Kami",
+      "description": "Kami menawarkan berbagai layanan untuk memenuhi setiap kebutuhan perjalanan Anda.",
+      "items": [
+        {
+          "title": "Rental Mobil All-in-one",
+          "description": "Sewa mobil dengan supir profesional dan BBM."
+        },
+        {
+          "title": "Tour Keliling Lombok",
+          "description": "Jelajahi berbagai destinasi wisata di Lombok."
+        },
+        {
+          "title": "City Tour Mataram",
+          "description": "Pengalaman menyenangkan berkeliling ibu kota."
+        },
+        {
+          "title": "Antar Jemput",
+          "description": "Layanan penjemputan dan pengantaran praktis."
+        },
+        {
+          "title": "Sewa Fleksibel",
+          "description": "Tentukan sendiri durasi sewa sesuai kebutuhan."
+        },
+        {
+          "title": "Field Trip & Building",
+          "description": "Akomodasi transportasi kegiatan rombongan."
+        }
+      ]
+    },
+    "fleet": {
+      "title": "Armada Pilihan Kami",
+      "description": "Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda.",
+      "empty": "Belum ada armada tersedia."
+    },
+    "tourTeaser": {
+      "title": "Paket Tour Populer",
+      "description": "Pilihan paket yang sering dipesan pelanggan kami.",
+      "empty": "Belum ada paket tour yang tersedia.",
+      "viewAll": "Lihat Semua Paket"
+    },
+    "paketTour": {
+      "title": "Layanan Unggulan Kami",
+      "description": "Kami menyediakan beberapa layanan utama untuk menemani perjalanan Anda di Lombok.",
+      "packages": [
+        {
+          "title": "Sewa Mobil Harian",
+          "description": "Sewa mobil per 12 jam dengan berbagai pilihan paket, termasuk dengan supir dan BBM."
+        },
+        {
+          "title": "Antar Jemput Bandara",
+          "description": "Layanan antar jemput dari/ke Bandara Internasional Lombok ke berbagai destinasi utama."
+        }
+      ],
+      "learnMore": "Selengkapnya &rarr;"
+    },
+    "gallery": {
+      "title": "Galeri Armada & Perjalanan",
+      "description": "Lihat lebih dekat armada kami dan momen perjalanan pelanggan kami."
+    },
+    "partners": {
+      "title": "Mitra Kami",
+      "description": "Kami bangga bekerja sama dengan berbagai mitra terpercaya untuk memberikan layanan terbaik."
+    },
+    "faq": {
+      "title": "Pertanyaan yang Sering Diajukan",
+      "description": "Temukan jawaban atas pertanyaan umum di sini."
+    },
+    "whatsappCta": {
+      "title": "Siap Berangkat? Chat Kami Sekarang",
+      "subtitle": "Tanyakan ketersediaan armada dan dapatkan penawaran paket tour terbaik langsung via WhatsApp.",
+      "description": "Tanyakan ketersediaan {carName} dan dapatkan penawaran terbaik langsung via WhatsApp.",
+      "armada": "armada",
+      "perks": [
+        "Driver berpengalaman & ramah",
+        "Respon cepat via WhatsApp",
+        "Jadwal fleksibel sesuai kebutuhan"
+      ]
+    }
+  },
+  "aboutUs": {
+    "meta": {
+      "title": "Tentang Kami - Penyedia Rental Mobil Terpercaya di Lombok",
+      "description": "Kenali lebih dekat penyedia rental mobil Anda di Lombok. Kami berkomitmen memberikan layanan terbaik dengan armada berkualitas dan harga yang kompetitif."
+    },
+    "hero": {
+      "title": "Mengenal Kami <span class='text-primary'>Lebih Dekat</span>",
+      "subtitle": "Pelajari lebih lanjut tentang sejarah, visi, dan nilai-nilai yang membentuk kami."
+    },
+    "aboutSection": {
+      "title": "Tentang Reborn Lombok Trans",
+      "description": "Reborn Lombok Trans adalah solusi rental mobil Anda di Mataram untuk seluruh wilayah Lombok. Kami menawarkan paket praktis sudah termasuk mobil, sopir berpengalaman, dan bensin, sehingga perjalanan Anda nyaman tanpa biaya tersembunyi.",
+      "armadaTitle": "Armada Terbaik & Terawat",
+      "armadaDescription": "Dengan armada terbaru tahun 2025 yang bersih dan terawat, kami siap melayani kebutuhan wisata, perjalanan bisnis, hingga antar-jemput bandara. Keamanan, kenyamanan, dan kepuasan Anda adalah prioritas kami."
+    },
+    "visionMission": {
+      "title": "Visi & Misi Reborn Lombok Trans",
+      "visionTitle": "Visi Kami",
+      "visionDescription": "Menjadi perusahaan rental mobil terpercaya di Kota Mataram yang menghadirkan layanan transportasi aman (berbadan Hukum), nyaman (Unit terbaru 2025), dan praktis (mudah pemesanan dan transparan) untuk mendukung kebutuhan perjalanan wisata, bisnis, dan keluarga di Lombok.",
+      "missionTitle": "Misi Kami",
+      "missions": [
+        {
+          "title": "Menyajikan Armada Terbaik",
+          "description": "Menjamin setiap kendaraan dalam kondisi prima"
+        },
+        {
+          "title": "Memberikan Kemudahan Maksimal",
+          "description": "Menawarkan paket all-in-one bebas repot"
+        },
+        {
+          "title": "Memprioritaskan Pelayanan Prima",
+          "description": "Menempatkan keamanan & kepuasan anda"
+        },
+        {
+          "title": "Berkontribusi Untuk Pariwisata Indonesia",
+          "description": "Menyediakan akses transportasi yang andal"
+        },
+        {
+          "title": "Menghadirkan Akses yang Mudah",
+          "description": "Sistem reservasi yang cepat dan fleksibel"
+        },
+        {
+          "title": "Membangun Kemitraan",
+          "description": "Aktif menjalani kerjasama demi pariwisata Lombok"
+        }
+      ]
+    }
+  },
+  "pricing": {
+    "filterControls": {
+      "title": "Sesuaikan Harga",
+      "description": "Filter tarif sesuai armada, paket, dan rentang harga yang Anda inginkan.",
+      "resetButton": "Reset",
+      "vehicleType": "Jenis Kendaraan",
+      "packageType": "Jenis Paket",
+      "priceRange": "Range Harga",
+      "allVehicles": "Semua Kendaraan",
+      "allPackages": "Semua Paket",
+      "allPrices": "Semua Harga"
+    },
+    "priceTable": {
+      "serviceType": "Jenis Layanan",
+      "packageType": "Jenis Paket",
+      "fleetType": "Jenis Armada",
+      "price": "Harga"
+    },
+    "dailyRental": {
+      "meta": {
+        "title": "Harga Sewa Mobil Harian di Lombok - Lepas Kunci & Dengan Sopir",
+        "description": "Daftar harga sewa mobil harian (12 jam atau 24 jam) di Lombok. Tersedia opsi lepas kunci atau dengan sopir. Armada lengkap, harga bersaing."
+      },
+      "hero": {
+        "title": "Harga <span class='text-primary'>Sewa Harian</span>"
+      }
+    },
+    "tourPackage": {
+      "meta": {
+        "title": "Harga Paket Tour Lombok - Wisata Murah & Berkesan",
+        "description": "Temukan berbagai pilihan paket tour di Lombok dengan harga terbaik. Jelajahi destinasi wisata populer dengan nyaman bersama kami. Termasuk mobil dan sopir."
+      },
+      "hero": {
+        "title": "Harga <span class='text-primary'>Paket Tour</span>"
+      }
+    },
+    "airportTransfer": {
+      "meta": {
+        "title": "Harga Antar Jemput Bandara Lombok - Tarif Murah & Terjangkau",
+        "description": "Lihat daftar harga layanan antar jemput dari dan ke Bandara Internasional Lombok. Tarif flat, transparan, dan kompetitif untuk berbagai jenis armada."
+      },
+      "hero": {
+        "title": "Harga <span class='text-primary'>Antar Jemput</span>"
+      }
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Syarat dan Ketentuan Sewa Mobil di Lombok",
+      "description": "Pahami syarat dan ketentuan yang berlaku untuk semua layanan sewa mobil kami di Lombok. Informasi penting mengenai pemesanan, pembayaran, dan penggunaan kendaraan."
+    },
+    "hero": {
+      "title": "Syarat & Ketentuan <span class='text-primary'>Sewa Kendaraan</span>",
+      "subtitle": "Selamat datang di layanan rental mobil Reborn Lombok Trans. Dengan melanjutkan proses pemesanan, Anda menyatakan telah membaca, memahami, dan setuju untuk terikat pada semua syarat dan ketentuan yang tercantum di halaman ini. Mohon luangkan waktu untuk mempelajarinya dengan saksama."
+    },
+    "sectionTitle": "Syarat dan Ketentuan",
+    "sectionDescription": "Temukan syarat dan ketentuan penyewaan di sini."
+  },
+  "servicesPage": {
+    "meta": {
+      "title": "Layanan Sewa Mobil & Tour di Lombok - Paket Lengkap",
+      "description": "Jelajahi semua layanan kami, mulai dari sewa mobil harian, antar jemput bandara, hingga paket wisata eksklusif di Lombok. Solusi transportasi lengkap untuk liburan Anda."
+    },
+    "hero": {
+      "title": "Layanan <span class='text-primary'>Rental Mobil</span>",
+      "subtitle": "Kepuasan Anda adalah yang Utama. Ingat Lombok! Ingat Reborn Lombok Trans!!"
+    }
+  },
+  "fleetDetail": {
+    "keyFeaturesTitle": "Fitur Unggulan",
+    "specsTitle": "Spesifikasi Lengkap",
+    "tariffTitle": "Detail Tarif Lengkap",
+    "notFound": "Armada tidak ditemukan"
+  },
+  "tourDetail": {
+    "heroTitle": "Paket Wisata Pilihan",
+    "descriptionTitle": "Deskripsi Paket",
+    "inclusionsTitle": "Termasuk Dalam Paket",
+    "priceMatrixTitle": "Tabel Harga",
+    "dynamicPrice": "Harga paket bersifat dinamis",
+    "askForPrice": "Tanyakan harga terbaru dan dapatkan penawaran terbaik sesuai jumlah peserta dan pilihan hotel.",
+    "askCtaTitle": "Tanyakan Harga Paket Ini"
+  },
+  "auth": {
+    "login": {
+      "title": "Masuk ke akun Anda",
+      "description": "Masukkan email Anda di bawah ini untuk masuk ke akun Anda",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Lupa kata sandi Anda?",
+      "button": "Masuk",
+      "loadingButton": "Masuk..."
+    },
+    "forgotPassword": {
+      "title": "Lupa Password Anda?",
+      "description": "Kami akan mengirimkan OTP ke email Anda",
+      "email": "Email",
+      "sendOtp": "Kirim OTP",
+      "enterOtp": "Masukkan OTP",
+      "verify": "Verifikasi",
+      "resend": "Kirim Ulang"
+    },
+    "resetPassword": {
+      "title": "Atur Ulang Password",
+      "description": "Masukkan password baru Anda di bawah ini.",
+      "newPassword": "Password baru",
+      "confirmPassword": "Konfirmasi password",
+      "save": "Simpan Password"
+    }
+  },
+  "header": {
+    "nav": {
+      "home": "Beranda",
+      "services": "Sewa Mobil & Layanan",
+      "tour": "Paket Tour",
+      "about": "Tentang Kami",
+      "terms": "Syarat & Ketentuan"
+    },
+    "whatsappPrompt": "Butuh Rental?",
+    "whatsappAria": "Hubungi kami di WhatsApp",
+    "openMenuAria": "Buka menu",
+    "closeMenuAria": "Tutup menu"
+  },
+  "footer": {
+    "satisfaction": "Kepuasan Anda Prioritas Kami",
+    "tagline": "Rental Mobil Lombok Terpercaya",
+    "usefulLinks": {
+      "title": "Tautan Penting",
+      "about": "Tentang Kami",
+      "services": "Sewa Mobil & Layanan",
+      "terms": "Syarat & Ketentuan"
+    },
+    "carLinks": {
+      "title": "Armada Populer",
+      "innova": "Innova Reborn",
+      "hiace": "Hiace Commuter"
+    },
+    "address": {
+      "title": "Alamat Kantor",
+      "content": "Jl. Adi Sucipto No. 10, Mataram, Lombok, NTB"
+    },
+    "email": {
+      "title": "Email"
+    },
+    "phone": {
+      "title": "Telepon"
+    }
   }
 }

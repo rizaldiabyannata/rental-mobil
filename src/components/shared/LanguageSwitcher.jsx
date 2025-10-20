@@ -9,7 +9,16 @@ export default function LanguageSwitcher() {
   const locale = useLocale();
 
   const changeLocale = (nextLocale) => {
-    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
+    // Remove any leading locale from the current path
+    const segments = pathname.split("/").filter(Boolean);
+    // If the first segment is a supported locale, remove it
+    const supportedLocales = ["id", "en"];
+    if (supportedLocales.includes(segments[0])) {
+      segments.shift();
+    }
+    // Build the new path with the selected locale
+    const newPath =
+      `/${nextLocale}` + (segments.length ? `/${segments.join("/")}` : "");
     router.replace(newPath);
   };
 

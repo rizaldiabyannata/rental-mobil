@@ -6,12 +6,7 @@ import SectionHeading from "@/components/SectionHeading";
 import WhatsAppCta from "@/components/shared/WhatsAppCta";
 import { cn } from "@/lib/utils";
 import { ShieldCheck, Clock3, ThumbsUp } from "lucide-react";
-
-const perks = [
-  { icon: ShieldCheck, text: "Driver berpengalaman & ramah" },
-  { icon: Clock3, text: "Respon cepat via WhatsApp" },
-  { icon: ThumbsUp, text: "Jadwal fleksibel sesuai kebutuhan" },
-];
+import { useTranslations } from "next-intl";
 
 export default function WhatsAppCtaSection({
   carName = undefined,
@@ -19,11 +14,23 @@ export default function WhatsAppCtaSection({
   imageSrc = "/imageforctasection.png",
   imageAlt = "Armada siap berangkat",
   imageVisible = true,
-  sectionHeadingText = "Siap Berangkat? Chat Kami Sekarang",
-  sectionDescription = "Tanyakan ketersediaan armada dan dapatkan penawaran paket tour terbaik langsung via WhatsApp.",
+  sectionHeadingText,
+  sectionDescription,
   className,
   includePageLink, // optional override; if undefined, auto-exclusion applies in WhatsAppCta
 }) {
+  const t = useTranslations("homepage.whatsappCta");
+
+  const perks = [
+    { icon: ShieldCheck, text: t("perks.0") },
+    { icon: Clock3, text: t("perks.1") },
+    { icon: ThumbsUp, text: t("perks.2") },
+  ];
+
+  // Use translations if props not provided
+  const title = sectionHeadingText || t("title");
+  const description = sectionDescription || t("subtitle");
+
   return (
     <section className={cn("w-full py-10 md:py-14 bg-neutral-50", className)}>
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
@@ -36,7 +43,7 @@ export default function WhatsAppCtaSection({
           {/* Left: Text + CTA */}
           <div className={cn(!imageVisible && "mx-auto max-w-2xl")}>
             <SectionHeading
-              title={sectionHeadingText}
+              title={title}
               align={imageVisible ? "left" : "center"}
               size="lg"
               underline
@@ -46,7 +53,7 @@ export default function WhatsAppCtaSection({
               titleClassName="text-primary"
               underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
               className="mb-4"
-              description={sectionDescription}
+              description={description}
             />
             <p
               className={cn(
@@ -54,8 +61,7 @@ export default function WhatsAppCtaSection({
                 !imageVisible && "text-center"
               )}
             >
-              Tanyakan ketersediaan {carName ? <b>{carName}</b> : "armada"} dan
-              dapatkan penawaran terbaik langsung via WhatsApp.
+              {t("description", { carName: carName || t("armada") })}
             </p>
 
             <ul

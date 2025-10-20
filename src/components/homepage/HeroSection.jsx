@@ -14,11 +14,9 @@ const HeroSection = ({
   primaryHref = "/#armada",
   waProps: customWaProps,
 }) => {
-  const t = useTranslations("HeroSection");
+  const t = useTranslations("homepage.hero");
 
-  const title = (
-    <span dangerouslySetInnerHTML={{ __html: t.raw("title") }} />
-  );
+  const title = <span dangerouslySetInnerHTML={{ __html: t.raw("title") }} />;
   const subtitle = t("subtitle");
   const primaryLabel = t("primaryLabel");
 

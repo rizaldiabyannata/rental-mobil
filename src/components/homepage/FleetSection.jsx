@@ -1,6 +1,9 @@
+"use client";
+
 import CarCard from "./CarCard";
 import SectionHeading from "@/components/SectionHeading";
 import { prisma } from "@/lib/prisma";
+import { useTranslations } from "next-intl";
 
 async function getCars() {
   try {
@@ -50,8 +53,8 @@ async function getCars() {
   }
 }
 
-const FleetSection = async () => {
-  const carsData = await getCars();
+const FleetSectionContent = ({ carsData }) => {
+  const t = useTranslations("homepage.fleet");
 
   // Local uploads mapping
   function getImageUrl(src) {
@@ -108,7 +111,7 @@ const FleetSection = async () => {
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
           <SectionHeading
-            title={"Armada Pilihan Kami"}
+            title={t("title")}
             align="center"
             size="md"
             underline
@@ -118,9 +121,7 @@ const FleetSection = async () => {
             titleClassName="text-primary"
             underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
             className="mb-6 md:mb-10"
-            description={
-              "Pilih mobil yang paling sesuai dengan kebutuhan perjalanan Anda."
-            }
+            description={t("description")}
           />
         </div>
 
@@ -131,13 +132,19 @@ const FleetSection = async () => {
             ))
           ) : (
             <div className="col-span-2 text-center text-gray-600 py-8">
-              Belum ada armada tersedia.
+              {t("empty")}
             </div>
           )}
         </div>
       </div>
     </section>
   );
+};
+
+const FleetSection = async () => {
+  const carsData = await getCars();
+
+  return <FleetSectionContent carsData={carsData} />;
 };
 
 export default FleetSection;

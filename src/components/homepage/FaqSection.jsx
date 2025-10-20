@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionContent,
@@ -6,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 
 import SectionHeading from "../SectionHeading";
+import { useTranslations } from "next-intl";
 
 const defaultFaq = [
   {
@@ -36,6 +39,8 @@ const defaultFaq = [
 ];
 
 const FaqSection = ({ faqs }) => {
+  const t = useTranslations("homepage.faq");
+
   const faqData =
     Array.isArray(faqs) && faqs.length
       ? faqs.map((f) => ({ question: f.question, answer: f.answer }))
@@ -44,7 +49,7 @@ const FaqSection = ({ faqs }) => {
     <section className="bg-white py-[25px] md:py-[50px]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <SectionHeading
-          title={"Pertanyaan yang Sering Diajukan"}
+          title={t("title")}
           align="center"
           size="md"
           underline
@@ -54,7 +59,7 @@ const FaqSection = ({ faqs }) => {
           titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
-          description={"Temukan jawaban atas pertanyaan umum di sini."}
+          description={t("description")}
         />
 
         <Accordion type="single" collapsible className="w-full space-y-4 pb-12">

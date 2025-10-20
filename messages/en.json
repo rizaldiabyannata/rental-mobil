@@ -1,8 +1,328 @@
 {
-  "HeroSection": {
-    "title": "[EN] Car Rental <span class='text-primary'>Best in Lombok</span>",
-    "subtitle": "[EN] Explore the beauty of Lombok in comfort with Reborn Lombok Trans. Well-maintained fleet, professional drivers, and the best prices.",
-    "primaryLabel": "[EN] View Fleet",
-    "contactLabel": "[EN] Contact Us"
+  "global": {
+    "contactUs": "Contact Us",
+    "viewFleet": "View Fleet",
+    "details": "Details",
+    "car": "Car",
+    "driver": "Driver",
+    "fuel": "Fuel",
+    "ticket": "Tour Ticket",
+    "meal": "Meal",
+    "water": "Mineral Water",
+    "documentation": "Documentation",
+    "hotel": "Hotel",
+    "perDay": "/day",
+    "per12Hours": "/12 Hours",
+    "startingFrom": "Starting from",
+    "perPax": "/ PAX",
+    "learnMore": "Learn More &rarr;"
+  },
+  "homepage": {
+    "meta": {
+      "title": "Reborn Lombok Trans - Trusted Car Rental in Lombok",
+      "description": "Looking for car rental in Lombok? We provide the newest fleet for self-drive or with a driver. Affordable prices, best service. Contact us!"
+    },
+    "hero": {
+      "title": "The Best <span class='text-primary'>Car Rental in Lombok</span>",
+      "subtitle": "Explore the beauty of Lombok comfortably with Reborn Lombok Trans. Well-maintained fleet, professional drivers, and the best prices.",
+      "primaryLabel": "View Fleet",
+      "contactLabel": "Contact Us"
+    },
+    "video": {
+      "title": "Reborn Lombok Trans Profile Video"
+    },
+    "whyUs": {
+      "title": "Why Choose Reborn Lombok Trans?",
+      "description": "We are committed to providing more than just a car rental.",
+      "features": [
+        {
+          "title": "Well-Maintained & Quality Fleet",
+          "description": "All our cars are 2025 models, in prime condition and routinely maintained to ensure your safety and comfort."
+        },
+        {
+          "title": "Professional & Experienced Drivers",
+          "description": "Our drivers are not only expert drivers but also friendly and ready to be your tour guide."
+        },
+        {
+          "title": "Best & Transparent Prices",
+          "description": "We offer competitive rental prices with no hidden fees, providing the best value for you."
+        }
+      ]
+    },
+    "services": {
+      "title": "Our Service Types",
+      "description": "We offer a variety of services to meet your every travel need.",
+      "items": [
+        {
+          "title": "All-in-one Car Rental",
+          "description": "Rent a car with a professional driver and fuel included."
+        },
+        {
+          "title": "Lombok Island Tour",
+          "description": "Explore various tourist destinations in Lombok."
+        },
+        {
+          "title": "Mataram City Tour",
+          "description": "A pleasant experience exploring the capital city."
+        },
+        {
+          "title": "Pickup & Drop-off",
+          "description": "Convenient pickup and drop-off services."
+        },
+        {
+          "title": "Flexible Rental",
+          "description": "Choose your own rental duration according to your needs."
+        },
+        {
+          "title": "Field Trip & Team Building",
+          "description": "Transportation accommodation for group activities."
+        }
+      ]
+    },
+    "fleet": {
+      "title": "Our Featured Fleet",
+      "description": "Choose the car that best suits your travel needs.",
+      "empty": "No fleet available yet."
+    },
+    "tourTeaser": {
+      "title": "Popular Tour Packages",
+      "description": "Package options that our customers often book.",
+      "empty": "No tour packages available yet.",
+      "viewAll": "View All Packages"
+    },
+    "paketTour": {
+      "title": "Our Featured Services",
+      "description": "We provide several main services to accompany your journey in Lombok.",
+      "packages": [
+        {
+          "title": "Daily Car Rental",
+          "description": "Rent a car per 12 hours with various package options, including driver and fuel."
+        },
+        {
+          "title": "Airport Transfer",
+          "description": "Shuttle service from/to Lombok International Airport to various main destinations."
+        }
+      ],
+      "learnMore": "Learn More &rarr;"
+    },
+    "gallery": {
+      "title": "Fleet & Journey Gallery",
+      "description": "Take a closer look at our fleet and our customers' travel moments."
+    },
+    "partners": {
+      "title": "Our Partners",
+      "description": "We are proud to work with various trusted partners to provide the best service."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "description": "Find answers to common questions here."
+    },
+    "whatsappCta": {
+      "title": "Ready to Go? Chat With Us Now",
+      "subtitle": "Ask about fleet availability and get the best tour package offers directly via WhatsApp.",
+      "description": "Ask about {carName} availability and get the best offers directly via WhatsApp.",
+      "armada": "fleet",
+      "perks": [
+        "Experienced & friendly drivers",
+        "Fast response via WhatsApp",
+        "Flexible schedule to suit your needs"
+      ]
+    }
+  },
+  "aboutUs": {
+    "meta": {
+      "title": "About Us - Trusted Car Rental Provider in Lombok",
+      "description": "Get to know your car rental provider in Lombok better. We are committed to providing the best service with a quality fleet and competitive prices."
+    },
+    "hero": {
+      "title": "Getting to Know Us <span class='text-primary'>Better</span>",
+      "subtitle": "Learn more about the history, vision, and values that shape us."
+    },
+    "aboutSection": {
+      "title": "About Reborn Lombok Trans",
+      "description": "Reborn Lombok Trans is your car rental solution in Mataram for the entire Lombok region. We offer practical packages that include a car, an experienced driver, and fuel, so your journey is comfortable without hidden costs.",
+      "armadaTitle": "Best & Well-Maintained Fleet",
+      "armadaDescription": "With the latest 2025 fleet that is clean and well-maintained, we are ready to serve the needs of tourism, business trips, and airport transfers. Your safety, comfort, and satisfaction are our priorities."
+    },
+    "visionMission": {
+      "title": "Vision & Mission of Reborn Lombok Trans",
+      "visionTitle": "Our Vision",
+      "visionDescription": "To become a trusted car rental company in Mataram City that provides safe (legally incorporated), comfortable (latest 2025 units), and practical (easy booking and transparent) transportation services to support the travel needs of tourists, businesses, and families in Lombok.",
+      "missionTitle": "Our Mission",
+      "missions": [
+        {
+          "title": "Providing the Best Fleet",
+          "description": "Ensuring every vehicle is in prime condition"
+        },
+        {
+          "title": "Providing Maximum Convenience",
+          "description": "Offering hassle-free all-in-one packages"
+        },
+        {
+          "title": "Prioritizing Excellent Service",
+          "description": "Putting your safety & satisfaction first"
+        },
+        {
+          "title": "Contributing to Indonesian Tourism",
+          "description": "Providing reliable transportation access"
+        },
+        {
+          "title": "Providing Easy Access",
+          "description": "A fast and flexible reservation system"
+        },
+        {
+          "title": "Building Partnerships",
+          "description": "Actively collaborating for the sake of Lombok tourism"
+        }
+      ]
+    }
+  },
+  "pricing": {
+    "filterControls": {
+      "title": "Adjust Price",
+      "description": "Filter rates according to the fleet, package, and price range you want.",
+      "resetButton": "Reset",
+      "vehicleType": "Vehicle Type",
+      "packageType": "Package Type",
+      "priceRange": "Price Range",
+      "allVehicles": "All Vehicles",
+      "allPackages": "All Packages",
+      "allPrices": "All Prices"
+    },
+    "priceTable": {
+      "serviceType": "Service Type",
+      "packageType": "Package Type",
+      "fleetType": "Fleet Type",
+      "price": "Price"
+    },
+    "dailyRental": {
+      "meta": {
+        "title": "Daily Car Rental Prices in Lombok - Self-Drive & With Driver",
+        "description": "Price list for daily car rental (12 hours or 24 hours) in Lombok. Self-drive or with a driver options available. Complete fleet, competitive prices."
+      },
+      "hero": {
+        "title": "Daily <span class='text-primary'>Rental Prices</span>"
+      }
+    },
+    "tourPackage": {
+      "meta": {
+        "title": "Lombok Tour Package Prices - Affordable & Memorable Tours",
+        "description": "Find a variety of tour package options in Lombok at the best prices. Explore popular tourist destinations comfortably with us. Car and driver included."
+      },
+      "hero": {
+        "title": "<span class='text-primary'>Tour Package</span> Prices"
+      }
+    },
+    "airportTransfer": {
+      "meta": {
+        "title": "Lombok Airport Transfer Prices - Cheap & Affordable Rates",
+        "description": "See the price list for shuttle services from and to Lombok International Airport. Flat, transparent, and competitive rates for various types of fleets."
+      },
+      "hero": {
+        "title": "<span class='text-primary'>Airport Transfer</span> Prices"
+      }
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Terms and Conditions for Car Rental in Lombok",
+      "description": "Understand the terms and conditions that apply to all our car rental services in Lombok. Important information regarding booking, payment, and vehicle use."
+    },
+    "hero": {
+      "title": "Terms & Conditions for <span class='text-primary'>Vehicle Rental</span>",
+      "subtitle": "Welcome to the Reborn Lombok Trans car rental service. By proceeding with the booking process, you declare that you have read, understood, and agree to be bound by all the terms and conditions listed on this page. Please take the time to study them carefully."
+    },
+    "sectionTitle": "Terms and Conditions",
+    "sectionDescription": "Find the rental terms and conditions here."
+  },
+  "servicesPage": {
+    "meta": {
+      "title": "Car Rental & Tour Services in Lombok - Complete Packages",
+      "description": "Explore all our services, from daily car rentals, airport transfers, to exclusive tour packages in Lombok. Complete transportation solutions for your vacation."
+    },
+    "hero": {
+      "title": "<span class='text-primary'>Car Rental</span> Services",
+      "subtitle": "Your Satisfaction is Our Priority. Remember Lombok! Remember Reborn Lombok Trans!!"
+    }
+  },
+  "fleetDetail": {
+    "keyFeaturesTitle": "Key Features",
+    "specsTitle": "Full Specifications",
+    "tariffTitle": "Complete Tariff Details",
+    "notFound": "Fleet not found"
+  },
+  "tourDetail": {
+    "heroTitle": "Featured Tour Packages",
+    "descriptionTitle": "Package Description",
+    "inclusionsTitle": "Included in the Package",
+    "priceMatrixTitle": "Price Table",
+    "dynamicPrice": "Package price is dynamic",
+    "askForPrice": "Ask for the latest prices and get the best offer according to the number of participants and hotel choices.",
+    "askCtaTitle": "Ask for This Package's Price"
+  },
+  "auth": {
+    "login": {
+      "title": "Login to your account",
+      "description": "Enter your email below to login to your account",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "button": "Login",
+      "loadingButton": "Logging in..."
+    },
+    "forgotPassword": {
+      "title": "Forgot Your Password?",
+      "description": "We will send an OTP to your email",
+      "email": "Email",
+      "sendOtp": "Send OTP",
+      "enterOtp": "Enter OTP",
+      "verify": "Verify",
+      "resend": "Resend"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Enter your new password below.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "save": "Save Password"
+    }
+  },
+  "header": {
+    "nav": {
+      "home": "Home",
+      "services": "Car Rental & Services",
+      "tour": "Tour Packages",
+      "about": "About Us",
+      "terms": "Terms & Conditions"
+    },
+    "whatsappPrompt": "Need a rental?",
+    "whatsappAria": "Contact us on WhatsApp",
+    "openMenuAria": "Open menu",
+    "closeMenuAria": "Close menu"
+  },
+  "footer": {
+    "satisfaction": "Your Satisfaction is Our Priority",
+    "tagline": "Trusted Car Rental in Lombok",
+    "usefulLinks": {
+      "title": "Useful Links",
+      "about": "About Us",
+      "services": "Car Rental & Services",
+      "terms": "Terms & Conditions"
+    },
+    "carLinks": {
+      "title": "Popular Fleet",
+      "innova": "Innova Reborn",
+      "hiace": "Hiace Commuter"
+    },
+    "address": {
+      "title": "Office Address",
+      "content": "Jl. Adi Sucipto No. 10, Mataram, Lombok, NTB"
+    },
+    "email": {
+      "title": "Email"
+    },
+    "phone": {
+      "title": "Phone"
+    }
   }
 }

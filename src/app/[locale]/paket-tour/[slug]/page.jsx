@@ -15,7 +15,7 @@ import TourDescription from "@/components/tours/TourDescription";
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       select: { name: true, description: true },

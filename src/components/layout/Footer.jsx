@@ -2,18 +2,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Mail, Phone, Instagram, Facebook } from "lucide-react";
 import { Icon } from "@iconify-icon/react";
-
-const usefulLinks = [
-  { href: "/tentang-kami", label: "Tentang Kami" },
-  { href: "/sewa-mobil-layanan", label: "Sewa Mobil & Layanan" },
-  { href: "/syarat-ketentuan", label: "Syarat & Ketentuan" },
-];
-const carLinks = [
-  { href: "#", label: "Innova Reborn" },
-  { href: "/detail", label: "Toyata HI Ace" },
-];
+import { useTranslations, useLocale } from "next-intl";
 
 const Footer = () => {
+  const t = useTranslations("footer");
+  const locale = useLocale();
+
+  // Translated links with locale prefix
+  const usefulLinks = [
+    { href: `/${locale}/tentang-kami`, label: t("usefulLinks.about") },
+    { href: `/${locale}/sewa-mobil-layanan`, label: t("usefulLinks.services") },
+    { href: `/${locale}/syarat-ketentuan`, label: t("usefulLinks.terms") },
+  ];
+  const carLinks = [
+    { href: `#`, label: t("carLinks.innova") },
+    { href: `/${locale}/detail`, label: t("carLinks.hiace") },
+  ];
+
   return (
     <footer className="bg-gray-800 text-gray-300">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -25,10 +30,10 @@ const Footer = () => {
                 <MapPin className="w-6 h-6 text-gray-400 flex-shrink-0" />
                 <div>
                   <h3 className="font-poppins text-sm md:text-base font-medium text-gray-400">
-                    Alamat
+                    {t("address.title")}
                   </h3>
                   <p className="font-poppins text-base md:text-lg font-semibold text-white leading-relaxed">
-                    Jl. Dukuh salah no 17, pejeruk, ampenan, mataram, lombok
+                    {t("address.content")}
                   </p>
                 </div>
               </div>
@@ -40,7 +45,7 @@ const Footer = () => {
                   <Mail className="w-6 h-6 text-gray-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="font-poppins text-sm md:text-base font-medium text-gray-400">
-                      Email
+                      {t("email.title")}
                     </h3>
                     <p className="font-poppins text-base md:text-lg font-semibold text-white">
                       rebornlombokmandiri@gmail.com
@@ -52,7 +57,7 @@ const Footer = () => {
                 <Phone className="w-6 h-6 text-gray-400 flex-shrink-0" />
                 <div>
                   <h3 className="font-poppins text-sm md:text-base font-medium text-gray-400">
-                    Telepon
+                    {t("phone.title")}
                   </h3>
                   <p className="font-poppins text-base md:text-lg font-semibold text-white">
                     +62-877-4186-1681
@@ -117,9 +122,9 @@ const Footer = () => {
                 className="bg-white rounded-md"
               />
               <h2 className="font-poppins text-lg md:text-xl font-semibold text-white max-w-xs">
-                Kepuasan anda adalah yang utama
+                {t("satisfaction")}
                 <br />
-                Ingat Lombok ingat Reborn Lombok Trans !!!!
+                {t("tagline")}
               </h2>
             </div>
 
@@ -127,7 +132,7 @@ const Footer = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="font-semibold text-base md:text-lg text-white mb-3">
-                  Useful links
+                  {t("usefulLinks.title")}
                 </h3>
                 <ul className="space-y-2 text-sm md:text-base text-gray-400">
                   {usefulLinks.map((link) => (
@@ -141,7 +146,7 @@ const Footer = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-base md:text-lg text-white mb-3">
-                  Mobil
+                  {t("carLinks.title")}
                 </h3>
                 <ul className="space-y-2 text-sm md:text-base text-gray-400">
                   {carLinks.map((link) => (
@@ -174,10 +179,10 @@ const Footer = () => {
                 <MapPin className="w-8 h-8 text-gray-400 flex-shrink-0" />
                 <div>
                   <h3 className="font-poppins text-sm font-medium text-gray-400 mb-1">
-                    Alamat
+                    {t("address.title")}
                   </h3>
                   <p className="font-poppins text-base font-semibold text-white leading-relaxed max-w-[280px]">
-                    Jl. Dukuh salah no 17, pejeruk, ampenan, mataram, lombok
+                    {t("address.content")}
                   </p>
                 </div>
               </div>
@@ -189,7 +194,7 @@ const Footer = () => {
                   <Mail className="w-8 h-8 text-gray-400 flex-shrink-0" />
                   <div>
                     <h3 className="font-poppins text-sm font-medium text-gray-400 mb-1">
-                      Email
+                      {t("email.title")}
                     </h3>
                     <p className="font-poppins text-base font-semibold text-white">
                       rebornlombokmandiri@gmail.com
@@ -201,7 +206,7 @@ const Footer = () => {
                 <Phone className="w-8 h-8 text-gray-400 flex-shrink-0" />
                 <div>
                   <h3 className="font-poppins text-sm font-medium text-gray-400 mb-1">
-                    Telepon
+                    {t("phone.title")}
                   </h3>
                   <p className="font-poppins text-base font-semibold text-white">
                     +62-877-4186-1681
@@ -217,9 +222,9 @@ const Footer = () => {
           <div className="grid grid-cols-3 gap-16">
             <div className="space-y-4">
               <h2 className="font-poppins text-xl font-semibold text-white max-w-xs pt-4">
-                Kepuasan anda adalah yang utama
+                {t("satisfaction")}
                 <br />
-                Ingat Lombok ingat Reborn Lombok Trans !!!!
+                {t("tagline")}
               </h2>
               <div className="flex gap-4 pt-2">
                 {/* <Link href="#" className="hover:opacity-80">
@@ -272,7 +277,7 @@ const Footer = () => {
 
             <div>
               <h3 className="font-semibold text-lg text-white mb-4">
-                Useful links
+                {t("usefulLinks.title")}
               </h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 {usefulLinks.map((link) => (
@@ -285,7 +290,9 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-lg text-white mb-4">Mobil</h3>
+              <h3 className="font-semibold text-lg text-white mb-4">
+                {t("carLinks.title")}
+              </h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 {carLinks.map((link) => (
                   <li key={link.href}>

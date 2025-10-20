@@ -1,36 +1,12 @@
+"use client";
 import SectionHeading from "@/components/SectionHeading";
 import TourCard from "@/components/tours/TourCard";
 import { prisma } from "@/lib/prisma";
+import { useTranslations } from "next-intl";
 
-// Server component: fetch a few latest tour packages and show as cards
-export default async function TourTeaserSection() {
-  let packages = [];
-  try {
-    packages = await prisma.tourPackage.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 3,
-      select: {
-        name: true,
-        slug: true,
-        description: true,
-        duration: true,
-        inclusions: true,
-        galleryImages: true,
-        hotelTiers: {
-          select: {
-            priceTiers: {
-              select: { price: true },
-              orderBy: { price: "asc" },
-            },
-          },
-          orderBy: { order: "asc" },
-        },
-      },
-    });
-  } catch (e) {
-    console.error("TourTeaserSection fetch failed:", e?.message || e);
-    packages = [];
-  }
+// Client component wrapper
+const TourTeaserSectionContent = ({ packages }) => {
+  const t = useTranslations("homepage.tourTeaser");
 
   const cards = packages.map((pkg) => {
     // compute minimal price if hotel tiers exist
@@ -93,7 +69,7 @@ export default async function TourTeaserSection() {
     <section className="w-full py-12 md:py-16 lg:py-20">
       <div className="container mx-auto px-4 md:px-6">
         <SectionHeading
-          title="Paket Tour Populer"
+          title={t("title")}
           align="center"
           size="md"
           underline
@@ -103,7 +79,7 @@ export default async function TourTeaserSection() {
           titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
-          description="Pilihan paket yang sering dipesan pelanggan kami."
+          description={t("description")}
         />
         {cards.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -112,9 +88,7 @@ export default async function TourTeaserSection() {
             ))}
           </div>
         ) : (
-          <div className="text-center text-muted-foreground">
-            Belum ada paket tour yang tersedia.
-          </div>
+          <div className="text-center text-muted-foreground">{t("empty")}</div>
         )}
 
         <div className="mt-8 flex justify-center">
@@ -122,10 +96,43 @@ export default async function TourTeaserSection() {
             href="/paket-tour"
             className="inline-flex items-center rounded-md border border-primary px-4 py-2 text-primary hover:bg-primary/10"
           >
-            Lihat Semua Paket
+            {t("viewAll")}
           </a>
         </div>
       </div>
     </section>
   );
+};
+
+// Server component: fetch a few latest tour packages and show as cards
+export default async function TourTeaserSection() {
+  let packages = [];
+  try {
+    packages = await prisma.tourPackage.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      select: {
+        name: true,
+        slug: true,
+        description: true,
+        duration: true,
+        inclusions: true,
+        galleryImages: true,
+        hotelTiers: {
+          select: {
+            priceTiers: {
+              select: { price: true },
+              orderBy: { price: "asc" },
+            },
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+  } catch (e) {
+    console.error("TourTeaserSection fetch failed:", e?.message || e);
+    packages = [];
+  }
+
+  return <TourTeaserSectionContent packages={packages} />;
 }

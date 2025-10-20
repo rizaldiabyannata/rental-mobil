@@ -7,8 +7,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { useTranslations, useLocale } from "next-intl";
 
-const MobileMenu = ({ isOpen, onClose }) => {
+const MobileMenu = ({ isOpen, onClose, t }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col items-start px-4 md:pl-24 md:pr-10 md:pt-5">
@@ -17,7 +18,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
         variant="ghost"
         className="self-end mb-8 size-12"
         onClick={onClose}
-        aria-label="Tutup menu"
+        aria-label={t("closeMenuAria")}
       >
         <X className="size-6" />
       </Button>
@@ -27,35 +28,35 @@ const MobileMenu = ({ isOpen, onClose }) => {
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Beranda
+          {t("nav.home")}
         </Link>
         <Link
           href="/sewa-mobil-layanan"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Sewa Mobil & Layanan
+          {t("nav.services")}
         </Link>
         <Link
           href="/paket-tour"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Paket Tour
+          {t("nav.tour")}
         </Link>
         <Link
           href="/tentang-kami"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Tentang Kami
+          {t("nav.about")}
         </Link>
         <Link
           href="/syarat-ketentuan"
           className="text-2xl font-semibold hover:text-primary"
           onClick={onClose}
         >
-          Syarat & Ketentuan
+          {t("nav.terms")}
         </Link>
         <div className="pt-4">
           <LanguageSwitcher />
@@ -66,6 +67,8 @@ const MobileMenu = ({ isOpen, onClose }) => {
 };
 
 const Header = () => {
+  const t = useTranslations("header");
+  const locale = useLocale();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -81,39 +84,55 @@ const Header = () => {
         />
 
         <nav className="hidden lg:flex items-center gap-2">
-          <Link href="/">
-            <Button variant={pathname === "/" ? "default" : "ghost"}>
-              Beranda
-            </Button>
-          </Link>
-          <Link href="/sewa-mobil-layanan">
+          <Link href={`/${locale}/`}>
             <Button
               variant={
-                pathname.startsWith("/sewa-mobil-layanan") ? "default" : "ghost"
+                pathname === `/${locale}` || pathname === `/${locale}/`
+                  ? "default"
+                  : "ghost"
               }
             >
-              Sewa Mobil & Layanan
+              {t("nav.home")}
             </Button>
           </Link>
-          <Link href="/paket-tour">
+          <Link href={`/${locale}/sewa-mobil-layanan`}>
             <Button
-              variant={pathname.startsWith("/paket-tour") ? "default" : "ghost"}
+              variant={
+                pathname.startsWith(`/${locale}/sewa-mobil-layanan`)
+                  ? "default"
+                  : "ghost"
+              }
             >
-              Paket Tour
+              {t("nav.services")}
             </Button>
           </Link>
-          <Link href="/tentang-kami">
+          <Link href={`/${locale}/paket-tour`}>
             <Button
-              variant={pathname === "/tentang-kami" ? "default" : "ghost"}
+              variant={
+                pathname.startsWith(`/${locale}/paket-tour`)
+                  ? "default"
+                  : "ghost"
+              }
             >
-              Tentang Kami
+              {t("nav.tour")}
             </Button>
           </Link>
-          <Link href="/syarat-ketentuan">
+          <Link href={`/${locale}/tentang-kami`}>
             <Button
-              variant={pathname === "/syarat-ketentuan" ? "default" : "ghost"}
+              variant={
+                pathname === `/${locale}/tentang-kami` ? "default" : "ghost"
+              }
             >
-              Syarat & Ketentuan
+              {t("nav.about")}
+            </Button>
+          </Link>
+          <Link href={`/${locale}/syarat-ketentuan`}>
+            <Button
+              variant={
+                pathname === `/${locale}/syarat-ketentuan` ? "default" : "ghost"
+              }
+            >
+              {t("nav.terms")}
             </Button>
           </Link>
         </nav>
@@ -125,18 +144,19 @@ const Header = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm"
+            aria-label={t("whatsappAria")}
           >
-          <Icon
-            icon="ic:baseline-whatsapp"
-            width="36"
-            height="36"
-            style={{ color: "#00a63e" }}
-          />
+            <Icon
+              icon="ic:baseline-whatsapp"
+              width="36"
+              height="36"
+              style={{ color: "#00a63e" }}
+            />
 
-          <div>
-            <p className="font-medium">Butuh Rental?</p>
-            <p className="font-bold text-green-600">+62-853-5381-8685</p>
-          </div>
+            <div>
+              <p className="font-medium">{t("whatsappPrompt")}</p>
+              <p className="font-bold text-green-600">+62-853-5381-8685</p>
+            </div>
           </a>
         </div>
 
@@ -146,13 +166,17 @@ const Header = () => {
             variant="ghost"
             className="self-end size-12"
             onClick={() => setIsMenuOpen(true)}
-            aria-label="Buka menu"
+            aria-label={t("openMenuAria")}
           >
             <Menu className="size-6" />
           </Button>
         </div>
       </div>
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MobileMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        t={t}
+      />
     </header>
   );
 };

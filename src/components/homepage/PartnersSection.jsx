@@ -8,8 +8,11 @@ import {
   MarqueeFade,
 } from "@/components/ui/shadcn-io/marquee";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function PartnersSection() {
+  const t = useTranslations("homepage.partners");
+
   const [logos, setLogos] = useState([]);
   const [isClient, setIsClient] = useState(false);
 
@@ -39,7 +42,7 @@ export default function PartnersSection() {
     <section className="w-full py-8 md:py-12">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
         <SectionHeading
-          title="Mitra Kami"
+          title={t("title")}
           align="center"
           size="md"
           underline
@@ -49,7 +52,7 @@ export default function PartnersSection() {
           titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
-          description="Kami bangga bekerja sama dengan berbagai mitra terpercaya untuk memberikan layanan terbaik."
+          description={t("description")}
         />
         <div className="relative">
           {isClient && (

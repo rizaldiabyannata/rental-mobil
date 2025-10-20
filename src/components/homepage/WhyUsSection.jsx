@@ -1,35 +1,36 @@
+"use client";
+
 import { Car, Medal, Wallet } from "lucide-react";
 import SectionHeading from "../SectionHeading";
 import { Card, CardContent } from "@/components/ui/card";
-
-const features = [
-  {
-    icon: Car,
-    title: "Armada Terawat & Berkualitas",
-    description:
-      "Semua mobil kami adalah keluaran tahun 2025, dalam kondisi prima dan terawat secara rutin untuk menjamin keamanan dan kenyamanan Anda.",
-  },
-  {
-    icon: Medal,
-    title: "Supir Profesional & Berpengalaman",
-    description:
-      "Supir kami tidak hanya ahli mengemudi, tetapi juga ramah dan siap menjadi pemandu wisata Anda.",
-  },
-  {
-    icon: Wallet,
-    title: "Harga Terbaik & Transparan",
-    description:
-      "Kami menawarkan harga sewa yang kompetitif tanpa biaya tersembunyi, memberikan nilai terbaik untuk Anda.",
-  },
-];
+import { useTranslations } from "next-intl";
 
 const WhyUsSection = () => {
+  const t = useTranslations("homepage.whyUs");
+
+  const features = [
+    {
+      icon: Car,
+      title: t("features.0.title"),
+      description: t("features.0.description"),
+    },
+    {
+      icon: Medal,
+      title: t("features.1.title"),
+      description: t("features.1.description"),
+    },
+    {
+      icon: Wallet,
+      title: t("features.2.title"),
+      description: t("features.2.description"),
+    },
+  ];
   return (
     <section className="w-full py-16">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 md:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <SectionHeading
-            title={"Kenapa Memilih Reborn Lombok Trans?"}
+            title={t("title")}
             align="center"
             size="md"
             underline
@@ -39,9 +40,7 @@ const WhyUsSection = () => {
             titleClassName="text-primary"
             underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
             className="mb-6 md:mb-10"
-            description={
-              "Kami berkomitmen memberikan lebih dari sekadar sewa mobil."
-            }
+            description={t("description")}
           />
         </div>
 

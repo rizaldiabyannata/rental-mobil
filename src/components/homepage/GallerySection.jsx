@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import SectionHeading from "../SectionHeading";
+import { useTranslations } from "next-intl";
 
 const images = [
   { src: "/sopir.png", alt: "Sopir Ramah" },
@@ -11,11 +14,13 @@ const images = [
 ];
 
 const GallerySection = () => {
+  const t = useTranslations("homepage.gallery");
+
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          title={"Galeri Armada & Perjalanan"}
+          title={t("title")}
           align="center"
           size="md"
           underline
@@ -25,9 +30,7 @@ const GallerySection = () => {
           titleClassName="text-primary"
           underlineClassName="h-[3px] w-24 md:w-32 lg:w-40"
           className="mb-6 md:mb-10"
-          description={
-            "Lihat lebih dekat armada kami dan momen perjalanan pelanggan kami."
-          }
+          description={t("description")}
         />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {images.map((image, index) => (

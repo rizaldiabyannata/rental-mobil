@@ -1,8 +1,12 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const CtaSection = () => {
+  const t = useTranslations("homepage.cta");
+
   return (
     <section className="bg-white pt-[25px] md:pt-[50px]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,7 +14,7 @@ const CtaSection = () => {
           <div className="w-full lg:w-1/2 order-2 lg:order-1">
             <Image
               src="/2Women.png"
-              alt="Hubungi Kami"
+              alt={t("imageAlt")}
               width={600}
               height={400}
               className="w-full h-auto"
@@ -19,11 +23,10 @@ const CtaSection = () => {
 
           <div className="w-full lg:w-1/2 flex flex-col items-center text-center gap-6 order-1 lg:order-2">
             <h2 className="font-sans text-2xl md:text-4xl xl:text-5xl font-bold text-gray-800">
-              Ada Pertanyaan? Silakan <br />
-              <span className="text-emerald-700">Hubungi Kami</span>
+              {t("title")}
             </h2>
             <Link href="https://wa.me/6285353818685" target="_blank">
-              <Button size="lg">Hubungi Kami</Button>
+              <Button size="lg">{t("button")}</Button>
             </Link>
           </div>
         </div>
