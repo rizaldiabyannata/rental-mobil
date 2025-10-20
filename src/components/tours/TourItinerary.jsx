@@ -8,7 +8,7 @@ export default function TourItinerary({ itinerary }) {
     <div className="space-y-4">
       {sortedItinerary.map((day, idx) => (
         <div
-          key={idx}
+          key={day.id}
           className="rounded-xl border border-neutral-200 p-4 bg-white"
         >
           <h4 className="font-semibold text-emerald-800">
