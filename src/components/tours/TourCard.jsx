@@ -173,7 +173,19 @@ export default function TourCard({ tour }) {
     ) {
       result.push(CARD_INCLUDES.find((i) => i.label === "TOOLS SNORKLING"));
     }
-    return result;
+    // TIKET WISATA
+    if (
+      lowerIncludes.some(
+        (inc) =>
+          inc.includes("tiket") ||
+          inc.includes("ticket") ||
+          inc.includes("wisata") ||
+          inc.includes("parkir")
+      )
+    ) {
+      result.push(CARD_INCLUDES.find((i) => i.label === "TIKET WISATA"));
+    }
+    return result.slice(0, 6);
   }
 
   return (
