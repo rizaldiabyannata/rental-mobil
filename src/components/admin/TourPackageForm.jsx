@@ -93,8 +93,12 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
   //   name: "itinerary",
   // });
   const handleItineraryChange = (index, updatedDayData) => {
-    const newItinerary = [...itinerary];
-    newItinerary[index] = updatedDayData;
+    const newItinerary = itinerary.map((day, i) => {
+      if (i === index) {
+        return updatedDayData;
+      }
+      return day;
+    });
     setItinerary(newItinerary);
   };
   const addItineraryDay = () => {
