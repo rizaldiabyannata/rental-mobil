@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/SectionHeading";
@@ -33,6 +33,26 @@ async function getTourPackages() {
   }
 
   // Process to find the minimum price and format for the TourCard component
+  // Prioritized inclusion points based on the provided image
+  const inclusionPriority = [
+    "hotel (sesuai pilihan) mobil full ac",
+    "bbm driver",
+    "local guide",
+    "guide (merangkap jadi fotografer)",
+    "makan siang 5x",
+    "makan malam 4x",
+    "parcel buah (day 1)",
+    "kalung selamat datang (songket)",
+    "mineral water",
+    "private glash bottom boat",
+    "snorkling gear (mask & life jaket)",
+    "fotografer underwater",
+    "premium dokumentasi by guide",
+    "foto menggunakan baju adat sasak",
+    "tiket masuk",
+    "parkir",
+  ];
+
   return tourPackages.map((pkg) => {
     let minPrice = null;
     const prices = pkg.hotelTiers.flatMap((tier) =>
@@ -42,41 +62,24 @@ async function getTourPackages() {
       minPrice = Math.min(...prices);
     }
 
-    // Heuristic mapping of inclusions text to icon keys for card
-    const includes = Array.isArray(pkg.inclusions)
-      ? pkg.inclusions
-          .map((i) => (typeof i === "string" ? i.toLowerCase() : ""))
-          .reduce((acc, text) => {
-            if (!text) return acc;
-            // Dokumentasi variants: Indonesian & English typos/synonyms
-            if (
-              text.includes("dokumentasi") ||
-              text.includes("dokumentation") ||
-              text.includes("documentation") ||
-              text.includes("foto") ||
-              text.includes("photo") ||
-              text.includes("kamera") ||
-              text.includes("camera") ||
-              text.includes("video")
-            ) {
-              acc.add("camera");
-            }
-            if (text.includes("hotel")) acc.add("hotel");
-            if (text.includes("mobil")) acc.add("car");
-            if (text.includes("driver") || text.includes("sopir"))
-              acc.add("driver");
-            if (text.includes("tiket")) acc.add("ticket");
-            if (
-              text.includes("makan") ||
-              text.includes("lunch") ||
-              text.includes("meal")
-            )
-              acc.add("meal");
-            if (text.includes("air") || text.includes("mineral"))
-              acc.add("water");
-            return acc;
-          }, new Set())
-      : new Set();
+    // Find matching inclusion points (case-insensitive, partial match)
+    let includes = [];
+    if (Array.isArray(pkg.inclusions)) {
+      const lowerInclusions = pkg.inclusions.map((i) =>
+        typeof i === "string" ? i.toLowerCase() : ""
+      );
+      includes = inclusionPriority.filter((point) => {
+        // Find if any inclusion contains the main keyword of the point
+        const mainKeyword = point.split(" ")[0].toLowerCase();
+        return lowerInclusions.some((inc) => inc.includes(mainKeyword));
+      });
+      // If not enough, fallback to first 4-5 inclusions
+      if (includes.length < 4) {
+        includes = lowerInclusions.slice(0, 5);
+      } else {
+        includes = includes.slice(0, 5);
+      }
+    }
 
     return {
       slug: pkg.slug,
@@ -86,7 +89,7 @@ async function getTourPackages() {
       durationText: pkg.duration, // Pass string duration for ribbon
       minPrice: minPrice,
       features: [], // Fallback icons if needed
-      includes: Array.from(includes),
+      includes,
     };
   });
 }
@@ -117,12 +120,6 @@ export default async function TourListPage() {
               "Pilih paket yang paling sesuai dengan kebutuhan perjalanan Anda."
             }
           />
-          {/* <SectionHeading
-            title="Semua Paket Wisata"
-            align="center"
-            className="mb-8 md:mb-12"
-            description="Pilih paket yang paling sesuai dengan gaya perjalanan Anda."
-          /> */}
           {tours.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {tours.map((tour) => (

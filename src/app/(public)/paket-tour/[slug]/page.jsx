@@ -68,11 +68,12 @@ export default async function TourDetailPage({ params }) {
   const { slug } = params;
   const tour = await getTourPackage(slug);
 
-  // Compute minimal price across all tiers for quick highlight
-  const minPrice = (() => {
+  // Find the lowest price for 2-3 PAX (not just absolute minimal price)
+  const minPrice23Pax = (() => {
     try {
       const prices = (tour?.hotelTiers || [])
         .flatMap((h) => h.priceTiers || [])
+        .filter((p) => p.paxMin === 2 && p.paxMax === 3)
         .map((p) => p.price)
         .filter((n) => typeof n === "number" && !isNaN(n));
       if (!prices.length) return null;
@@ -144,7 +145,7 @@ export default async function TourDetailPage({ params }) {
                 >
                   {tour.duration}
                 </Badge>
-                {minPrice !== null ? (
+                {minPrice23Pax !== null ? (
                   <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
                     <p className="text-sm text-neutral-700">Mulai dari</p>
                     <p className="text-2xl font-extrabold text-primary">
@@ -152,9 +153,9 @@ export default async function TourDetailPage({ params }) {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
-                      }).format(minPrice)}
+                      }).format(minPrice23Pax)}
                       <span className="ml-1 text-sm font-medium text-neutral-600">
-                        / PAX
+                        / 2-3 PAX
                       </span>
                     </p>
                   </div>
