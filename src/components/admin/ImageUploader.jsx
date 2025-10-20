@@ -1,5 +1,3 @@
-// src/components/admin/ImageUploader.jsx
-
 "use client";
 
 import { useState } from "react";
@@ -8,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Loader2, Trash2, Upload } from "lucide-react";
 
-const ImageUploader = ({ value = [], onChange }) => {
+const ImageUploader = ({ value = [], onChange, uploaderId }) => {
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = async (event) => {
@@ -73,13 +71,13 @@ const ImageUploader = ({ value = [], onChange }) => {
         <div className="flex items-center gap-4">
           <Button type="button" variant="outline" asChild>
             <label
-              htmlFor="image-upload"
+              htmlFor={uploaderId}
               className="cursor-pointer flex items-center gap-2"
             >
               <Upload className="size-4" />
-              <span>Kelola Foto</span>
+              <span>Upload Foto</span>
               <input
-                id="image-upload"
+                id={uploaderId}
                 type="file"
                 multiple
                 accept="image/*"

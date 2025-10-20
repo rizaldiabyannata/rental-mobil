@@ -12,6 +12,7 @@ const EditorJs = dynamic(() => import("./EditorJs"), { ssr: false });
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Loader2 } from "lucide-react";
+import ItineraryDayCard from "./ItineraryDayCard";
 //tambahan
 // import { useFieldArray } from "react-hook-form";
 import ImageUploader from "./ImageUploader";
@@ -91,9 +92,9 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
   //   control,
   //   name: "itinerary",
   // });
-  const handleItineraryChange = (index, field, value) => {
+  const handleItineraryChange = (index, updatedDayData) => {
     const newItinerary = [...itinerary];
-    newItinerary[index][field] = value;
+    newItinerary[index] = updatedDayData;
     setItinerary(newItinerary);
   };
   const addItineraryDay = () => {
@@ -337,69 +338,13 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
               Itinerary (Rencana Perjalanan)
             </h3>
             {itinerary.map((day, index) => (
-              <div
+              <ItineraryDayCard
                 key={index}
-                className="border p-4 rounded-md my-4 space-y-2 bg-white/50"
-              >
-                <div className="flex justify-between items-center">
-                  <h4 className="font-medium">Hari ke-{index + 1}</h4>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => removeItineraryDay(index)}
-                  >
-                    Hapus Hari
-                  </Button>
-                </div>
-                <div className="grid gap-1">
-                  <Label>Judul Hari</Label>
-                  <Input
-                    placeholder="Contoh: Gili Trawangan & Sunset"
-                    value={day.title}
-                    onChange={(e) =>
-                      handleItineraryChange(index, "title", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <Label>Deskripsi Kegiatan</Label>
-                  <Textarea
-                    placeholder="Jelaskan kegiatan hari ini..."
-                    value={day.description}
-                    onChange={(e) =>
-                      handleItineraryChange(
-                        index,
-                        "description",
-                        e.target.value
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <Label>Daftar Kegiatan (satu per baris)</Label>
-                  <Textarea
-                    placeholder="- Mengunjungi Pantai Kuta&#x0a;- Makan siang&#x0a;- Berburu oleh-oleh"
-                    value={(day.activities || []).join("\n")}
-                    onChange={(e) =>
-                      handleItineraryChange(
-                        index,
-                        "activities",
-                        e.target.value.split("\n")
-                      )
-                    }
-                    rows={4}
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <Label>URL Gambar</Label>
-                  <ImageUploader
-                    value={day.images || []}
-                    onChange={(newImages) =>
-                      handleItineraryChange(index, "images", newImages)
-                    }
-                  />
-                </div>
-              </div>
+                index={index}
+                dayData={day}
+                onDayChange={handleItineraryChange}
+                onRemoveDay={removeItineraryDay}
+              />
             ))}
             <Button
               type="button"
