@@ -13,6 +13,14 @@ import { Badge } from "@/components/ui/badge";
 import TourDescription from "@/components/tours/TourDescription";
 import TourItinerary from "@/components/tours/TourItinerary";
 
+function getImageUrl(src) {
+  if (!src) return "/imageforctasection.png";
+  if (/^https?:\/\//i.test(src)) return src;
+  if (!src.startsWith("/")) src = `/${src}`;
+  if (!src.startsWith("/uploads/")) src = `/uploads${src}`;
+  return src;
+}
+
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   try {
@@ -57,7 +65,7 @@ async function getTourPackage(slug) {
 }
 
 export default async function TourDetailPage({ params }) {
-  const { slug } = await params;
+  const { slug } = params;
   const tour = await getTourPackage(slug);
 
   // Compute minimal price across all tiers for quick highlight
@@ -79,14 +87,17 @@ export default async function TourDetailPage({ params }) {
       <PageHero
         title={tour.name}
         subtitle={`Paket Wisata ${tour.duration}`}
-        imageUrl={tour.galleryImages[0] || "/InnovaReborn-2.png"}
+        imageUrl={getImageUrl(tour.galleryImages?.[0])}
       />
       <div className="container mx-auto px-4 md:px-6 pt-0 md:pt-0 pb-10 md:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12">
           {/* Left: Gallery & Details */}
           <div className="lg:col-span-8 space-y-8 xl:space-y-10 py-4 lg:py-8 xl:py-10">
             <section>
-              <TourGallery images={tour.galleryImages} alt={tour.name} />
+              <TourGallery
+                images={(tour.galleryImages || []).map(getImageUrl)}
+                alt={tour.name}
+              />
             </section>
             <section
               id="deskripsi"

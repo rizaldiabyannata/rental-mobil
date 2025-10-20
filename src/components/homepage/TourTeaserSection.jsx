@@ -6,27 +6,47 @@ import { prisma } from "@/lib/prisma";
 export default async function TourTeaserSection() {
   let packages = [];
   try {
-    packages = await prisma.tourPackage.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 3,
-      select: {
-        name: true,
-        slug: true,
-        description: true,
-        duration: true,
-        inclusions: true,
-        galleryImages: true,
-        hotelTiers: {
-          select: {
-            priceTiers: {
-              select: { price: true },
-              orderBy: { price: "asc" },
+    // 1) Get all slugs, then sample 3 randomly to avoid heavy payloads
+    const all = await prisma.tourPackage.findMany({ select: { slug: true } });
+    if (!all?.length) {
+      packages = [];
+    } else {
+      const sampleSize = Math.min(3, all.length);
+      const picked = new Set();
+      while (picked.size < sampleSize) {
+        const idx = Math.floor(Math.random() * all.length);
+        picked.add(all[idx].slug);
+      }
+      const selectedSlugs = Array.from(picked);
+      const orderIndex = new Map(selectedSlugs.map((s, i) => [s, i]));
+
+      // 2) Fetch only selected packages with the full fields required
+      const selected = await prisma.tourPackage.findMany({
+        where: { slug: { in: selectedSlugs } },
+        select: {
+          name: true,
+          slug: true,
+          description: true,
+          duration: true,
+          inclusions: true,
+          galleryImages: true,
+          hotelTiers: {
+            select: {
+              priceTiers: {
+                select: { price: true },
+                orderBy: { price: "asc" },
+              },
             },
+            orderBy: { order: "asc" },
           },
-          orderBy: { order: "asc" },
         },
-      },
-    });
+      });
+
+      // 3) Preserve the random order
+      packages = (selected || []).sort(
+        (a, b) => (orderIndex.get(a.slug) ?? 0) - (orderIndex.get(b.slug) ?? 0)
+      );
+    }
   } catch (e) {
     console.error("TourTeaserSection fetch failed:", e?.message || e);
     packages = [];

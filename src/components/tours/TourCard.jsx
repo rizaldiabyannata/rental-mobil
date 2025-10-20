@@ -19,6 +19,7 @@ export default function TourCard({ tour }) {
     title = "Paket Tour",
     shortDescription = "",
     coverImage = "/imageforctasection.png",
+    durationText: durationTextProp,
     durationDays = 0,
     durationHours = 0,
     minPrice = null,
@@ -28,7 +29,9 @@ export default function TourCard({ tour }) {
 
   // Build duration label similar to reference (e.g., "2 HARI 1 MALAM")
   const nights = durationDays > 1 ? durationDays - 1 : 0;
-  const durationText = durationDays
+  const durationText = durationTextProp
+    ? durationTextProp
+    : durationDays
     ? `${durationDays} HARI${nights ? ` ${nights} MALAM` : ""}`
     : durationHours
     ? `${durationHours} JAM`
