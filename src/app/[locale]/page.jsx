@@ -19,7 +19,8 @@ export const metadata = {
     "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!",
 };
 
-export default async function Home() {
+export default async function Home({ params }) {
+  const { locale } = await params;
   // Fetch cars data (moved from FleetSection)
   let carsData = [];
   try {
@@ -80,6 +81,7 @@ export default async function Home() {
       <FaqSectionWrapper />
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8 pb-12">
         <WhatsAppCtaSection
+          locale={locale}
           waUrlBase="https://wa.me/6285353818685"
           imageSrc="/imageforctasection.png"
           imageAlt={`Gallery`}

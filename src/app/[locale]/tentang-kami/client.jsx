@@ -7,7 +7,7 @@ import HeroSection from "@/components/homepage/HeroSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { useTranslations } from "next-intl";
 
-export default function TentangKamiClient() {
+export default function TentangKamiClient({ locale }) {
   const t = useTranslations("aboutUs.hero");
 
   return (
@@ -26,6 +26,7 @@ export default function TentangKamiClient() {
         <GallerySection />
         <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8 pb-12">
           <WhatsAppCtaSection
+            locale={locale}
             waUrlBase="https://wa.me/6285353818685"
             imageSrc="/imageforctasection.png"
             imageAlt={`Gallery`}

@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import SewaMobilLayananClient from "./client";
 
-export async function generateMetadata({ params: { locale } }) {
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "servicesPage.meta" });
   return {
     title: t("title"),
@@ -9,6 +10,7 @@ export async function generateMetadata({ params: { locale } }) {
   };
 }
 
-export default function SewaMobilLayananPage() {
-  return <SewaMobilLayananClient />;
+export default function SewaMobilLayananPage({ params }) {
+  const { locale } = params;
+  return <SewaMobilLayananClient locale={locale} />;
 }

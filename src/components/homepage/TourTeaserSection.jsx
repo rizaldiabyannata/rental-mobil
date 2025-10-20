@@ -1,4 +1,4 @@
-"use client";
+// 'use client' removed: only TourTeaserSectionContent is a Client Component
 import SectionHeading from "@/components/SectionHeading";
 import TourCard from "@/components/tours/TourCard";
 import { prisma } from "@/lib/prisma";

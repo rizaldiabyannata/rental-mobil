@@ -210,7 +210,7 @@
         "description": "Temukan berbagai pilihan paket tour di Lombok dengan harga terbaik. Jelajahi destinasi wisata populer dengan nyaman bersama kami. Termasuk mobil dan sopir."
       },
       "hero": {
-        "title": "Harga <span>Paket Tour</span>"
+        "title": "Harga Paket Tour"
       },
       "allPackagesTitle": "Semua Paket Wisata",
       "allPackagesDescription": "Pilih paket yang paling sesuai dengan kebutuhan perjalanan Anda.",
@@ -222,7 +222,7 @@
         "description": "Lihat daftar harga layanan antar jemput dari dan ke Bandara Internasional Lombok. Tarif flat, transparan, dan kompetitif untuk berbagai jenis armada."
       },
       "hero": {
-        "title": "Harga <span class='text-primary'>Antar Jemput</span>"
+        "title": "Harga <span>Antar Jemput</span>"
       }
     }
   },

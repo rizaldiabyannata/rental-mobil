@@ -9,6 +9,7 @@ import { ShieldCheck, Clock3, ThumbsUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function WhatsAppCtaSection({
+  locale,
   carName = undefined,
   waUrlBase,
   imageSrc = "/imageforctasection.png",
@@ -19,7 +20,7 @@ export default function WhatsAppCtaSection({
   className,
   includePageLink, // optional override; if undefined, auto-exclusion applies in WhatsAppCta
 }) {
-  const t = useTranslations("homepage.whatsappCta");
+  const t = useTranslations("homepage.whatsappCta", { locale });
 
   const perks = [
     { icon: ShieldCheck, text: t("perks.0") },
