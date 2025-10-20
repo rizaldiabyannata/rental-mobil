@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/SectionHeading";
@@ -6,8 +6,12 @@ import TourCard from "@/components/tours/TourCard";
 import PageHero from "@/components/shared/PageHero";
 import { getTranslations } from "next-intl/server";
 
-export async function generateMetadata({ params: { locale } }) {
-  const t = await getTranslations({ locale, namespace: "pricing.tourPackage.meta" });
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+  const t = await getTranslations({
+    locale,
+    namespace: "pricing.tourPackage.meta",
+  });
   return {
     title: t("title"),
     description: t("description"),
@@ -58,14 +62,21 @@ async function getTourPackages() {
           .reduce((acc, text) => {
             if (!text) return acc;
             if (
-              text.includes("dokumentasi") || text.includes("documentation") || text.includes("camera")
-            ) acc.add("camera");
+              text.includes("dokumentasi") ||
+              text.includes("documentation") ||
+              text.includes("camera")
+            )
+              acc.add("camera");
             if (text.includes("hotel")) acc.add("hotel");
             if (text.includes("mobil") || text.includes("car")) acc.add("car");
-            if (text.includes("driver") || text.includes("sopir")) acc.add("driver");
-            if (text.includes("tiket") || text.includes("ticket")) acc.add("ticket");
-            if (text.includes("makan") || text.includes("meal")) acc.add("meal");
-            if (text.includes("air") || text.includes("water")) acc.add("water");
+            if (text.includes("driver") || text.includes("sopir"))
+              acc.add("driver");
+            if (text.includes("tiket") || text.includes("ticket"))
+              acc.add("ticket");
+            if (text.includes("makan") || text.includes("meal"))
+              acc.add("meal");
+            if (text.includes("air") || text.includes("water"))
+              acc.add("water");
             return acc;
           }, new Set())
       : new Set();
@@ -83,7 +94,8 @@ async function getTourPackages() {
   });
 }
 
-export default async function TourListPage({ params: { locale } }) {
+export default async function TourListPage({ params }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pricing.tourPackage" });
   const tours = await getTourPackages();
   return (

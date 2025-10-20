@@ -2,56 +2,7 @@
 
 import CarCard from "./CarCard";
 import SectionHeading from "@/components/SectionHeading";
-import { prisma } from "@/lib/prisma";
 import { useTranslations } from "next-intl";
-
-async function getCars() {
-  try {
-    const cars = await prisma.car.findMany({
-      where: { available: true },
-      take: 6,
-      orderBy: { createdAt: "desc" },
-      select: {
-        slug: true,
-        name: true,
-        description: true,
-        startingPrice: true,
-        capacity: true,
-        transmission: true,
-        fuelType: true,
-        specifications: true, // Untuk coverImage
-        images: {
-          select: {
-            imageUrl: true,
-            alt: true,
-            order: true,
-          },
-          orderBy: { order: "asc" },
-        },
-      },
-    });
-
-    // Strukturnya sedikit berbeda dari API, kita sesuaikan di sini
-    return cars.map((c) => ({
-      slug: c.slug,
-      name: c.name,
-      description: c.description,
-      startingPrice: c.startingPrice,
-      capacity: c.capacity,
-      transmission: c.transmission,
-      fuelType: c.fuelType,
-      coverImage: c.specifications?.coverImage || null,
-      gallery: c.images.map((img) => ({
-        url: img.imageUrl,
-        alt: img.alt,
-        order: img.order,
-      })),
-    }));
-  } catch (error) {
-    console.error("Failed to fetch cars directly:", error);
-    return []; // Return empty array on error
-  }
-}
 
 const FleetSectionContent = ({ carsData }) => {
   const t = useTranslations("homepage.fleet");
@@ -141,9 +92,7 @@ const FleetSectionContent = ({ carsData }) => {
   );
 };
 
-const FleetSection = async () => {
-  const carsData = await getCars();
-
+const FleetSection = ({ carsData }) => {
   return <FleetSectionContent carsData={carsData} />;
 };
 

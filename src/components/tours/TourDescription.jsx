@@ -14,15 +14,19 @@ export default function TourDescription({ description }) {
       const parsed = JSON.parse(description);
       if (parsed?.blocks) return <EditorJsRenderer data={parsed} />;
     } catch {}
-    // Clean common HTML entities and symbols for cleaner rendering
-    let cleanDesc = description
-      .replace(/&nbsp;/g, " ")
-      .replace(/&amp;/g, "&")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/<[^>]+>/g, ""); // Remove any remaining HTML tags
+
+    // Create a temporary DOM element to decode HTML entities and strip tags
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = description;
+
+    // Get the text content (strips all HTML tags and decodes entities)
+    let cleanDesc = tempDiv.textContent || tempDiv.innerText || "";
+
+    // Additional cleanup for any remaining whitespace issues
+    cleanDesc = cleanDesc
+      .replace(/\s+/g, " ") // Replace multiple spaces with single space
+      .trim(); // Remove leading/trailing whitespace
+
     return (
       <p className="text-gray-700 whitespace-pre-wrap text-base xl:text-lg">
         {cleanDesc}

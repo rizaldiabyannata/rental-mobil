@@ -135,7 +135,7 @@
       "description": "Kenali lebih dekat penyedia rental mobil Anda di Lombok. Kami berkomitmen memberikan layanan terbaik dengan armada berkualitas dan harga yang kompetitif."
     },
     "hero": {
-      "title": "Mengenal Kami <span class='text-primary'>Lebih Dekat</span>",
+      "title": "Mengenal Kami <span>Lebih Dekat</span>",
       "subtitle": "Pelajari lebih lanjut tentang sejarah, visi, dan nilai-nilai yang membentuk kami."
     },
     "aboutSection": {
@@ -210,7 +210,7 @@
         "description": "Temukan berbagai pilihan paket tour di Lombok dengan harga terbaik. Jelajahi destinasi wisata populer dengan nyaman bersama kami. Termasuk mobil dan sopir."
       },
       "hero": {
-        "title": "Harga <span class='text-primary'>Paket Tour</span>"
+        "title": "Harga <span>Paket Tour</span>"
       },
       "allPackagesTitle": "Semua Paket Wisata",
       "allPackagesDescription": "Pilih paket yang paling sesuai dengan kebutuhan perjalanan Anda.",
@@ -232,7 +232,7 @@
       "description": "Pahami syarat dan ketentuan yang berlaku untuk semua layanan sewa mobil kami di Lombok. Informasi penting mengenai pemesanan, pembayaran, dan penggunaan kendaraan."
     },
     "hero": {
-      "title": "Syarat & Ketentuan <span class='text-primary'>Sewa Kendaraan</span>",
+      "title": "Syarat & Ketentuan <span>Sewa Kendaraan</span>",
       "subtitle": "Selamat datang di layanan rental mobil Reborn Lombok Trans. Dengan melanjutkan proses pemesanan, Anda menyatakan telah membaca, memahami, dan setuju untuk terikat pada semua syarat dan ketentuan yang tercantum di halaman ini. Mohon luangkan waktu untuk mempelajarinya dengan saksama."
     },
     "sectionTitle": "Syarat dan Ketentuan",
@@ -245,7 +245,7 @@
       "description": "Jelajahi semua layanan kami, mulai dari sewa mobil harian, antar jemput bandara, hingga paket wisata eksklusif di Lombok. Solusi transportasi lengkap untuk liburan Anda."
     },
     "hero": {
-      "title": "Layanan <span class='text-primary'>Rental Mobil</span>",
+      "title": "Layanan <span>Rental Mobil</span>",
       "subtitle": "Kepuasan Anda adalah yang Utama. Ingat Lombok! Ingat Reborn Lombok Trans!!"
     }
   },
@@ -269,7 +269,7 @@
     "askForPrice": "Tanyakan harga terbaru dan dapatkan penawaran terbaik sesuai jumlah peserta dan pilihan hotel.",
     "askCtaTitle": "Tanyakan Harga Paket Ini",
     "startingFrom": "Mulai dari",
-    "perPax": "/ PAX",
+    "perPax": "/ 2-3 PAX",
     "hotelOptionsPrefix": "Pilihan Hotel:",
     "paxColumn": "Jumlah Peserta",
     "pricePerPaxColumn": "Harga per PAX"

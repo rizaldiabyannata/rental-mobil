@@ -1,9 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import HeroSection from "@/components/homepage/HeroSection";
 import WhyUsSection from "@/components/homepage/WhyUsSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
 import FleetSection from "@/components/homepage/FleetSection";
+import { prisma } from "@/lib/prisma";
 import GallerySection from "@/components/homepage/GallerySection";
 import FaqSectionWrapper from "@/components/homepage/FaqSectionWrapper";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
@@ -18,14 +19,60 @@ export const metadata = {
     "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!",
 };
 
-export default function Home() {
+export default async function Home() {
+  // Fetch cars data (moved from FleetSection)
+  let carsData = [];
+  try {
+    const cars = await prisma.car.findMany({
+      where: { available: true },
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      select: {
+        slug: true,
+        name: true,
+        description: true,
+        startingPrice: true,
+        capacity: true,
+        transmission: true,
+        fuelType: true,
+        specifications: true, // Untuk coverImage
+        images: {
+          select: {
+            imageUrl: true,
+            alt: true,
+            order: true,
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+    carsData = cars.map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      description: c.description,
+      startingPrice: c.startingPrice,
+      capacity: c.capacity,
+      transmission: c.transmission,
+      fuelType: c.fuelType,
+      coverImage: c.specifications?.coverImage || null,
+      gallery: c.images.map((img) => ({
+        url: img.imageUrl,
+        alt: img.alt,
+        order: img.order,
+      })),
+    }));
+  } catch (error) {
+    console.error("Failed to fetch cars directly:", error);
+    carsData = [];
+  }
+
   return (
     <>
       <HeroSection />
       <VideoSection />
       <WhyUsSection />
       <ServicesSection />
-      <FleetSection />
+      <FleetSection carsData={carsData} />
       <TourTeaserSection />
       <PaketTourSection />
       <GallerySection />

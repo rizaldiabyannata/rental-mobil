@@ -135,7 +135,7 @@
       "description": "Get to know your car rental provider in Lombok better. We are committed to providing the best service with a quality fleet and competitive prices."
     },
     "hero": {
-      "title": "Getting to Know Us <span class='text-primary'>Better</span>",
+      "title": "Getting to Know Us <span>Better</span>",
       "subtitle": "Learn more about the history, vision, and values that shape us."
     },
     "aboutSection": {
@@ -210,7 +210,7 @@
         "description": "Find a variety of tour package options in Lombok at the best prices. Explore popular tourist destinations comfortably with us. Car and driver included."
       },
       "hero": {
-        "title": "<span class='text-primary'>Tour Package</span> Prices"
+        "title": "Tour Package Prices"
       },
       "allPackagesTitle": "All Tour Packages",
       "allPackagesDescription": "Choose the package that best suits your travel needs.",
@@ -232,7 +232,7 @@
       "description": "Understand the terms and conditions that apply to all our car rental services in Lombok. Important information regarding booking, payment, and vehicle use."
     },
     "hero": {
-      "title": "Terms & Conditions for <span class='text-primary'>Vehicle Rental</span>",
+      "title": "Terms & Conditions for <span>Vehicle Rental</span>",
       "subtitle": "Welcome to the Reborn Lombok Trans car rental service. By proceeding with the booking process, you declare that you have read, understood, and agree to be bound by all the terms and conditions listed on this page. Please take the time to study them carefully."
     },
     "sectionTitle": "Terms and Conditions",
@@ -245,7 +245,7 @@
       "description": "Explore all our services, from daily car rentals, airport transfers, to exclusive tour packages in Lombok. Complete transportation solutions for your vacation."
     },
     "hero": {
-      "title": "<span class='text-primary'>Car Rental</span> Services",
+      "title": "<span>Car Rental</span> Services",
       "subtitle": "Your Satisfaction is Our Priority. Remember Lombok! Remember Reborn Lombok Trans!!"
     }
   },
@@ -269,7 +269,7 @@
     "askForPrice": "Ask for the latest prices and get the best offer according to the number of participants and hotel choices.",
     "askCtaTitle": "Ask for This Package's Price",
     "startingFrom": "Starting from",
-    "perPax": "/ PAX",
+    "perPax": "/ 2-3 PAX",
     "hotelOptionsPrefix": "Hotel Options:",
     "paxColumn": "Number of Participants",
     "pricePerPaxColumn": "Price per PAX"
