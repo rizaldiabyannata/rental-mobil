@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "@iconify-icon/react";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 
 const MobileMenu = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -56,6 +57,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
         >
           Syarat & Ketentuan
         </Link>
+        <div className="pt-4">
+          <LanguageSwitcher />
+        </div>
       </nav>
     </div>
   );
@@ -114,12 +118,14 @@ const Header = () => {
           </Link>
         </nav>
 
-        <a
-          href="https://wa.me/6285353818685"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden lg:flex items-center gap-2 text-sm"
-        >
+        <div className="hidden lg:flex items-center gap-4">
+          <LanguageSwitcher />
+          <a
+            href="https://wa.me/6285353818685"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm"
+          >
           <Icon
             icon="ic:baseline-whatsapp"
             width="36"
@@ -131,7 +137,8 @@ const Header = () => {
             <p className="font-medium">Butuh Rental?</p>
             <p className="font-bold text-green-600">+62-853-5381-8685</p>
           </div>
-        </a>
+          </a>
+        </div>
 
         <div className="lg:hidden">
           <Button

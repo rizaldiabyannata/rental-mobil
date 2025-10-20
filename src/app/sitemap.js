@@ -38,7 +38,6 @@ export default async function sitemap() {
       priority: 0.9,
     }));
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error(
       "sitemap: DB not ready, returning static routes only",
       err?.message || err

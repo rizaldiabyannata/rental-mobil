@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -5,26 +8,30 @@ import WhatsAppCta from "@/components/shared/WhatsAppCta";
 import PropTypes from "prop-types";
 
 const HeroSection = ({
-  title = (
-    <>
-      Sewa Mobil <span className="text-primary">Terbaik di Lombok</span>
-    </>
-  ),
-  subtitle = "Jelajahi keindahan Lombok dengan nyaman bersama Reborn Lombok Trans. Armada terawat, supir profesional, dan harga terbaik.",
   imageSrc = "/Hero-1.png",
   imageAlt = "Hero Image",
   imageOnRight = false,
-  primaryLabel = "Lihat Armada",
   primaryHref = "/#armada",
-  waProps = {
+  waProps: customWaProps,
+}) => {
+  const t = useTranslations("HeroSection");
+
+  const title = (
+    <span dangerouslySetInnerHTML={{ __html: t.raw("title") }} />
+  );
+  const subtitle = t("subtitle");
+  const primaryLabel = t("primaryLabel");
+
+  const defaultWaProps = {
     waUrlBase: "https://wa.me/6285353818685",
-    label: "Hubungi Kami",
+    label: t("contactLabel"),
     buttonClassName: "w-full bg-[#3E6598] hover:bg-[#8FA6C3] py-5",
     iconClassName: "h-6 w-6",
     anchorClassName: "inline-flex items-center justify-center gap-3 w-full",
-  },
-}) => {
-  // Mobile: text first, image second. On large screens, swap based on imageOnRight
+  };
+
+  const waProps = { ...defaultWaProps, ...customWaProps };
+
   const textOrder = imageOnRight ? "order-1 lg:order-1" : "order-1 lg:order-2";
   const imageOrder = imageOnRight ? "order-2 lg:order-2" : "order-2 lg:order-1";
   const imageJustify = imageOnRight ? "lg:justify-end" : "lg:justify-start";
@@ -33,7 +40,6 @@ const HeroSection = ({
     <section className="w-full bg-white">
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
         <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 items-center`}>
-          {/* Text column */}
           <div className={`text-center lg:text-left ${textOrder}`}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
               {title}
@@ -55,7 +61,6 @@ const HeroSection = ({
             </div>
           </div>
 
-          {/* Image column - circular white card */}
           <div className={`flex justify-center ${imageJustify} ${imageOrder}`}>
             <div className="relative bg-white p-2">
               <div className="relative overflow-hidden w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
@@ -76,12 +81,9 @@ const HeroSection = ({
 };
 
 HeroSection.propTypes = {
-  title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-  subtitle: PropTypes.string,
   imageSrc: PropTypes.string,
   imageAlt: PropTypes.string,
   imageOnRight: PropTypes.bool,
-  primaryLabel: PropTypes.string,
   primaryHref: PropTypes.string,
   waProps: PropTypes.object,
 };
