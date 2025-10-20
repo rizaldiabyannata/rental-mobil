@@ -11,6 +11,7 @@ import {
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { Badge } from "@/components/ui/badge";
 import TourDescription from "@/components/tours/TourDescription";
+import TourItinerary from "@/components/tours/TourItinerary";
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
@@ -36,6 +37,7 @@ async function getTourPackage(slug) {
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       include: {
+        itinerary: true,
         hotelTiers: {
           orderBy: { order: "asc" },
           include: {
@@ -94,6 +96,15 @@ export default async function TourDetailPage({ params }) {
                 Deskripsi Paket
               </h2>
               <TourDescription description={tour.description} />
+            </section>
+            <section
+              id="itinerary"
+              className="bg-gray-50 rounded-xl shadow-sm p-6 xl:p-8"
+            >
+              <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
+                Rencana Perjalanan
+              </h2>
+              <TourItinerary itinerary={tour.itinerary} />
             </section>
             <section
               id="inklusi"

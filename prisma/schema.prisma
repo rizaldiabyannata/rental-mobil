@@ -75,6 +75,7 @@ model TourPackage {
     updatedAt     DateTime @updatedAt
 
     hotelTiers HotelTier[]
+    itinerary ItineraryDay[]
 
     @@index([slug])
 }
@@ -206,4 +207,14 @@ model PasswordResetRequest {
 
     @@index([userId])
     @@index([expiresAt])
+}
+model ItineraryDay {
+  id          String   @id @default(cuid())
+  day         Int
+  title       String
+  description String   @db.Text
+  images      Json?    
+  activities  String[]
+  package     TourPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  packageId   String
 }

@@ -12,6 +12,15 @@ const EditorJs = dynamic(() => import("./EditorJs"), { ssr: false });
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Loader2 } from "lucide-react";
+//tambahan
+// import { useFieldArray } from "react-hook-form";
+import ImageUploader from "./ImageUploader";
+// import {
+//   FormField,
+//   FormItem,
+//   FormControl,
+//   FormMessage,
+// } from "@/components/ui/form";
 
 function toArrayFromComma(text) {
   if (!text) return [];
@@ -58,6 +67,7 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
   const [error, setError] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [itinerary, setItinerary] = useState(initialData?.itinerary || []);
   // Hotel tiers (bintang & nama hotel per tier) + harga per pax
   const [hotelTiers, setHotelTiers] = useState(() => {
     const tiers = initialData?.hotelTiers || [];
@@ -76,6 +86,32 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
         : [],
     }));
   });
+  //tambahan
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: "itinerary",
+  // });
+  const handleItineraryChange = (index, field, value) => {
+    const newItinerary = [...itinerary];
+    newItinerary[index][field] = value;
+    setItinerary(newItinerary);
+  };
+  const addItineraryDay = () => {
+    setItinerary([
+      ...itinerary,
+      {
+        day: itinerary.length + 1,
+        title: "",
+        description: "",
+        activities: [],
+        images: [],
+      },
+    ]);
+  };
+
+  const removeItineraryDay = (index) => {
+    setItinerary(itinerary.filter((_, i) => i !== index));
+  };
 
   // Auto-generate slug from name if not editing or slug empty
   useEffect(() => {
@@ -108,6 +144,7 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
         inclusions: toArrayFromComma(inclusionsText),
         galleryImages: toArrayFromComma(galleryImagesText),
         showHotels: Boolean(showHotels),
+        itinerary: itinerary,
         hotelTiers: hotelTiers.map((t, i) => ({
           name: t.name?.trim() || undefined,
           starRating:
@@ -292,6 +329,86 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
                 className="border-emerald-300 focus-visible:ring-emerald-500 focus-visible:ring-2 focus-visible:border-emerald-500"
               />
             </div>
+          </div>
+
+          <Separator />
+          <div>
+            <h3 className="text-lg font-medium text-emerald-800">
+              Itinerary (Rencana Perjalanan)
+            </h3>
+            {itinerary.map((day, index) => (
+              <div
+                key={index}
+                className="border p-4 rounded-md my-4 space-y-2 bg-white/50"
+              >
+                <div className="flex justify-between items-center">
+                  <h4 className="font-medium">Hari ke-{index + 1}</h4>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => removeItineraryDay(index)}
+                  >
+                    Hapus Hari
+                  </Button>
+                </div>
+                <div className="grid gap-1">
+                  <Label>Judul Hari</Label>
+                  <Input
+                    placeholder="Contoh: Gili Trawangan & Sunset"
+                    value={day.title}
+                    onChange={(e) =>
+                      handleItineraryChange(index, "title", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <Label>Deskripsi Kegiatan</Label>
+                  <Textarea
+                    placeholder="Jelaskan kegiatan hari ini..."
+                    value={day.description}
+                    onChange={(e) =>
+                      handleItineraryChange(
+                        index,
+                        "description",
+                        e.target.value
+                      )
+                    }
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <Label>Daftar Kegiatan (satu per baris)</Label>
+                  <Textarea
+                    placeholder="- Mengunjungi Pantai Kuta&#x0a;- Makan siang&#x0a;- Berburu oleh-oleh"
+                    value={(day.activities || []).join("\n")}
+                    onChange={(e) =>
+                      handleItineraryChange(
+                        index,
+                        "activities",
+                        e.target.value.split("\n")
+                      )
+                    }
+                    rows={4}
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <Label>URL Gambar (pisahkan dengan koma)</Label>
+                  <ImageUploader
+                    value={day.images || []}
+                    onChange={(newImages) =>
+                      handleItineraryChange(index, "images", newImages)
+                    }
+                  />
+                </div>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addItineraryDay}
+              className="border-emerald-600 text-emerald-600 hover:text-white hover:bg-emerald-700"
+            >
+              Tambah Hari
+            </Button>
           </div>
 
           {/* Hotel Tiers */}

@@ -9,6 +9,7 @@ export async function GET(_request, { params }) {
     const data = await prisma.tourPackage.findUnique({
       where: { id },
       include: {
+        itinerary: true,
         hotelTiers: {
           orderBy: { order: "asc" },
           include: { priceTiers: { orderBy: { price: "asc" } } },
@@ -40,6 +41,7 @@ export async function PUT(request, { params }) {
       galleryImages = [],
       showHotels = true,
       hotelTiers = [],
+      itinerary = [],
     } = body || {};
     if (!name || !slug || !duration) {
       return new Response("Field wajib: name, slug, duration", { status: 400 });
@@ -80,6 +82,22 @@ export async function PUT(request, { params }) {
         });
         await tx.hotelTier.deleteMany({
           where: { id: { in: existingTierIds } },
+        });
+      }
+      await tx.itineraryDay.deleteMany({
+        where: { packageId: id },
+      });
+
+      if (Array.isArray(itinerary) && itinerary.length > 0) {
+        await tx.itineraryDay.createMany({
+          data: itinerary.map((day, index) => ({
+            packageId: id,
+            day: day.day || index + 1,
+            title: day.title,
+            description: day.description,
+            activities: day.activities || [],
+            images: day.images || [],
+          })),
         });
       }
 

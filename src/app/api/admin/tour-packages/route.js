@@ -36,6 +36,7 @@ export async function POST(request) {
       galleryImages = [],
       showHotels = true,
       hotelTiers = [],
+      itinerary = [],
     } = body || {};
     if (!name || !slug || !duration) {
       return new Response("Field wajib: name, slug, duration", { status: 400 });
@@ -54,6 +55,15 @@ export async function POST(request) {
         inclusions,
         galleryImages,
         showHotels: Boolean(showHotels),
+        itinerary: {
+          create: itinerary.map((day, index) => ({
+            day: day.day || index + 1,
+            title: day.title,
+            description: day.description,
+            activities: day.activities || [],
+            images: day.images || [],
+          })),
+        },
       },
     });
 
