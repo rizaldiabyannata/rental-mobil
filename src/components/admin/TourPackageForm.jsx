@@ -220,11 +220,14 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
       const json = await res.json();
       console.log("Upload success:", json);
       const urls = Array.isArray(json?.urls) ? json.urls : [];
+      console.log("Extracted URLs:", urls);
       if (!urls.length) {
         throw new Error("Tidak ada URL gambar yang dikembalikan dari server");
       }
       const current = toArrayFromComma(galleryImagesText);
       const next = [...current, ...urls];
+      console.log("Current gallery:", current);
+      console.log("New gallery:", next);
       setGalleryImagesText(toCommaFromArray(next));
       setSelectedFiles([]);
       setError(null); // Clear any previous errors on success
