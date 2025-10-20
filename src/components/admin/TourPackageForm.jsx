@@ -391,7 +391,7 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
                   />
                 </div>
                 <div className="grid gap-1">
-                  <Label>URL Gambar (pisahkan dengan koma)</Label>
+                  <Label>URL Gambar</Label>
                   <ImageUploader
                     value={day.images || []}
                     onChange={(newImages) =>
