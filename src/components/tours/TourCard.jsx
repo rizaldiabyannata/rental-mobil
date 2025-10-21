@@ -22,7 +22,7 @@ export default function TourCard({ tour }) {
     durationText: durationTextProp,
     durationDays = 0,
     durationHours = 0,
-    minPrice = null,
+    hotelTiers = [],
     features = [], // e.g. ["car", "beach", "group"]
     includes = [], // e.g. ["car","driver","ticket","meal","water"]
   } = tour || {};
@@ -36,6 +36,21 @@ export default function TourCard({ tour }) {
     : durationHours
     ? `${durationHours} JAM`
     : "";
+
+  // Find min price for 2-3 PAX only
+  const minPrice23Pax = (() => {
+    try {
+      const prices = (hotelTiers || [])
+        .flatMap((h) => h.priceTiers || [])
+        .filter((p) => p.paxRange === "2-3 PAX")
+        .map((p) => p.price)
+        .filter((n) => typeof n === "number" && !isNaN(n));
+      if (!prices.length) return null;
+      return Math.min(...prices);
+    } catch {
+      return null;
+    }
+  })();
 
   // Helper to map to local uploads URL
   function getImageUrl(src) {
@@ -242,7 +257,7 @@ export default function TourCard({ tour }) {
 
         {/* Footer: price per pax + button */}
         <div className="mt-4 flex items-center justify-between">
-          {minPrice !== null ? (
+          {minPrice23Pax !== null ? (
             <div className="text-sm">
               <div className="text-xs text-neutral-600 leading-none mb-1">
                 Mulai dari
@@ -253,7 +268,7 @@ export default function TourCard({ tour }) {
                     style: "currency",
                     currency: "IDR",
                     minimumFractionDigits: 0,
-                  }).format(minPrice)}{" "}
+                  }).format(minPrice23Pax)}{" "}
                   / 2-3 PAX
                 </span>
               </div>

@@ -73,7 +73,7 @@ export default async function TourDetailPage({ params }) {
     try {
       const prices = (tour?.hotelTiers || [])
         .flatMap((h) => h.priceTiers || [])
-        .filter((p) => p.paxMin === 2 && p.paxMax === 3)
+        .filter((p) => p.paxRange === "2-3 PAX")
         .map((p) => p.price)
         .filter((n) => typeof n === "number" && !isNaN(n));
       if (!prices.length) return null;
