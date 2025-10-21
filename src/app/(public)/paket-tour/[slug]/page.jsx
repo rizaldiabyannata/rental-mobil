@@ -133,7 +133,7 @@ export default async function TourDetailPage({ params }) {
                 <TourItinerary itinerary={tour.itinerary} />
               </section>
             )}
-            {!tour.hotelTiers && (
+            {tour.hotelTiers && tour.hotelTiers.length > 0 && (
               <section
                 id="tarif"
                 className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
