@@ -24,7 +24,7 @@ function getImageUrl(src) {
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       select: { name: true, description: true },
@@ -65,10 +65,15 @@ async function getTourPackage(slug) {
 }
 
 export default async function TourDetailPage({ params }) {
-  const { slug } = params;
-  const tour = await getTourPackage(slug);
+  const itineraryIsEmpty = !tour?.itinerary || tour.itinerary.length === 0;
+  const priceTableIsEmpty =
+    !tour?.hotelTiers ||
+    tour.hotelTiers.every((ht) => !ht.priceTiers || ht.priceTiers.length === 0);
+  if (itineraryIsEmpty && priceTableIsEmpty) {
+    notFound();
+  }
 
-  // Find the lowest price for 2-3 PAX (not just absolute minimal price)
+  // ...existing code...
   const minPrice23Pax = (() => {
     try {
       const prices = (tour?.hotelTiers || [])
@@ -109,26 +114,30 @@ export default async function TourDetailPage({ params }) {
               </h2>
               <TourDescription description={tour.description} />
             </section>
-            <section
-              id="itinerary"
-              className="bg-gray-50 rounded-xl shadow-sm p-6 xl:p-8"
-            >
-              <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
-                Rencana Perjalanan
-              </h2>
-              <TourItinerary itinerary={tour.itinerary} />
-            </section>
+            {!itineraryIsEmpty && (
+              <section
+                id="itinerary"
+                className="bg-gray-50 rounded-xl shadow-sm p-6 xl:p-8"
+              >
+                <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
+                  Rencana Perjalanan
+                </h2>
+                <TourItinerary itinerary={tour.itinerary} />
+              </section>
+            )}
             <section
               id="inklusi"
               className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
             >
               <TourInclusions inclusions={tour.inclusions} />
-              <section className="mt-4 lg:mt-8" id="harga">
-                <TourPriceMatrix
-                  hotelTiers={tour.hotelTiers}
-                  showHotels={tour.showHotels}
-                />
-              </section>
+              {!priceTableIsEmpty && (
+                <section className="mt-4 lg:mt-8" id="harga">
+                  <TourPriceMatrix
+                    hotelTiers={tour.hotelTiers}
+                    showHotels={tour.showHotels}
+                  />
+                </section>
+              )}
             </section>
           </div>
 

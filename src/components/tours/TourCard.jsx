@@ -237,7 +237,12 @@ export default function TourCard({ tour }) {
             </ul>
           </div>
         ) : (
-          <TourFeatureIcons features={features} />
+          <div className="text-xs text-muted-foreground">
+            {shortDescription
+              ? shortDescription.slice(0, 80) +
+                (shortDescription.length > 80 ? "..." : "")
+              : ""}
+          </div>
         )}
 
         {/* Footer: price per pax + button */}
