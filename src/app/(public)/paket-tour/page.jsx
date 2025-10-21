@@ -92,10 +92,23 @@ async function getTourPackages() {
       }
     }
 
+    // Ambil deskripsi utama dari JSON
+    let descriptionText = "";
+    if (typeof pkg.description === "string") {
+      descriptionText = pkg.description;
+    } else if (pkg.description && typeof pkg.description === "object") {
+      // Ambil field text, plain, atau fallback ke JSON string
+      descriptionText =
+        pkg.description.text ||
+        pkg.description.plain ||
+        JSON.stringify(pkg.description);
+    }
+
     return {
       slug: pkg.slug,
       title: pkg.name,
-      shortDescription: pkg.description,
+      description: descriptionText,
+      shortDescription: descriptionText,
       coverImage: pkg.galleryImages ? pkg.galleryImages[0] : null,
       durationText: pkg.duration, // Pass string duration for ribbon
       minPrice: minPrice,

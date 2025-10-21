@@ -65,13 +65,14 @@ async function getTourPackage(slug) {
 }
 
 export default async function TourDetailPage({ params }) {
+  const { slug } = await params;
+  const tour = await getTourPackage(slug);
+  if (!tour) notFound();
+
   const itineraryIsEmpty = !tour?.itinerary || tour.itinerary.length === 0;
   const priceTableIsEmpty =
     !tour?.hotelTiers ||
     tour.hotelTiers.every((ht) => !ht.priceTiers || ht.priceTiers.length === 0);
-  if (itineraryIsEmpty && priceTableIsEmpty) {
-    notFound();
-  }
 
   // ...existing code...
   const minPrice23Pax = (() => {
@@ -112,7 +113,16 @@ export default async function TourDetailPage({ params }) {
               <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
                 Deskripsi Paket
               </h2>
-              <TourDescription description={tour.description} />
+              <div
+                style={{
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-line",
+                  maxWidth: "100%",
+                }}
+                className="text-base text-neutral-700 leading-relaxed"
+              >
+                <TourDescription description={tour.description} />
+              </div>
             </section>
             {!itineraryIsEmpty && (
               <section
@@ -125,20 +135,17 @@ export default async function TourDetailPage({ params }) {
                 <TourItinerary itinerary={tour.itinerary} />
               </section>
             )}
-            <section
-              id="inklusi"
-              className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
-            >
-              <TourInclusions inclusions={tour.inclusions} />
-              {!priceTableIsEmpty && (
-                <section className="mt-4 lg:mt-8" id="harga">
-                  <TourPriceMatrix
-                    hotelTiers={tour.hotelTiers}
-                    showHotels={tour.showHotels}
-                  />
-                </section>
-              )}
-            </section>
+            {!tour.hotelTier && (
+              <section
+                id="tarif"
+                className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
+              >
+                <TourPriceMatrix
+                  hotelTiers={tour.hotelTiers}
+                  showHotels={tour.showHotels}
+                />
+              </section>
+            )}
           </div>
 
           {/* Right: Sidebar */}

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import TourFeatureIcons from "./TourFeatureIcons";
+
 import {
   FaUser,
   FaTicketAlt,
@@ -12,6 +13,7 @@ import {
   FaHotel,
   FaCamera,
 } from "react-icons/fa";
+import TourDescription from "./TourDescription";
 
 export default function TourCard({ tour }) {
   if (!tour) return null;
@@ -245,11 +247,20 @@ export default function TourCard({ tour }) {
             </ul>
           </div>
         ) : (
-          <div className="text-xs text-muted-foreground">
-            {description
-              ? description.slice(0, 80) +
-                (description.length > 80 ? "..." : "")
-              : ""}
+          <div
+            className="py-4 mb-2 text-[15px] text-neutral-700 leading-relaxed transition-all duration-150"
+            style={{
+              minHeight: 56,
+              maxHeight: 120,
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            <div className="text-[11px] font-semibold uppercase text-neutral-600 mb-2">
+              Deskripsi
+            </div>
+            <TourDescription description={description} truncate={80} />
+            <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white/90 to-transparent pointer-events-none" />
           </div>
         )}
 
