@@ -55,14 +55,22 @@ async function getTourPackages() {
 
   return tourPackages.map((pkg) => {
     let minPrice = null;
-    // Only use priceTiers with paxRange '2-3 PAX'
+    // Cari priceTiers dengan paxRange '2-3 PAX' (case-insensitive)
     const prices = pkg.hotelTiers.flatMap((tier) =>
       (tier.priceTiers || [])
-        .filter((p) => p.paxRange === "2-3 PAX")
+        .filter((p) => (p.paxRange || "").toLowerCase() === "2-3 pax")
         .map((p) => p.price)
     );
     if (prices.length > 0) {
       minPrice = Math.min(...prices);
+    } else {
+      // Fallback ke harga terendah
+      const allPrices = pkg.hotelTiers.flatMap((tier) =>
+        (tier.priceTiers || []).map((p) => p.price)
+      );
+      if (allPrices.length > 0) {
+        minPrice = Math.min(...allPrices);
+      }
     }
 
     // Find matching inclusion points (case-insensitive, partial match)
