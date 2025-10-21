@@ -12,7 +12,7 @@ export default function TourItinerary({ itinerary }) {
           className="rounded-xl border border-neutral-200 p-4 bg-white"
         >
           <h4 className="font-semibold text-emerald-800">
-            Hari {day.day || idx + 1}
+            Hari {idx + 1}
             {day.title ? ` - ${day.title}` : ""}
           </h4>
           {Array.isArray(day.activities) && day.activities.length ? (
