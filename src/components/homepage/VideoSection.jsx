@@ -1,3 +1,5 @@
+import SectionHeading from "@/components/SectionHeading";
+
 const VideoSection = () => {
   return (
     <section className="py-16 md:py-24 bg-white">
@@ -13,6 +15,11 @@ const VideoSection = () => {
             allowFullScreen
           ></iframe>
         </div>
+      </div>
+      <div className="container mx-auto px-4 py-4">
+        <h1 className="text-primary mb-6 md:mb-10 text-[16px] md:text-[20px] lg:text-2xl text-center font-bold">
+          CV. Reborn Lombok Mandiri
+        </h1>
       </div>
     </section>
   );
