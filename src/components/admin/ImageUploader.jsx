@@ -46,26 +46,33 @@ const ImageUploader = ({ value = [], onChange, uploaderId }) => {
       <Label>Galeri Foto</Label>
       <div className="p-4 border rounded-lg bg-gray-50">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
-          {value.map((url, index) => (
-            <div key={index} className="relative group aspect-video">
-              <Image
-                src={url}
-                alt={`Gambar galeri ${index + 1}`}
-                fill
-                className="object-cover rounded-md"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  type="button"
-                  onClick={() => handleRemoveImage(index)}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+          {value
+            .filter(
+              (url) =>
+                typeof url === "string" &&
+                url.trim() &&
+                /^https?:\/\//.test(url)
+            )
+            .map((url, index) => (
+              <div key={index} className="relative group aspect-video">
+                <Image
+                  src={url}
+                  alt={`Gambar galeri ${index + 1}`}
+                  fill
+                  className="object-cover rounded-md"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <div className="flex items-center gap-4">

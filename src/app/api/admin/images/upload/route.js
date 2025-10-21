@@ -23,24 +23,23 @@ export async function POST(request) {
       await minioClient.makeBucket(bucketName, "us-east-1");
     }
 
+    function randomString(length = 8) {
+      return Math.random()
+        .toString(36)
+        .substring(2, 2 + length);
+    }
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = Date.now() + "_" + file.name.replaceAll(" ", "_");
-      // const uploadPath = path.join(
-      //   process.cwd(),
-      //   "public/uploads/tours",
-      //   filename
-      // );
-      await minioClient.putObject(bucketName, filename, buffer, file.size);
+      const ext = file.name.split(".").pop();
+      const filename = `${Date.now()}_${randomString(8)}.${ext}`;
+      const objectName = `tours/${filename}`;
+      await minioClient.putObject(bucketName, objectName, buffer, file.size);
 
-      // await writeFile(uploadPath, buffer);
-      // const publicUrl = `/uploads/tours/${filename}`;
-      // uploadedUrls.push(publicUrl);
       const publicUrl = `${
         process.env.MINIO_USE_SSL === "true" ? "https" : "http"
       }://${process.env.MINIO_ENDPOINT}:${
         process.env.MINIO_PORT
-      }/${bucketName}/${filename}`;
+      }/${bucketName}/${objectName}`;
       uploadedUrls.push(publicUrl);
     }
 

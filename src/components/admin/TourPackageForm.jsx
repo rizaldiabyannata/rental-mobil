@@ -37,6 +37,26 @@ function toCommaFromArray(arr) {
 }
 
 export function TourPackageForm({ isEditing = false, initialData = null }) {
+  // Handler for inclusions
+  const handleAddInclusion = () => {
+    if (inclusionInput.trim()) {
+      setInclusions([...inclusions, inclusionInput.trim()]);
+      setInclusionInput("");
+    }
+  };
+  const handleDeleteInclusion = (idx) => {
+    setInclusions(inclusions.filter((_, i) => i !== idx));
+  };
+  // Handler for gallery images
+  const handleAddGalleryImage = () => {
+    if (galleryImageInput.trim()) {
+      setGalleryImages([...galleryImages, galleryImageInput.trim()]);
+      setGalleryImageInput("");
+    }
+  };
+  const handleDeleteGalleryImage = (idx) => {
+    setGalleryImages(galleryImages.filter((_, i) => i !== idx));
+  };
   const router = useRouter();
   const [name, setName] = useState(initialData?.name || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
@@ -57,12 +77,19 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
     }
     return {};
   });
-  const [inclusionsText, setInclusionsText] = useState(
-    toCommaFromArray(initialData?.inclusions) || ""
+  // Improved: use array state for inclusions and gallery images
+  const [inclusions, setInclusions] = useState(
+    Array.isArray(initialData?.inclusions)
+      ? initialData.inclusions
+      : toArrayFromComma(initialData?.inclusions)
   );
-  const [galleryImagesText, setGalleryImagesText] = useState(
-    toCommaFromArray(initialData?.galleryImages) || ""
+  const [inclusionInput, setInclusionInput] = useState("");
+  const [galleryImages, setGalleryImages] = useState(
+    Array.isArray(initialData?.galleryImages)
+      ? initialData.galleryImages
+      : toArrayFromComma(initialData?.galleryImages)
   );
+  const [galleryImageInput, setGalleryImageInput] = useState("");
   const [showHotels, setShowHotels] = useState(initialData?.showHotels ?? true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -146,8 +173,8 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
         slug: slug.trim(),
         duration: duration.trim(),
         description,
-        inclusions: toArrayFromComma(inclusionsText),
-        galleryImages: toArrayFromComma(galleryImagesText),
+        inclusions,
+        galleryImages,
         showHotels: Boolean(showHotels),
         itinerary: itinerary,
         hotelTiers: hotelTiers.map((t, i) => ({
@@ -295,63 +322,71 @@ export function TourPackageForm({ isEditing = false, initialData = null }) {
 
           <Separator />
 
-          <div className="grid gap-2">
+          <div className="mb-6">
             <Label htmlFor="inclusions" className="text-emerald-700">
               Termasuk (pisahkan dengan koma)
             </Label>
-            <Input
-              id="inclusions"
-              value={inclusionsText}
-              onChange={(e) => setInclusionsText(e.target.value)}
-              placeholder="Hotel, Makan, Transportasi"
-              className="border-emerald-300 focus-visible:ring-emerald-500 focus-visible:ring-2 focus-visible:border-emerald-500"
+            <div className="flex gap-2 mb-2">
+              <Input
+                id="inclusionInput"
+                value={inclusionInput}
+                onChange={(e) => setInclusionInput(e.target.value)}
+                placeholder="Tambah item termasuk..."
+                className="border-emerald-300 focus-visible:ring-emerald-500 focus-visible:ring-2 focus-visible:border-emerald-500 flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddInclusion();
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleAddInclusion}
+              >
+                Tambah
+              </Button>
+            </div>
+            <ul className="list-disc pl-5 space-y-1">
+              {inclusions.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <span>{item}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-500 px-2"
+                    onClick={() => handleDeleteInclusion(idx)}
+                  >
+                    Hapus
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-2 text-xs text-muted-foreground">
+              Atau masukkan beberapa item sekaligus, pisahkan dengan koma:
+            </div>
+            <Textarea
+              className="border-emerald-300 focus-visible:ring-emerald-500 focus-visible:ring-2 focus-visible:border-emerald-500 w-full mt-1"
+              rows={2}
+              value={inclusions.join(", ")}
+              onChange={(e) => setInclusions(toArrayFromComma(e.target.value))}
+              placeholder="hotel (sesuai pilihan), mobil full ac, bbm driver, ..."
             />
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="gallery">
-              <span className="text-emerald-700">
-                URL Gambar Galeri (pisahkan dengan koma)
-              </span>
+          <div className="mb-6">
+            <Label
+              htmlFor="gallery"
+              className="text-emerald-700 font-semibold mb-2 block"
+            >
+              Galeri Gambar
             </Label>
-            <div className="grid gap-2">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) =>
-                  setSelectedFiles(Array.from(e.target.files || []))
-                }
-                className="border border-emerald-300 rounded-md p-2 text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 file:mr-3 file:px-2 file:rounded-md file:border-0 file:bg-emerald-600 file:text-white hover:file:bg-emerald-700"
-              />
-              <div className="flex items-center gap-3">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleUploadFiles}
-                  disabled={uploading || !selectedFiles.length}
-                  className="border-emerald-600 hover:bg-emerald-50 text-white"
-                >
-                  {uploading ? (
-                    <span className="inline-flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" /> Mengupload...
-                    </span>
-                  ) : (
-                    `Upload ${selectedFiles.length || ""} File`
-                  )}
-                </Button>
-                <span className="text-xs text-emerald-700/80">
-                  Setelah upload, URL gambar akan terisi otomatis di bawah.
-                </span>
-              </div>
-              <Textarea
-                id="gallery"
-                value={galleryImagesText}
-                onChange={(e) => setGalleryImagesText(e.target.value)}
-                placeholder="/uploads/tours/img1.jpg, /uploads/tours/img2.jpg"
-                rows={4}
-                className="border-emerald-300 focus-visible:ring-emerald-500 focus-visible:ring-2 focus-visible:border-emerald-500"
-              />
-            </div>
+            <ImageUploader
+              uploaderId="gallery-image-uploader"
+              value={galleryImages}
+              onChange={setGalleryImages}
+            />
           </div>
 
           <Separator />
