@@ -24,7 +24,7 @@ function getImageUrl(src) {
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       select: { name: true, description: true },
@@ -65,14 +65,21 @@ async function getTourPackage(slug) {
 }
 
 export default async function TourDetailPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const tour = await getTourPackage(slug);
+  if (!tour) notFound();
 
-  // Compute minimal price across all tiers for quick highlight
-  const minPrice = (() => {
+  const itineraryIsEmpty = !tour?.itinerary || tour.itinerary.length === 0;
+  const priceTableIsEmpty =
+    !tour?.hotelTiers ||
+    tour.hotelTiers.every((ht) => !ht.priceTiers || ht.priceTiers.length === 0);
+
+  // ...existing code...
+  const minPrice23Pax = (() => {
     try {
       const prices = (tour?.hotelTiers || [])
         .flatMap((h) => h.priceTiers || [])
+        .filter((p) => p.paxRange === "2-3 PAX")
         .map((p) => p.price)
         .filter((n) => typeof n === "number" && !isNaN(n));
       if (!prices.length) return null;
@@ -106,29 +113,39 @@ export default async function TourDetailPage({ params }) {
               <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
                 Deskripsi Paket
               </h2>
-              <TourDescription description={tour.description} />
+              <div
+                style={{
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-line",
+                  maxWidth: "100%",
+                }}
+                className="text-base text-neutral-700 leading-relaxed"
+              >
+                <TourDescription description={tour.description} />
+              </div>
             </section>
-            <section
-              id="itinerary"
-              className="bg-gray-50 rounded-xl shadow-sm p-6 xl:p-8"
-            >
-              <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
-                Rencana Perjalanan
-              </h2>
-              <TourItinerary itinerary={tour.itinerary} />
-            </section>
-            <section
-              id="inklusi"
-              className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
-            >
-              <TourInclusions inclusions={tour.inclusions} />
-              <section className="mt-4 lg:mt-8" id="harga">
+            {!itineraryIsEmpty && (
+              <section
+                id="itinerary"
+                className="bg-gray-50 rounded-xl shadow-sm p-6 xl:p-8"
+              >
+                <h2 className="text-2xl xl:text-3xl font-semibold mb-4 xl:mb-6">
+                  Rencana Perjalanan
+                </h2>
+                <TourItinerary itinerary={tour.itinerary} />
+              </section>
+            )}
+            {!tour.hotelTier && (
+              <section
+                id="tarif"
+                className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
+              >
                 <TourPriceMatrix
                   hotelTiers={tour.hotelTiers}
                   showHotels={tour.showHotels}
                 />
               </section>
-            </section>
+            )}
           </div>
 
           {/* Right: Sidebar */}
@@ -144,7 +161,7 @@ export default async function TourDetailPage({ params }) {
                 >
                   {tour.duration}
                 </Badge>
-                {minPrice !== null ? (
+                {minPrice23Pax !== null ? (
                   <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
                     <p className="text-sm text-neutral-700">Mulai dari</p>
                     <p className="text-2xl font-extrabold text-primary">
@@ -152,9 +169,9 @@ export default async function TourDetailPage({ params }) {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
-                      }).format(minPrice)}
+                      }).format(minPrice23Pax)}
                       <span className="ml-1 text-sm font-medium text-neutral-600">
-                        / PAX
+                        / 2-3 PAX
                       </span>
                     </p>
                   </div>

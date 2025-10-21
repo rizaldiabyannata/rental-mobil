@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import TourFeatureIcons from "./TourFeatureIcons";
+
 import {
   FaUser,
   FaTicketAlt,
@@ -12,20 +13,29 @@ import {
   FaHotel,
   FaCamera,
 } from "react-icons/fa";
+import TourDescription from "./TourDescription";
 
 export default function TourCard({ tour }) {
+  if (!tour) return null;
   const {
     slug = "",
     title = "Paket Tour",
-    shortDescription = "",
+    description = "",
     coverImage = "/imageforctasection.png",
     durationText: durationTextProp,
     durationDays = 0,
     durationHours = 0,
     minPrice = null,
     features = [], // e.g. ["car", "beach", "group"]
-    includes = [], // e.g. ["car","driver","ticket","meal","water"]
-  } = tour || {};
+    includes: rawIncludes = [], // e.g. ["car","driver","ticket","meal","water"]
+  } = tour;
+
+  // Always ensure includes is array or string
+  const includes = Array.isArray(rawIncludes)
+    ? rawIncludes
+    : typeof rawIncludes === "string"
+    ? rawIncludes.split(/,\s*/)
+    : [];
 
   // Build duration label similar to reference (e.g., "2 HARI 1 MALAM")
   const nights = durationDays > 1 ? durationDays - 1 : 0;
@@ -51,25 +61,142 @@ export default function TourCard({ tour }) {
     return out;
   }
 
-  // Includes section mapping
-  const INCLUDE_LABELS = {
-    hotel: "Hotel",
-    car: "Mobil",
-    driver: "Driver",
-    ticket: "Tiket Wisata",
-    meal: "Makan",
-    water: "Air Mineral",
-    camera: "Dokumentasi",
-  };
-  const INCLUDE_ICONS = {
-    hotel: FaHotel,
-    car: FaCar,
-    driver: FaUser,
-    ticket: FaTicketAlt,
-    meal: FaUtensils,
-    water: FaTint,
-    camera: FaCamera,
-  };
+  // Only show these fixed includes on the card
+  const CARD_INCLUDES = [
+    {
+      keys: ["mobil", "car", "full ac"],
+      label: "MOBIL",
+      icon: FaCar,
+    },
+    {
+      keys: ["driver", "bbm", "sopir"],
+      label: "DRIVER",
+      icon: FaUser,
+    },
+    {
+      keys: [
+        "dokumentasi",
+        "dokumentation",
+        "documentation",
+        "foto",
+        "photo",
+        "kamera",
+        "camera",
+        "premium dokumentasi",
+      ],
+      label: "DOKUMENTATION",
+      icon: FaCamera,
+    },
+    {
+      keys: ["makan", "food", "siang", "malam", "parcel", "mineral", "air"],
+      label: "FOOD & MINERAL WATER",
+      icon: FaUtensils,
+    },
+    {
+      keys: ["snorkling", "snorkel", "mask", "life jaket", "underwater"],
+      label: "TOOLS SNORKLING",
+      icon: FaTint,
+    },
+    {
+      keys: ["tiket", "ticket", "wisata", "parkir"],
+      label: "TIKET WISATA",
+      icon: FaTicketAlt,
+    },
+  ];
+
+  // Find matching includes from tour.includes
+  function getCardIncludes(includes) {
+    let lowerIncludes = [];
+    if (Array.isArray(includes)) {
+      lowerIncludes = includes.map((i) =>
+        typeof i === "string" ? i.toLowerCase() : ""
+      );
+    } else if (typeof includes === "string") {
+      lowerIncludes = includes.split(/,\s*/).map((i) => i.toLowerCase());
+    }
+    // Only show the fixed 5 main features, in order
+    const allowedLabels = [
+      "MOBIL",
+      "DRIVER",
+      "DOKUMENTATION",
+      "FOOD & MINERAL WATER",
+      "TOOLS SNORKLING",
+    ];
+    // Custom matching for FOOD & MINERAL WATER and TOOLS SNORKLING
+    const result = [];
+    // MOBIL
+    if (lowerIncludes.some((inc) => inc.includes("mobil"))) {
+      result.push(CARD_INCLUDES.find((i) => i.label === "MOBIL"));
+    }
+    // DRIVER
+    if (
+      lowerIncludes.some(
+        (inc) =>
+          inc.includes("driver") || inc.includes("bbm") || inc.includes("sopir")
+      )
+    ) {
+      result.push(CARD_INCLUDES.find((i) => i.label === "DRIVER"));
+    }
+    // DOKUMENTATION
+    if (
+      lowerIncludes.some(
+        (inc) =>
+          inc.includes("dokumentasi") ||
+          inc.includes("dokumentation") ||
+          inc.includes("documentation") ||
+          inc.includes("foto") ||
+          inc.includes("photo") ||
+          inc.includes("kamera") ||
+          inc.includes("camera") ||
+          inc.includes("premium dokumentasi")
+      )
+    ) {
+      result.push(CARD_INCLUDES.find((i) => i.label === "DOKUMENTATION"));
+    }
+    // FOOD & MINERAL WATER
+    if (
+      lowerIncludes.some(
+        (inc) =>
+          inc.includes("makan") ||
+          inc.includes("food") ||
+          inc.includes("siang") ||
+          inc.includes("malam") ||
+          inc.includes("parcel") ||
+          inc.includes("mineral") ||
+          inc.includes("air")
+      )
+    ) {
+      result.push(
+        CARD_INCLUDES.find((i) => i.label === "FOOD & MINERAL WATER")
+      );
+    }
+    // TOOLS SNORKLING
+    if (
+      lowerIncludes.some(
+        (inc) =>
+          inc.includes("snorkling") ||
+          inc.includes("snorkel") ||
+          inc.includes("mask") ||
+          inc.includes("life jaket") ||
+          inc.includes("underwater")
+      )
+    ) {
+      result.push(CARD_INCLUDES.find((i) => i.label === "TOOLS SNORKLING"));
+    }
+    // TIKET WISATA
+    if (
+      lowerIncludes.some(
+        (inc) =>
+          inc.includes("tiket") ||
+          inc.includes("ticket") ||
+          inc.includes("wisata") ||
+          inc.includes("parkir")
+      )
+    ) {
+      result.push(CARD_INCLUDES.find((i) => i.label === "TIKET WISATA"));
+    }
+    return result.slice(0, 6);
+  }
 
   return (
     <Card className="overflow-hidden border border-primary/20 shadow-md pt-0">
@@ -103,25 +230,38 @@ export default function TourCard({ tour }) {
               Include
             </div>
             <ul className="space-y-1">
-              {includes.slice(0, 6).map((key, idx) => {
-                const Icon = INCLUDE_ICONS[key] || FaCar;
-                const label = INCLUDE_LABELS[key] || key;
+              {getCardIncludes(includes).map((item, idx) => {
+                const Icon = item.icon;
                 return (
                   <li
-                    key={key + idx}
+                    key={item.label + idx}
                     className="flex items-center gap-2 text-[13px] text-neutral-700"
                   >
                     <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary border border-primary/20">
                       <Icon className="w-3.5 h-3.5" />
                     </span>
-                    <span className="tracking-wide">{label}</span>
+                    <span className="tracking-wide">{item.label}</span>
                   </li>
                 );
               })}
             </ul>
           </div>
         ) : (
-          <TourFeatureIcons features={features} />
+          <div
+            className="py-4 mb-2 text-[15px] text-neutral-700 leading-relaxed transition-all duration-150"
+            style={{
+              minHeight: 56,
+              maxHeight: 120,
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            <div className="text-[11px] font-semibold uppercase text-neutral-600 mb-2">
+              Deskripsi
+            </div>
+            <TourDescription description={description} truncate={80} />
+            <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white/90 to-transparent pointer-events-none" />
+          </div>
         )}
 
         {/* Footer: price per pax + button */}

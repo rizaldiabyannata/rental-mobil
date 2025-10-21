@@ -27,7 +27,7 @@ export async function GET(_request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const id = params?.id;
+    const id = await params?.id;
     if (!id || typeof id !== "string") {
       return new Response("ID tidak valid", { status: 400 });
     }

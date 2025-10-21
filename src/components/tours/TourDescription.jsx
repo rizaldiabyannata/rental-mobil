@@ -22,9 +22,10 @@ export default function TourDescription({ description }) {
       .replace(/&#39;/g, "'")
       .replace(/&lt;/g, "<")
       .replace(/&gt;/g, ">")
-      .replace(/<[^>]+>/g, ""); // Remove any remaining HTML tags
+      .replace(/<br\s*\/?>/gi, " ") // Remove <br> tags
+      .replace(/<[^>]*>/g, ""); // Remove ALL HTML tags
     return (
-      <p className="text-gray-700 whitespace-pre-wrap text-base xl:text-lg">
+      <p className="text-gray-700 whitespace-pre-wrap text-base xl:text-lg text-wrap">
         {cleanDesc}
       </p>
     );
