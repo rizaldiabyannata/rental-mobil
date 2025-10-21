@@ -55,8 +55,11 @@ async function getTourPackages() {
 
   return tourPackages.map((pkg) => {
     let minPrice = null;
+    // Only use priceTiers with paxRange '2-3 PAX'
     const prices = pkg.hotelTiers.flatMap((tier) =>
-      tier.priceTiers.map((p) => p.price)
+      (tier.priceTiers || [])
+        .filter((p) => p.paxRange === "2-3 PAX")
+        .map((p) => p.price)
     );
     if (prices.length > 0) {
       minPrice = Math.min(...prices);
