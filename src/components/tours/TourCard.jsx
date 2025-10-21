@@ -22,7 +22,7 @@ export default function TourCard({ tour }) {
     durationText: durationTextProp,
     durationDays = 0,
     durationHours = 0,
-    hotelTiers = [],
+    hotelTiers = [], // for price lookup
     features = [], // e.g. ["car", "beach", "group"]
     includes = [], // e.g. ["car","driver","ticket","meal","water"]
   } = tour || {};
