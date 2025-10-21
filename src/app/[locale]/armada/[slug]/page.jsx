@@ -6,6 +6,7 @@ import SpecsSection from "@/components/detail-armada/SpecsSection";
 import TariffDetailSection from "@/components/detail-armada/TariffDetailSection";
 import WhatsAppCtaSection from "@/components/shared/WhatsAppCtaSection";
 import { prisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 
 function getImageUrl(src) {
   if (!src) return "/imageforctasection.png";
@@ -93,21 +94,26 @@ async function getCarBySlug(slug) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "fleetDetail.meta" });
   const car = await getCarBySlug(slug);
 
   if (!car) {
     return {
-      title: "Armada Tidak Ditemukan",
-      description: "Mobil yang Anda cari tidak tersedia atau tidak ada.",
+      title: t("notFound.title"),
+      description: t("notFound.description"),
     };
   }
 
   const siteName = "Reborn Trans Lombok";
-  const title = `Sewa Mobil ${car.name} di Lombok - ${siteName}`;
+  const title = t("title", { carName: car.name, siteName });
   const description =
     car.description ||
-    `Sewa mobil ${car.name} di Lombok dengan harga terjangkau. Kapasitas ${car.capacity} penumpang, transmisi ${car.transmission}. Pesan sekarang!`;
+    t("description", {
+      carName: car.name,
+      capacity: car.capacity,
+      transmission: car.transmission,
+    });
   const images = car.coverImage
     ? [car.coverImage]
     : car.gallery?.map((g) => g.url).filter(Boolean) || [];
@@ -169,16 +175,15 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ArmadaDetailPage({ params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "fleetDetail" });
   const car = await getCarBySlug(slug);
 
   if (!car) {
     return (
       <div className="container mx-auto px-4 py-10">
-        <h1 className="text-2xl font-semibold">Armada tidak ditemukan</h1>
-        <p className="text-muted-foreground mt-2">
-          Periksa kembali tautan atau pilih armada lain.
-        </p>
+        <h1 className="text-2xl font-semibold">{t("notFound")}</h1>
+        <p className="text-muted-foreground mt-2">{t("notFoundHint")}</p>
       </div>
     );
   }
@@ -188,7 +193,7 @@ export default async function ArmadaDetailPage({ params }) {
     name: car.name,
     description: car.description,
     price: new Intl.NumberFormat("id-ID").format(car.startingPrice),
-    priceUnit: "/ 12 Jam (Termasuk Driver)", // optional: bisa diambil dari kategori tarif jika ada
+    priceUnit: t("priceUnit"), // optional: bisa diambil dari kategori tarif jika ada
     longDescription: car.description, // bisa diperluas jika ada field khusus
     images: Array.isArray(car.gallery)
       ? car.gallery.map((g) => {
@@ -216,12 +221,12 @@ export default async function ArmadaDetailPage({ params }) {
     }));
 
   const specItems = [];
-  specItems.push({ label: "Transmisi", value: car.transmission });
+  specItems.push({ label: t("specs.transmission"), value: car.transmission });
   specItems.push({
-    label: "Kapasitas Penumpang",
-    value: `${car.capacity} orang`,
+    label: t("specs.capacity"),
+    value: t("specs.capacityValue", { capacity: car.capacity }),
   });
-  specItems.push({ label: "Bahan Bakar", value: car.fuelType });
+  specItems.push({ label: t("specs.fuel"), value: car.fuelType });
   // Tambahkan detail fleksibel jika ada
   if (Array.isArray(car.details)) {
     for (const d of car.details) {
@@ -258,10 +263,10 @@ export default async function ArmadaDetailPage({ params }) {
     tariffCards = [
       {
         key: "tariff-default",
-        title: "Tarif Sewa",
+        title: t("tariffs.defaultTitle"),
         items: [
-          { label: "Harga mulai", price: car.startingPrice },
-          { label: "Detail tarif", price: "Hubungi admin" },
+          { label: t("tariffs.startingPriceLabel"), price: car.startingPrice },
+          { label: t("tariffs.contactAdminLabel"), price: t("tariffs.contactAdminValue") },
         ],
       },
     ];
@@ -272,7 +277,7 @@ export default async function ArmadaDetailPage({ params }) {
       <CarDetailSection car={carForHero} />
       <KeyFeatureSection features={keyFeatures} />
       <SpecsSection
-        title="Spesifikasi Lengkap"
+        title={t("specsTitle")}
         align="left"
         items={specItems}
         className="bg-white"

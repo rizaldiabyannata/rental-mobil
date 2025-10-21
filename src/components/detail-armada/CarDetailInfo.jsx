@@ -2,6 +2,7 @@
 
 import React from "react";
 import CarDetailCarousel from "./CarDetailCarousel";
+import { useTranslations } from "next-intl";
 
 const CarDetailInfo = ({
   car = {
@@ -15,10 +16,11 @@ const CarDetailInfo = ({
     images: [],
   },
 }) => {
+  const t = useTranslations("fleetDetail");
+  const tGlobal = useTranslations("global");
+
   const handleContactClick = () => {
-    const message = encodeURIComponent(
-      "Halo, saya tertarik dengan layanan Anda"
-    );
+    const message = encodeURIComponent(t("contactMessage", { carName: car.name }));
     window.open(`https://wa.me/6285353818685?text=${message}`, "_blank");
   };
 
@@ -54,7 +56,7 @@ const CarDetailInfo = ({
         <div className="pt-4 pb-1 w-full">
           <div className="w-full mb-[-1px]">
             <p className="text-2xl md:text-3xl font-bold text-black leading-[51.2px] md:leading-[1.2] font-sans">
-              Mulai Rp {car.price}
+              {t("startingFrom")} Rp {car.price}
             </p>
           </div>
           <div className="w-full mb-[-1px]">
@@ -78,7 +80,7 @@ const CarDetailInfo = ({
             className="bg-primary hover:bg-primary/70 transition-colors duration-200 flex gap-2.5 items-center justify-center overflow-hidden px-[18px] py-2.5 rounded-xl shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] cursor-pointer"
           >
             <span className="text-xs md:text-sm font-semibold leading-normal text-center text-white tracking-[0.5px] font-sans">
-              Hubungi Kami
+              {tGlobal("contactUs")}
             </span>
           </button>
         </div>

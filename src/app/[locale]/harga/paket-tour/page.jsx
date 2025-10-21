@@ -1,11 +1,18 @@
 import PaketTourPage from "@/components/harga/PaketTourClient";
 import { prisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-  title: "Harga Paket Tour Lombok - Wisata Murah & Berkesan",
-  description:
-    "Temukan berbagai pilihan paket tour di Lombok dengan harga terbaik. Jelajahi destinasi wisata populer dengan nyaman bersama kami. Termasuk mobil dan sopir.",
-};
+export async function generateMetadata({ params: { locale } }) {
+  const t = await getTranslations({
+    locale,
+    namespace: "pricing.tourPackage.meta",
+  });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 async function getTariffData() {
   try {

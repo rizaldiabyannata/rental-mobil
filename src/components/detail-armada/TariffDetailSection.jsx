@@ -4,9 +4,10 @@ import React from "react";
 import SectionHeading from "@/components/SectionHeading";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatIDR } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export default function TariffDetailSection({
-  title = "Detail Tarif Lengkap",
+  title,
   cards = [
     {
       key: "card-1",
@@ -33,6 +34,7 @@ export default function TariffDetailSection({
   className,
   gridCols,
 }) {
+  const t = useTranslations("fleetDetail");
   const cardsCount = Array.isArray(cards) ? cards.length : 0;
   // Auto-detect grid layout: jika ganjil dan hanya 1 card, gunakan col-1; jika ganjil > 1, tetap 2 kolom tapi card terakhir span 2
   const isOdd = cardsCount % 2 !== 0;
@@ -44,7 +46,7 @@ export default function TariffDetailSection({
       <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-6xl px-4 md:px-6 lg:px-8">
         {/* Heading mobile: center + underline tebal */}
         <SectionHeading
-          title={title}
+          title={title || t("tariffTitle")}
           align="center"
           size="md"
           underline

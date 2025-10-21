@@ -1,11 +1,18 @@
 import SewaHarianPage from "@/components/harga/SewaHarianClient";
 import { prisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-  title: "Harga Sewa Mobil Harian di Lombok - Lepas Kunci & Dengan Sopir",
-  description:
-    "Daftar harga sewa mobil harian (12 jam atau 24 jam) di Lombok. Tersedia opsi lepas kunci atau dengan sopir. Armada lengkap, harga bersaing.",
-};
+export async function generateMetadata({ params: { locale } }) {
+  const t = await getTranslations({
+    locale,
+    namespace: "pricing.dailyRental.meta",
+  });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 async function getTariffData() {
   try {

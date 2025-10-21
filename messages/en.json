@@ -187,13 +187,21 @@
       "priceRange": "Price Range",
       "allVehicles": "All Vehicles",
       "allPackages": "All Packages",
-      "allPrices": "All Prices"
+      "allPrices": "All Prices",
+      "priceRanges": {
+        "under500k": "Under IDR 500,000",
+        "500kto1m": "IDR 500,000 - IDR 1,000,000",
+        "over1m": "Over IDR 1,000,000"
+      }
     },
     "priceTable": {
+      "description": "Latest rates from Reborn Lombok Trans with professional service and prime fleet.",
       "serviceType": "Service Type",
       "packageType": "Package Type",
       "fleetType": "Fleet Type",
-      "price": "Price"
+      "price": "Price",
+      "armadaTitle": "Fleet: {armadaName}",
+      "noResults": "No results match your filter."
     },
     "dailyRental": {
       "meta": {
@@ -249,11 +257,45 @@
       "subtitle": "Your Satisfaction is Our Priority. Remember Lombok! Remember Reborn Lombok Trans!!"
     }
   },
+  "armada": {
+    "meta": {
+      "title": "Our Vehicle Fleet - Newest Cars for Rent in Lombok",
+      "description": "Browse our complete vehicle fleet. We provide various types of cars from city cars, MPVs, to tour buses to meet your travel needs in Lombok."
+    },
+    "hero": {
+      "title": "Our Vehicle Fleet",
+      "subtitle": "Choose the best vehicle that suits your comfort and travel needs in Lombok."
+    }
+  },
   "fleetDetail": {
-    "keyFeaturesTitle": "Key Features",
+    "meta": {
+      "title": "Rent {carName} in Lombok - {siteName}",
+      "description": "Rent {carName} in Lombok at an affordable price. Capacity {capacity} passengers, {transmission} transmission. Book now!",
+      "notFound": {
+        "title": "Fleet Not Found",
+        "description": "The car you are looking for is not available or does not exist."
+      }
+    },
+    "notFound": "Fleet not found",
+    "notFoundHint": "Please check the link again or choose another fleet.",
+    "priceUnit": "/ 12 Hours (Includes Driver)",
     "specsTitle": "Full Specifications",
+    "specs": {
+      "transmission": "Transmission",
+      "capacity": "Passenger Capacity",
+      "capacityValue": "{capacity} people",
+      "fuel": "Fuel"
+    },
+    "tariffs": {
+      "defaultTitle": "Rental Tariff",
+      "startingPriceLabel": "Starting price",
+      "contactAdminLabel": "Tariff details",
+      "contactAdminValue": "Contact admin"
+    },
+    "keyFeaturesTitle": "Key Features",
     "tariffTitle": "Complete Tariff Details",
-    "notFound": "Fleet not found"
+    "startingFrom": "Starting from",
+    "contactMessage": "Hello, I am interested in renting the {carName}."
   },
   "tourDetail": {
     "meta": {

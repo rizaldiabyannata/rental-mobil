@@ -187,13 +187,21 @@
       "priceRange": "Range Harga",
       "allVehicles": "Semua Kendaraan",
       "allPackages": "Semua Paket",
-      "allPrices": "Semua Harga"
+      "allPrices": "Semua Harga",
+      "priceRanges": {
+        "under500k": "Di bawah Rp.500.000",
+        "500kto1m": "Rp.500.000 - Rp.1.000.000",
+        "over1m": "Di atas Rp.1.000.000"
+      }
     },
     "priceTable": {
+      "description": "Tarif terbaru Reborn Lombok Trans dengan layanan profesional dan armada prima.",
       "serviceType": "Jenis Layanan",
       "packageType": "Jenis Paket",
       "fleetType": "Jenis Armada",
-      "price": "Harga"
+      "price": "Harga",
+      "armadaTitle": "Armada: {armadaName}",
+      "noResults": "Tidak ada hasil yang cocok dengan filter Anda."
     },
     "dailyRental": {
       "meta": {
@@ -249,11 +257,45 @@
       "subtitle": "Kepuasan Anda adalah yang Utama. Ingat Lombok! Ingat Reborn Lombok Trans!!"
     }
   },
+  "armada": {
+    "meta": {
+      "title": "Armada Kendaraan Kami - Mobil Terbaru untuk Disewa di Lombok",
+      "description": "Lihat armada kendaraan lengkap kami. Kami menyediakan berbagai jenis mobil mulai dari city car, MPV, hingga bus pariwisata untuk memenuhi kebutuhan perjalanan Anda di Lombok."
+    },
+    "hero": {
+      "title": "Armada Kendaraan Kami",
+      "subtitle": "Pilih kendaraan terbaik yang sesuai dengan kenyamanan dan kebutuhan perjalanan Anda di Lombok."
+    }
+  },
   "fleetDetail": {
-    "keyFeaturesTitle": "Fitur Unggulan",
+    "meta": {
+      "title": "Sewa Mobil {carName} di Lombok - {siteName}",
+      "description": "Sewa mobil {carName} di Lombok dengan harga terjangkau. Kapasitas {capacity} penumpang, transmisi {transmission}. Pesan sekarang!",
+      "notFound": {
+        "title": "Armada Tidak Ditemukan",
+        "description": "Mobil yang Anda cari tidak tersedia atau tidak ada."
+      }
+    },
+    "notFound": "Armada tidak ditemukan",
+    "notFoundHint": "Periksa kembali tautan atau pilih armada lain.",
+    "priceUnit": "/ 12 Jam (Termasuk Driver)",
     "specsTitle": "Spesifikasi Lengkap",
+    "specs": {
+      "transmission": "Transmisi",
+      "capacity": "Kapasitas Penumpang",
+      "capacityValue": "{capacity} orang",
+      "fuel": "Bahan Bakar"
+    },
+    "tariffs": {
+      "defaultTitle": "Tarif Sewa",
+      "startingPriceLabel": "Harga mulai",
+      "contactAdminLabel": "Detail tarif",
+      "contactAdminValue": "Hubungi admin"
+    },
+    "keyFeaturesTitle": "Fitur Unggulan",
     "tariffTitle": "Detail Tarif Lengkap",
-    "notFound": "Armada tidak ditemukan"
+    "startingFrom": "Mulai dari",
+    "contactMessage": "Halo, saya tertarik untuk menyewa mobil {carName}."
   },
   "tourDetail": {
     "meta": {

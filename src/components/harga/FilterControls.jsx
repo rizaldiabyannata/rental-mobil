@@ -1,3 +1,5 @@
+"use client";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -19,13 +21,13 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
   const activeFilters = [
     filters.armada && { label: "Armada", value: filters.armada },
     filters.paket && { label: "Paket", value: filters.paket },
-    filters.harga && { label: "Harga", value: filters.harga },
+    filters.harga && { label: t("priceRange"), value: filters.harga },
   ].filter(Boolean);
 
   const handleReset = () => {
     Object.keys(filters || {}).forEach((key) => onFilterChange(key, ""));
   };
-
+  const t = useTranslations("pricing.filterControls");
   return (
     <Card className="mb-8 border border-[#EFF7FF] shadow-md">
       <CardHeader className="pb-4">
@@ -35,12 +37,9 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               <span className="rounded-full bg-[#EFF7FF] p-2 text-primary">
                 <SlidersHorizontal className="h-4 w-4" />
               </span>
-              Sesuaikan Harga
+              {t("title")}
             </CardTitle>
-            <CardDescription className="mt-2">
-              Filter tarif sesuai armada, paket, dan rentang harga yang Anda
-              inginkan.
-            </CardDescription>
+            <CardDescription className="mt-2">{t("description")}</CardDescription>
           </div>
           <Button
             variant="ghost"
@@ -48,7 +47,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
             className="gap-2 text-primary hover:bg-[#EFF7FF]"
             onClick={handleReset}
           >
-            <RotateCcw className="h-4 w-4" /> Reset
+            <RotateCcw className="h-4 w-4" /> {t("resetButton")}
           </Button>
         </div>
 
@@ -75,7 +74,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               <div className="rounded-md bg-white p-2 shadow-sm">
                 <SlidersHorizontal className="h-4 w-4 text-primary" />
               </div>
-              Jenis Kendaraan
+              {t("vehicleType")}
             </div>
             <Select
               value={filters.armada}
@@ -84,10 +83,10 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               }
             >
               <SelectTrigger className="w-full border-[#3E6598] focus:border-primary focus:ring-[#8FA6C3]">
-                <SelectValue placeholder="Semua Kendaraan" />
+                <SelectValue placeholder={t("allVehicles")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Semua Kendaraan</SelectItem>
+                <SelectItem value="all">{t("allVehicles")}</SelectItem>
                 {options.armada.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -103,7 +102,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               <div className="rounded-md bg-white p-2 shadow-sm">
                 <SlidersHorizontal className="h-4 w-4 text-primary" />
               </div>
-              Jenis Paket
+              {t("packageType")}
             </div>
             <Select
               value={filters.paket}
@@ -112,10 +111,10 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               }
             >
               <SelectTrigger className="w-full border-[#3E6598] focus:border-primary focus:ring-[#8FA6C3]">
-                <SelectValue placeholder="Semua Paket" />
+                <SelectValue placeholder={t("allPackages")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Semua Paket</SelectItem>
+                <SelectItem value="all">{t("allPackages")}</SelectItem>
                 {options.paket.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -131,7 +130,7 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               <div className="rounded-md bg-white p-2 shadow-sm">
                 <SlidersHorizontal className="h-4 w-4 text-primary" />
               </div>
-              Range Harga
+              {t("priceRange")}
             </div>
             <Select
               value={filters.harga}
@@ -140,15 +139,13 @@ const FilterControls = ({ filters, onFilterChange, options }) => {
               }
             >
               <SelectTrigger className="w-full border-[#3E6598] focus:border-primary focus:ring-[#8FA6C3]">
-                <SelectValue placeholder="Semua Harga" />
+                <SelectValue placeholder={t("allPrices")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Semua Harga</SelectItem>
-                <SelectItem value="<500k">Di bawah Rp.500.000</SelectItem>
-                <SelectItem value="500k-1m">
-                  Rp.500.000 - Rp.1.000.000
-                </SelectItem>
-                <SelectItem value=">1m">Di atas Rp.1.000.000</SelectItem>
+                <SelectItem value="all">{t("allPrices")}</SelectItem>
+                <SelectItem value="<500k">{t("priceRanges.under500k")}</SelectItem>
+                <SelectItem value="500k-1m">{t("priceRanges.500kto1m")}</SelectItem>
+                <SelectItem value=">1m">{t("priceRanges.over1m")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

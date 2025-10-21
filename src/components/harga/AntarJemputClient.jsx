@@ -3,6 +3,7 @@ import { usePriceFilter } from "@/hooks/usePriceFilter";
 import FilterControls from "@/components/harga/FilterControls";
 import PriceTable from "@/components/harga/PriceTable";
 import HeroSection from "@/components/homepage/HeroSection";
+import { useTranslations } from "next-intl";
 
 const defaultData = [
   {
@@ -49,6 +50,7 @@ const AntarJemputPage = ({ data }) => {
   const hiaceFilteredData = filteredData.filter(
     (item) => item.armada === "TOYOTA HIACE"
   );
+  const t = useTranslations("pricing.priceTable");
 
   return (
     <>
@@ -64,22 +66,20 @@ const AntarJemputPage = ({ data }) => {
           <div className="space-y-12">
             {innovaFilteredData.length > 0 && (
               <PriceTable
-                title="Armada: Innova Reborn"
+                title={t("armadaTitle", { armadaName: "Innova Reborn" })}
                 data={innovaFilteredData}
               />
             )}
 
             {hiaceFilteredData.length > 0 && (
               <PriceTable
-                title="Armada: Toyota Hiace"
+                title={t("armadaTitle", { armadaName: "Toyota Hiace" })}
                 data={hiaceFilteredData}
               />
             )}
 
             {filteredData.length === 0 && (
-              <p className="text-center text-gray-500">
-                Tidak ada hasil yang cocok dengan filter Anda.
-              </p>
+              <p className="text-center text-gray-500">{t("noResults")}</p>
             )}
           </div>
         </div>

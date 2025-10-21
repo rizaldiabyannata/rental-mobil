@@ -12,12 +12,16 @@ import PaketTourSection from "@/components/sewa-mobil-layanan/PaketTourSection";
 import TourTeaserSection from "@/components/homepage/TourTeaserSection";
 import PartnersSection from "@/components/homepage/PartnersSection";
 import VideoSection from "@/components/homepage/VideoSection";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-  title: "Reborn Lombok Trans - Rental Mobil Terpercaya di Lombok",
-  description:
-    "Cari sewa mobil di Lombok? Kami menyediakan armada terbaru untuk rental mobil lepas kunci atau dengan sopir. Harga terjangkau, pelayanan terbaik. Hubungi kami!",
-};
+export async function generateMetadata({ params: { locale } }) {
+  const t = await getTranslations({ locale, namespace: "homepage.meta" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function Home({ params }) {
   const { locale } = await params;

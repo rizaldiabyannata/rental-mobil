@@ -1,3 +1,5 @@
+"use client";
+import { useTranslations } from "next-intl";
 import {
   Table,
   TableHeader,
@@ -15,6 +17,8 @@ import {
 } from "@/components/ui/card";
 
 const PriceTable = ({ title, data }) => {
+  const t = useTranslations("pricing.priceTable");
+
   return (
     <div className="mb-12">
       <Card className="overflow-hidden border border-[#EFF7FF] shadow-lg py-0 gap-0">
@@ -23,8 +27,7 @@ const PriceTable = ({ title, data }) => {
             {title}
           </CardTitle>
           <CardDescription className="text-emerald-50/90">
-            Tarif terbaru Reborn Lombok Trans dengan layanan profesional dan
-            armada prima.
+            {t("description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
@@ -33,16 +36,16 @@ const PriceTable = ({ title, data }) => {
               <TableHeader className="bg-[#EFF7FF] text-[#051C35] sticky top-0 z-10">
                 <TableRow className="border-b border-emerald-100">
                   <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
-                    Jenis Layanan
+                    {t("serviceType")}
                   </TableHead>
                   <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
-                    Jenis Paket
+                    {t("packageType")}
                   </TableHead>
                   <TableHead className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
-                    Jenis Armada
+                    {t("fleetType")}
                   </TableHead>
                   <TableHead className="px-3 py-2 sm:px-6 sm:py-4 text-right whitespace-nowrap">
-                    Harga
+                    {t("price")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
