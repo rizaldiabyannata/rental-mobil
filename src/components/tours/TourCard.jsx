@@ -14,18 +14,26 @@ import {
 } from "react-icons/fa";
 
 export default function TourCard({ tour }) {
+  if (!tour) return null;
   const {
     slug = "",
     title = "Paket Tour",
-    shortDescription = "",
+    description = "",
     coverImage = "/imageforctasection.png",
     durationText: durationTextProp,
     durationDays = 0,
     durationHours = 0,
     minPrice = null,
     features = [], // e.g. ["car", "beach", "group"]
-    includes = [], // e.g. ["car","driver","ticket","meal","water"]
-  } = tour || {};
+    includes: rawIncludes = [], // e.g. ["car","driver","ticket","meal","water"]
+  } = tour;
+
+  // Always ensure includes is array or string
+  const includes = Array.isArray(rawIncludes)
+    ? rawIncludes
+    : typeof rawIncludes === "string"
+    ? rawIncludes.split(/,\s*/)
+    : [];
 
   // Build duration label similar to reference (e.g., "2 HARI 1 MALAM")
   const nights = durationDays > 1 ? durationDays - 1 : 0;
@@ -238,9 +246,9 @@ export default function TourCard({ tour }) {
           </div>
         ) : (
           <div className="text-xs text-muted-foreground">
-            {shortDescription
-              ? shortDescription.slice(0, 80) +
-                (shortDescription.length > 80 ? "..." : "")
+            {description
+              ? description.slice(0, 80) +
+                (description.length > 80 ? "..." : "")
               : ""}
           </div>
         )}
