@@ -9,7 +9,7 @@ const CarDetailInfo = ({
     description:
       "Pilihan sempurna untuk kenyamanan perjalanan keluarga dan bisnis Anda.",
     price: "650.000",
-    priceUnit: "/ 12 Jam (Termasuk Driver)",
+    priceUnit: "/ 12 Jam (Termasuk Driver + BBM)",
     longDescription:
       "Nikmati pengalaman berkendara yang premium dengan Toyota Innova Reborn. Dikenal dengan ketangguhan, ruang kabin yang sangat lega, dan suspensi yang nyaman, mobil ini adalah partner terbaik untuk menjelajahi keindahan Lombok, mulai dari pantai Senggigi hingga perbukitan Mandalika.",
     images: [],

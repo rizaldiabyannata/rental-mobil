@@ -459,6 +459,7 @@ export default function EditCarPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Manual">Manual</SelectItem>
+                        <SelectItem value="Manual">Manual/Automatic</SelectItem>
                         <SelectItem value="Automatic">Automatic</SelectItem>
                         <SelectItem value="CVT">CVT</SelectItem>
                       </SelectContent>

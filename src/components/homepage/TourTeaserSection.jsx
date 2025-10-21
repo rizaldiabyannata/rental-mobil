@@ -96,13 +96,23 @@ export default async function TourTeaserSection() {
           }, new Set())
       : new Set();
 
+    // Ambil deskripsi utama dari JSON
+    let descriptionText = "";
+    if (typeof pkg.description === "string") {
+      descriptionText = pkg.description;
+    } else if (pkg.description && typeof pkg.description === "object") {
+      descriptionText =
+        pkg.description.text ||
+        pkg.description.plain ||
+        JSON.stringify(pkg.description);
+    }
+
     return {
       slug: pkg.slug,
       title: pkg.name,
-      shortDescription: pkg.description,
+      description: descriptionText,
       coverImage: pkg.galleryImages ? pkg.galleryImages[0] : null,
       durationText: pkg.duration,
-      // Include minPrice only when available; TourCard will render price conditionally
       ...(minPrice !== null ? { minPrice } : {}),
       features: [],
       includes: Array.from(includes),
