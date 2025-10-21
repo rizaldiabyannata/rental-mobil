@@ -74,12 +74,10 @@ export default async function TourDetailPage({ params }) {
     !tour?.hotelTiers ||
     tour.hotelTiers.every((ht) => !ht.priceTiers || ht.priceTiers.length === 0);
 
-  // ...existing code...
-  const minPrice23Pax = (() => {
+  const minPrice = (() => {
     try {
       const prices = (tour?.hotelTiers || [])
         .flatMap((h) => h.priceTiers || [])
-        .filter((p) => p.paxRange === "2-3 PAX")
         .map((p) => p.price)
         .filter((n) => typeof n === "number" && !isNaN(n));
       if (!prices.length) return null;
@@ -135,7 +133,7 @@ export default async function TourDetailPage({ params }) {
                 <TourItinerary itinerary={tour.itinerary} />
               </section>
             )}
-            {!tour.hotelTier && (
+            {!tour.hotelTiers && (
               <section
                 id="tarif"
                 className="bg-white rounded-xl shadow-sm p-6 xl:p-8"
@@ -161,7 +159,7 @@ export default async function TourDetailPage({ params }) {
                 >
                   {tour.duration}
                 </Badge>
-                {minPrice23Pax !== null ? (
+                {minPrice !== null ? (
                   <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
                     <p className="text-sm text-neutral-700">Mulai dari</p>
                     <p className="text-2xl font-extrabold text-primary">
@@ -169,9 +167,9 @@ export default async function TourDetailPage({ params }) {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
-                      }).format(minPrice23Pax)}
+                      }).format(minPrice)}
                       <span className="ml-1 text-sm font-medium text-neutral-600">
-                        / 2-3 PAX
+                        / PAX
                       </span>
                     </p>
                   </div>

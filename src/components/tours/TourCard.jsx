@@ -278,7 +278,7 @@ export default function TourCard({ tour }) {
                     currency: "IDR",
                     minimumFractionDigits: 0,
                   }).format(minPrice)}{" "}
-                  / 2-3 PAX
+                  / PAX
                 </span>
               </div>
             </div>
