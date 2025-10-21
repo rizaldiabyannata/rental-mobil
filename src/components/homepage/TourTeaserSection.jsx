@@ -62,39 +62,41 @@ export default async function TourTeaserSection() {
         .filter((n) => typeof n === "number" && !isNaN(n));
       if (prices.length) minPrice = Math.min(...prices);
     } catch {}
-    // Map inclusions text to icon keys used by TourCard
-    const includes = Array.isArray(pkg.inclusions)
-      ? pkg.inclusions
-          .map((i) => (typeof i === "string" ? i.toLowerCase() : ""))
-          .reduce((acc, text) => {
-            if (!text) return acc;
-            if (
-              text.includes("dokumentasi") ||
-              text.includes("dokumentation") ||
-              text.includes("documentation") ||
-              text.includes("foto") ||
-              text.includes("photo") ||
-              text.includes("kamera") ||
-              text.includes("camera") ||
-              text.includes("video")
-            )
-              acc.add("camera");
-            if (text.includes("hotel")) acc.add("hotel");
-            if (text.includes("mobil")) acc.add("car");
-            if (text.includes("driver") || text.includes("sopir"))
-              acc.add("driver");
-            if (text.includes("tiket")) acc.add("ticket");
-            if (
-              text.includes("makan") ||
-              text.includes("lunch") ||
-              text.includes("meal")
-            )
-              acc.add("meal");
-            if (text.includes("air") || text.includes("mineral"))
-              acc.add("water");
-            return acc;
-          }, new Set())
-      : new Set();
+
+    // Prioritas mapping includes sama seperti page.jsx
+    const inclusionPriority = [
+      "hotel (sesuai pilihan) mobil full ac",
+      "bbm driver",
+      "local guide",
+      "guide (merangkap jadi fotografer)",
+      "makan siang 5x",
+      "makan malam 4x",
+      "parcel buah (day 1)",
+      "kalung selamat datang (songket)",
+      "mineral water",
+      "private glash bottom boat",
+      "snorkling gear (mask & life jaket)",
+      "fotografer underwater",
+      "premium dokumentasi by guide",
+      "foto menggunakan baju adat sasak",
+      "tiket masuk",
+      "parkir",
+    ];
+    let includes = [];
+    if (Array.isArray(pkg.inclusions)) {
+      const lowerInclusions = pkg.inclusions.map((i) =>
+        typeof i === "string" ? i.toLowerCase() : ""
+      );
+      includes = inclusionPriority.filter((point) => {
+        const mainKeyword = point.split(" ")[0].toLowerCase();
+        return lowerInclusions.some((inc) => inc.includes(mainKeyword));
+      });
+      if (includes.length < 4) {
+        includes = lowerInclusions.slice(0, 5);
+      } else {
+        includes = includes.slice(0, 5);
+      }
+    }
 
     // Ambil deskripsi utama dari JSON
     let descriptionText = "";
