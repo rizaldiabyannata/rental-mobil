@@ -65,6 +65,12 @@ async function getPartners(request) {
         skip,
         take: limit,
         orderBy: { order: "asc" },
+        select: {
+          id: true,
+          name: true,
+          logoUrl: true,
+          order: true,
+        },
       }),
       prisma.partner.count({ where }),
     ]);

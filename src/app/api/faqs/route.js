@@ -27,6 +27,12 @@ async function getFAQs(request) {
         skip,
         take: limit,
         orderBy: { order: "asc" },
+        select: {
+          id: true,
+          question: true,
+          answer: true,
+          order: true,
+        },
       }),
       prisma.fAQ.count({ where }),
     ]);

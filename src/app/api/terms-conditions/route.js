@@ -41,6 +41,13 @@ async function getTermsAndConditions(request) {
         skip,
         take: limit,
         orderBy: [{ category: "asc" }, { order: "asc" }],
+        select: {
+          id: true,
+          category: true,
+          title: true,
+          order: true,
+          isActive: true,
+        },
       }),
       prisma.termsAndConditions.count({ where }),
     ]);
