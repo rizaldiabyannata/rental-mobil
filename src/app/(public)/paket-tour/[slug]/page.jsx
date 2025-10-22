@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import PageHero from "@/components/shared/PageHero";
 import TourGallery from "@/components/tours/TourGallery";
 import {
@@ -21,31 +22,14 @@ function getImageUrl(src) {
   return src;
 }
 
-// Generate dynamic metadata for SEO
-export async function generateMetadata({ params }) {
-  try {
-    const { slug } = await params;
-    const tourPackage = await prisma.tourPackage.findUnique({
-      where: { slug },
-      select: { name: true, description: true },
-    });
-    if (!tourPackage) return { title: "Paket Tidak Ditemukan" };
-    return {
-      title: `${tourPackage.name} | Paket Wisata Lombok`,
-      description: (tourPackage.description || "").substring(0, 160),
-    };
-  } catch (e) {
-    console.error("generateMetadata tourPackage failed:", e?.message || e);
-    return { title: "Paket Wisata" };
-  }
-}
-
-async function getTourPackage(slug) {
+const getTourPackage = cache(async (slug) => {
   try {
     const tourPackage = await prisma.tourPackage.findUnique({
       where: { slug },
       include: {
-        itinerary: true,
+        itinerary: {
+          orderBy: { day: "asc" },
+        },
         hotelTiers: {
           orderBy: { order: "asc" },
           include: {
@@ -62,6 +46,34 @@ async function getTourPackage(slug) {
     console.error("getTourPackage failed:", e?.message || e);
     notFound();
   }
+});
+
+// Generate dynamic metadata for SEO
+export async function generateMetadata({ params }) {
+  try {
+    const { slug } = await params;
+    const tourPackage = await getTourPackage(slug);
+    if (!tourPackage) return { title: "Paket Tidak Ditemukan" };
+
+    let descriptionText = "";
+    if (tourPackage.description) {
+        try {
+            // Assuming description is a JSON object with a 'plain' or 'text' key
+            const parsed = tourPackage.description;
+            descriptionText = parsed.plain || parsed.text || "";
+        } catch (e) {
+            descriptionText = String(tourPackage.description);
+        }
+    }
+
+    return {
+      title: `${tourPackage.name} | Paket Wisata Lombok`,
+      description: descriptionText.substring(0, 160),
+    };
+  } catch (e) {
+    console.error("generateMetadata tourPackage failed:", e?.message || e);
+    return { title: "Paket Wisata" };
+  }
 }
 
 export default async function TourDetailPage({ params }) {
@@ -74,7 +86,8 @@ export default async function TourDetailPage({ params }) {
     !tour?.hotelTiers ||
     tour.hotelTiers.every((ht) => !ht.priceTiers || ht.priceTiers.length === 0);
 
-  const minPrice = (() => {
+  // Now using startingPrice from the database if available
+  const minPrice = tour.startingPrice > 0 ? tour.startingPrice : (() => {
     try {
       const prices = (tour?.hotelTiers || [])
         .flatMap((h) => h.priceTiers || [])

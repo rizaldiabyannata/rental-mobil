@@ -1,5 +1,4 @@
 export const dynamic = "force-dynamic";
-
 import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/SectionHeading";
 import TourCard from "@/components/tours/TourCard";
@@ -15,105 +14,56 @@ async function getTourPackages() {
         slug: true,
         description: true,
         duration: true,
-        inclusions: true,
         galleryImages: true,
-        hotelTiers: {
-          select: {
-            priceTiers: {
-              select: { price: true },
-              orderBy: { price: "asc" },
-            },
-          },
-          orderBy: { order: "asc" },
-        },
+        startingPrice: true,
+        inclusions: true,
       },
     });
   } catch (e) {
     console.error("getTourPackages failed:", e?.message || e);
+    return [];
   }
 
-  // Process to find the minimum price and format for the TourCard component
-  // Prioritized inclusion points based on the provided image
   const inclusionPriority = [
-    "hotel (sesuai pilihan) mobil full ac",
-    "bbm driver",
-    "local guide",
-    "guide (merangkap jadi fotografer)",
-    "makan siang 5x",
-    "makan malam 4x",
-    "parcel buah (day 1)",
-    "kalung selamat datang (songket)",
-    "mineral water",
-    "private glash bottom boat",
-    "snorkling gear (mask & life jaket)",
-    "fotografer underwater",
-    "premium dokumentasi by guide",
-    "foto menggunakan baju adat sasak",
-    "tiket masuk",
-    "parkir",
+    "hotel", "mobil", "bbm", "driver", "guide", "makan",
+    "boat", "snorkling", "dokumentasi", "tiket masuk", "parkir"
   ];
 
   return tourPackages.map((pkg) => {
-    let minPrice = null;
-    // Cari priceTiers dengan paxRange '2-3 PAX' (case-insensitive)
-    const prices = pkg.hotelTiers.flatMap((tier) =>
-      (tier.priceTiers || [])
-        .filter((p) => (p.paxRange || "").toLowerCase() === "2-3 pax")
-        .map((p) => p.price)
-    );
-    if (prices.length > 0) {
-      minPrice = Math.min(...prices);
-    } else {
-      // Fallback ke harga terendah
-      const allPrices = pkg.hotelTiers.flatMap((tier) =>
-        (tier.priceTiers || []).map((p) => p.price)
-      );
-      if (allPrices.length > 0) {
-        minPrice = Math.min(...allPrices);
-      }
-    }
+    const coverImage = (pkg.galleryImages && pkg.galleryImages[0]) || null;
 
-    // Find matching inclusion points (case-insensitive, partial match)
-    let includes = [];
-    if (Array.isArray(pkg.inclusions)) {
-      const lowerInclusions = pkg.inclusions.map((i) =>
-        typeof i === "string" ? i.toLowerCase() : ""
+    let mainInclusions = [];
+    if (Array.isArray(pkg.inclusions) && pkg.inclusions.length > 0) {
+      const lowerInclusions = pkg.inclusions.map(i => String(i || '').toLowerCase());
+      mainInclusions = inclusionPriority.filter(point =>
+        lowerInclusions.some(inc => inc.includes(point))
       );
-      includes = inclusionPriority.filter((point) => {
-        // Find if any inclusion contains the main keyword of the point
-        const mainKeyword = point.split(" ")[0].toLowerCase();
-        return lowerInclusions.some((inc) => inc.includes(mainKeyword));
-      });
-      // If not enough, fallback to first 4-5 inclusions
-      if (includes.length < 4) {
-        includes = lowerInclusions.slice(0, 5);
+      if (mainInclusions.length === 0) {
+        mainInclusions = pkg.inclusions.slice(0, 5);
       } else {
-        includes = includes.slice(0, 5);
+        mainInclusions = mainInclusions.slice(0, 5);
       }
     }
 
-    // Ambil deskripsi utama dari JSON
-    let descriptionText = "";
-    if (typeof pkg.description === "string") {
-      descriptionText = pkg.description;
-    } else if (pkg.description && typeof pkg.description === "object") {
-      // Ambil field text, plain, atau fallback ke JSON string
-      descriptionText =
-        pkg.description.text ||
-        pkg.description.plain ||
-        JSON.stringify(pkg.description);
+    let shortDescription = "";
+    if (pkg.description) {
+        try {
+            const parsed = pkg.description;
+            shortDescription = (parsed.plain || parsed.text || "Klik untuk detail").substring(0, 100) + "...";
+        } catch (e) {
+            shortDescription = String(pkg.description).substring(0, 100) + "...";
+        }
     }
 
     return {
       slug: pkg.slug,
       title: pkg.name,
-      description: descriptionText,
-      shortDescription: descriptionText,
-      coverImage: pkg.galleryImages ? pkg.galleryImages[0] : null,
-      durationText: pkg.duration, // Pass string duration for ribbon
-      minPrice: minPrice,
-      features: [], // Fallback icons if needed
-      includes,
+      description: pkg.description,
+      shortDescription,
+      coverImage: coverImage,
+      durationText: pkg.duration,
+      minPrice: pkg.startingPrice,
+      includes: mainInclusions,
     };
   });
 }
